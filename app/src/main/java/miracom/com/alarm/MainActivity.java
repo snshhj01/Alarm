@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
 
@@ -31,13 +30,14 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
         mPm = ampm[1];
 
         initTab();
-        initLayOutSimpleAlarm();
+        //initLayOutSimpleAlarm();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        inflateClock();
+        setContentView(R.layout.add_alram_default);
+        //inflateClock();
 
     }
 
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
         //R.id.clock는 custom layout
         sClock = findViewById(R.id.clock);
 
-        TextView am = (TextView) findViewById(R.id.am);
+        /*TextView am = (TextView) findViewById(R.id.am);
         TextView pm = (TextView) findViewById(R.id.pm);
 
        if (am != null) {
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
         }
         if (pm != null) {
             pm.setText(mPm);
-        }
+        }*/
 
         Log.v("inflateClock END!!");
     }

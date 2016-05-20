@@ -59,9 +59,9 @@ public class DigitalClock extends LinearLayout{
         private TextView mAm, mPm;
 
         AmPm(View parent) {
-            mAmPmLayout = (LinearLayout) parent.findViewById(R.id.am_pm);
+            /*mAmPmLayout = (LinearLayout) parent.findViewById(R.id.am_pm);
             mAm = (TextView)mAmPmLayout.findViewById(R.id.am);
-            mPm = (TextView)mAmPmLayout.findViewById(R.id.pm);
+            mPm = (TextView)mAmPmLayout.findViewById(R.id.pm);*/
 
             Resources r = parent.getResources();
 
@@ -70,13 +70,13 @@ public class DigitalClock extends LinearLayout{
         }
 
         void setShowAmPm(boolean show) {
-            mAmPmLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+            //mAmPmLayout.setVisibility(show ? View.VISIBLE : View.GONE);
         }
 
         void setIsMorning(boolean isMorning) {
             Log.v(String.valueOf(isMorning));
-            mAm.setTextColor(isMorning ? mColorOn : mColorOff);
-            mPm.setTextColor(isMorning ? mColorOff : mColorOn);
+            /*mAm.setTextColor(isMorning ? mColorOn : mColorOff);
+            mPm.setTextColor(isMorning ? mColorOff : mColorOn);*/
         }
 
     }
@@ -104,12 +104,12 @@ public class DigitalClock extends LinearLayout{
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        hTimeDisplay = (TextView) findViewById(R.id.hTimeDisplay);
+      /*  hTimeDisplay = (TextView) findViewById(R.id.hTimeDisplay);
         mTimeDisplay = (TextView) findViewById(R.id.mTimeDisplay);
         mAmPm = new AmPm(this);
         mCalendar = Calendar.getInstance();
         mContext = getContext();
-        setDateFormat();
+        setDateFormat();*/
     }
 
     @Override
@@ -137,7 +137,7 @@ public class DigitalClock extends LinearLayout{
         mContext.getContentResolver().registerContentObserver(
                 Settings.System.CONTENT_URI, true, mFormatChangeObserver);*/
 
-        updateTime();
+        //updateTime();
     }
 
     @Override

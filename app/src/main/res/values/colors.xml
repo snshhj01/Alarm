@@ -9,5 +9,11 @@
 
     <color name="white">#ffffffff</color>
     <color name="red">#ffee0000</color>
+    <color name="blue">#ff0054ff</color>
     <color name="ltgrey">#ffe0e0e0</color>
+
+    <color name="button_press_before">#ffdddddd</color>
+    <color name="button_press_after">#5D5D5D</color>
+
+    <color name="divider">#D5D5D5</color>
 </resources>
