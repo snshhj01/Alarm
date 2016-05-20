@@ -9,10 +9,8 @@ import android.database.ContentObserver;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,6 +62,7 @@ public class DigitalClock extends LinearLayout{
             mPm = (TextView)mAmPmLayout.findViewById(R.id.pm);
 
             Resources r = parent.getResources();
+
             mColorOn = r.getColor(R.color.ampm_on);
             mColorOff = r.getColor(R.color.ampm_off);
         }
@@ -73,6 +72,7 @@ public class DigitalClock extends LinearLayout{
         }
 
         void setIsMorning(boolean isMorning) {
+            Log.v(String.valueOf(isMorning));
             mAm.setTextColor(isMorning ? mColorOn : mColorOff);
             mPm.setTextColor(isMorning ? mColorOff : mColorOn);
         }
@@ -92,19 +92,17 @@ public class DigitalClock extends LinearLayout{
 
     public DigitalClock(Context context) {
         this(context, null);
-        Log.d("----","DigitalClock");
     }
 
     public DigitalClock(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d("----","DigitalClock 11");
     }
 
     //xml로 부터 inflate가 끝난 후에 불린다.
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        Log.d("----", "onFinishInflate ");
+
         mTimeDisplay = (TextView) findViewById(R.id.timeDisplay);
         mAmPm = new AmPm(this);
         mCalendar = Calendar.getInstance();
@@ -116,7 +114,7 @@ public class DigitalClock extends LinearLayout{
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.d("----","onAttachedToWindow");
+        Log.v("start onAttachedToWindow");
 
         if (mAttached)
             return;
@@ -134,9 +132,9 @@ public class DigitalClock extends LinearLayout{
         }
 
         /* monitor 12/24-hour display preference */
-        mFormatChangeObserver = new FormatChangeObserver();
+        /*mFormatChangeObserver = new FormatChangeObserver();
         mContext.getContentResolver().registerContentObserver(
-                Settings.System.CONTENT_URI, true, mFormatChangeObserver);
+                Settings.System.CONTENT_URI, true, mFormatChangeObserver);*/
 
         updateTime();
     }
@@ -157,18 +155,22 @@ public class DigitalClock extends LinearLayout{
         if (mLive) {
             mContext.unregisterReceiver(mIntentReceiver);
         }
-        mContext.getContentResolver().unregisterContentObserver(
-                mFormatChangeObserver);
+        /*mContext.getContentResolver().unregisterContentObserver(
+                mFormatChangeObserver);*/
     }
 
     private void updateTime() {
+        Log.v("updateTime start");
         if (mLive) {
             mCalendar.setTimeInMillis(System.currentTimeMillis());
         }
 
         CharSequence newTime = DateFormat.format(mFormat, mCalendar);
         mTimeDisplay.setText(newTime);
+        Log.v(String.valueOf(mCalendar.get(Calendar.AM_PM)));
         mAmPm.setIsMorning(mCalendar.get(Calendar.AM_PM) == 0);
+
+        Log.v("updateTime end");
     }
 
     private void setDateFormat() {

@@ -2,7 +2,6 @@ package miracom.com.alarm;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     private String mAm, mPm;
 
+    static final boolean DEBUG = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
         String[] ampm = new DateFormatSymbols().getAmPmStrings();
         mAm = ampm[0];
         mPm = ampm[1];
-        Log.d("########","onCreate");
 
         initTab();
         initLayOutSimpleAlarm();
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("###########","Resume");
         inflateClock();
 
     }
@@ -74,25 +73,30 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
         }
     }
 
+    //custom digital_clock inflate
     private void inflateClock(){
         if (sClock != null) {
             sClockLayout.removeView(sClock);
         }
         //digital_clock digital_clock.xml miracom.com.alarm DigitalClock.java
+
         LayoutInflater.from(this).inflate(R.layout.digital_clock, sClockLayout);
-        Log.d("-----","maim inflater");
+        //위 코드가 불려지고 메모리 적재 시킨후..
+        //DigitalClock.java protected void onFinishInflate()함수가 실행된다.
+
+        //R.id.clock는 custom layout
         sClock = findViewById(R.id.clock);
 
         TextView am = (TextView) findViewById(R.id.am);
         TextView pm = (TextView) findViewById(R.id.pm);
 
-       /* if (am != null) {
+       if (am != null) {
             am.setText(mAm);
         }
         if (pm != null) {
             pm.setText(mPm);
-        }*/
+        }
 
-
+        Log.v("inflateClock END!!");
     }
 }
