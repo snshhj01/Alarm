@@ -3,7 +3,6 @@ package miracom.com.alarm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.drawable.AnimationDrawable;
@@ -22,6 +21,7 @@ import java.util.Calendar;
  */
 public class DigitalClock extends LinearLayout{
 
+    private TextView hTimeDisplay;
     private TextView mTimeDisplay;
 
     private Calendar mCalendar;
@@ -104,7 +104,8 @@ public class DigitalClock extends LinearLayout{
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        mTimeDisplay = (TextView) findViewById(R.id.timeDisplay);
+        hTimeDisplay = (TextView) findViewById(R.id.hTimeDisplay);
+        mTimeDisplay = (TextView) findViewById(R.id.mTimeDisplay);
         mAmPm = new AmPm(this);
         mCalendar = Calendar.getInstance();
         mContext = getContext();
@@ -121,15 +122,15 @@ public class DigitalClock extends LinearLayout{
 
         mAttached = true;
 
-        if (mLive) {
+        /*if (mLive) {
 
-            /* monitor time ticks, time changed, timezone */
+            *//* monitor time ticks, time changed, timezone *//*
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_TIME_TICK);
             filter.addAction(Intent.ACTION_TIME_CHANGED);
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
             mContext.registerReceiver(mIntentReceiver, filter, null, mHandler);
-        }
+        }*/
 
         /* monitor 12/24-hour display preference */
         /*mFormatChangeObserver = new FormatChangeObserver();
@@ -151,9 +152,9 @@ public class DigitalClock extends LinearLayout{
             ((AnimationDrawable) background).stop();
         }
 
-        if (mLive) {
+        /*if (mLive) {
             mContext.unregisterReceiver(mIntentReceiver);
-        }
+        }*/
         /*mContext.getContentResolver().unregisterContentObserver(
                 mFormatChangeObserver);*/
     }
@@ -165,8 +166,10 @@ public class DigitalClock extends LinearLayout{
         }
 
         CharSequence newTime = DateFormat.format(mFormat, mCalendar);
-        mTimeDisplay.setText(newTime);
-        Log.v(String.valueOf(mCalendar.get(Calendar.AM_PM)));
+
+        hTimeDisplay.setText(newTime.subSequence(0,1));
+        mTimeDisplay.setText(newTime.subSequence(2,4));
+
         mAmPm.setIsMorning(mCalendar.get(Calendar.AM_PM) == 0);
 
         Log.v("updateTime end");
