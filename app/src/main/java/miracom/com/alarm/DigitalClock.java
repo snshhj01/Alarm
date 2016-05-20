@@ -38,6 +38,7 @@ public class DigitalClock extends LinearLayout{
 
     private final Handler mHandler = new Handler();
 
+    //실시간 현재 time update
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -49,6 +50,7 @@ public class DigitalClock extends LinearLayout{
         }
     };
 
+    //AM PM 확인
     static class AmPm {
 
         private int mColorOn, mColorOff;
@@ -98,7 +100,6 @@ public class DigitalClock extends LinearLayout{
         super(context, attrs);
     }
 
-    //xml로 부터 inflate가 끝난 후에 불린다.
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -110,7 +111,6 @@ public class DigitalClock extends LinearLayout{
         setDateFormat();
     }
 
-    //뷰가 window에 추가될떄 호출된다.
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -139,7 +139,6 @@ public class DigitalClock extends LinearLayout{
         updateTime();
     }
 
-    //화면에 view가 제거 될 떄 호출된다.
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
