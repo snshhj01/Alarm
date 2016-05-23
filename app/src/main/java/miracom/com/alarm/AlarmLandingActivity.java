@@ -7,7 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class AlramLandingActivity extends Activity {
+public class AlarmLandingActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class AlramLandingActivity extends Activity {
                      * Called after splash times up. Do some action after splash
                      * times up. Here we moved to another main activity class
                      */
-                    startActivity(new Intent(AlramLandingActivity.this,
+                    startActivity(new Intent(AlarmLandingActivity.this,
                             MainActivity.class));
                     finish();
                 }
