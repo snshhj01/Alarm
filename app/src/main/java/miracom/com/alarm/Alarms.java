@@ -11,7 +11,6 @@ public class Alarms {
     // Shared with DigitalClock
     final static String M24 = "kk:mm";
 
-
     static boolean get24HourMode(final Context context) {
         return android.text.format.DateFormat.is24HourFormat(context);
     }

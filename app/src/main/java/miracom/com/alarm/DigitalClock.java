@@ -59,7 +59,7 @@ public class DigitalClock extends LinearLayout{
         private TextView mAm, mPm;
 
         AmPm(View parent) {
-            /*mAmPmLayout = (LinearLayout) parent.findViewById(R.id.am_pm);
+           /* mAmPmLayout = (LinearLayout) parent.findViewById(R.id.am_pm);
             mAm = (TextView)mAmPmLayout.findViewById(R.id.am);
             mPm = (TextView)mAmPmLayout.findViewById(R.id.pm);*/
 
