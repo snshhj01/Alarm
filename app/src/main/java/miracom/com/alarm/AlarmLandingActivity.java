@@ -12,7 +12,7 @@ public class AlarmLandingActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.alram_landing);
+        setContentView(R.layout.alarm_landing);
         /** set time to splash out */
         final int welcomeScreenDisplay = 3000;
         /** create a thread to show splash up to splash time */
