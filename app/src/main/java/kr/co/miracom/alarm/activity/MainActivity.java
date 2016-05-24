@@ -1,4 +1,4 @@
-package miracom.com.alarm;
+package kr.co.miracom.alarm.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 
 import java.text.DateFormatSymbols;
+
+import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.util.Logger;
 
 public class MainActivity extends AppCompatActivity implements TabHost.OnTabChangeListener{
 
@@ -97,6 +100,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.OnTabChan
             pm.setText(mPm);
         }*/
 
-        Log.v("inflateClock END!!");
+        Logger.v(this.getClass(), null, "inflateClock END!!");
     }
 }

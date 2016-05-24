@@ -1,4 +1,4 @@
-package miracom.com.alarm;
+package kr.co.miracom.alarm.view;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
+
+import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.util.Logger;
+import kr.co.miracom.alarm.vo.ext.Alarms;
 
 /**
  * Created by kimsungmog on 2016-05-19.
@@ -74,7 +78,7 @@ public class DigitalClock extends LinearLayout{
         }
 
         void setIsMorning(boolean isMorning) {
-            Log.v(String.valueOf(isMorning));
+            Logger.v(this.getClass(), "%s", String.valueOf(isMorning));
             /*mAm.setTextColor(isMorning ? mColorOn : mColorOff);
             mPm.setTextColor(isMorning ? mColorOff : mColorOn);*/
         }
@@ -115,7 +119,7 @@ public class DigitalClock extends LinearLayout{
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.v("start onAttachedToWindow");
+        Logger.v(this.getClass(), null, "start onAttachedToWindow");
 
         if (mAttached)
             return;
@@ -160,7 +164,7 @@ public class DigitalClock extends LinearLayout{
     }
 
     private void updateTime() {
-        Log.v("updateTime start");
+        Logger.v(this.getClass(),null,"updateTime start");
         if (mLive) {
             mCalendar.setTimeInMillis(System.currentTimeMillis());
         }
@@ -172,7 +176,7 @@ public class DigitalClock extends LinearLayout{
 
         mAmPm.setIsMorning(mCalendar.get(Calendar.AM_PM) == 0);
 
-        Log.v("updateTime end");
+        Logger.v(this.getClass(),null,"updateTime end");
     }
 
     private void setDateFormat() {

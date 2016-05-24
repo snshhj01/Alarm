@@ -1,4 +1,4 @@
-package miracom.com.alarm;
+package kr.co.miracom.alarm;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
