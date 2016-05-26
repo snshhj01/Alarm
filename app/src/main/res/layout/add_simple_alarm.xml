@@ -22,7 +22,7 @@
                 android:orientation="vertical">
 
                 <TimePicker
-                    android:id="@+id/timePicker"
+                    android:id="@+id/timePickerAddAlarm"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:timePickerMode="spinner" />
@@ -38,7 +38,7 @@
                 android:orientation="horizontal">
 
                 <ToggleButton
-                    android:id="@+id/sunday"
+                    android:id="@+id/toggleBtnSunday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -47,7 +47,7 @@
                     android:textOn="일" />
 
                 <ToggleButton
-                    android:id="@+id/monday"
+                    android:id="@+id/toggleBtnMonday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -55,7 +55,7 @@
                     android:textOn="월" />
 
                 <ToggleButton
-                    android:id="@+id/tuesday"
+                    android:id="@+id/toggleBtnTuesday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -63,7 +63,7 @@
                     android:textOn="화" />
 
                 <ToggleButton
-                    android:id="@+id/wednesday"
+                    android:id="@+id/toggleBtnWednesday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -71,7 +71,7 @@
                     android:textOn="수" />
 
                 <ToggleButton
-                    android:id="@+id/thursday"
+                    android:id="@+id/toggleBtnThursday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -79,7 +79,7 @@
                     android:textOn="목" />
 
                 <ToggleButton
-                    android:id="@+id/friday"
+                    android:id="@+id/toggleBtnFriday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -87,7 +87,7 @@
                     android:textOn="금" />
 
                 <ToggleButton
-                    android:id="@+id/saturday"
+                    android:id="@+id/toggleBtnSaturday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -114,7 +114,7 @@
                     android:textStyle="bold" />
 
                 <RadioGroup
-                    android:id="@+id/radiogroup"
+                    android:id="@+id/radioGroupAdd"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_centerHorizontal="true"
@@ -124,21 +124,21 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radio_sound"
+                        android:id="@+id/radioBtnSound"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/sound" />
 
                     <RadioButton
-                        android:id="@+id/radio_vibrate"
+                        android:id="@+id/radioBtnVibrate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/vibrate" />
 
                     <RadioButton
-                        android:id="@+id/radio_both"
+                        android:id="@+id/radioBtnSoundVibrate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -147,7 +147,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/alram_content_area"
+                android:id="@+id/contentLayoutAddAlarm"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
@@ -177,14 +177,14 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/volume_img"
+                    android:id="@+id/imageViewViewImg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:src="@drawable/speaker_on_blue" />
 
                 <SeekBar
-                    android:id="@+id/volume_bar"
+                    android:id="@+id/seekBarVolumeBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -211,7 +211,7 @@
                         android:textSize="17sp"
                         android:text="다시 울림" />
                     <TextView
-                        android:id="@+id/alram_repeat_setting"
+                        android:id="@+id/textViewAlramRepeatSetting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5분,3회" />
@@ -222,7 +222,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <Switch
-                        android:id="@+id/repeat_settting_switch"
+                        android:id="@+id/switchRepeatSettting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right" />
@@ -246,7 +246,7 @@
             android:showDividers="end">
 
             <Button
-                android:id="@+id/settings_cancel"
+                android:id="@+id/btnSettingsCancel"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
@@ -265,7 +265,7 @@
             android:showDividers="beginning">
 
             <Button
-                android:id="@+id/settings_ok"
+                android:id="@+id/btnSettingsOk"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"

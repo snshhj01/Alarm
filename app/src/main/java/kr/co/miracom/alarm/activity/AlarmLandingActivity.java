@@ -1,4 +1,4 @@
-package miracom.com.alarm;
+package kr.co.miracom.alarm.activity;
 
 /**
  * Created by sunghan on 2016-05-19.
@@ -6,6 +6,8 @@ package miracom.com.alarm;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import kr.co.miracom.alarm.R;
 
 public class AlarmLandingActivity extends Activity {
 
@@ -40,7 +42,7 @@ public class AlarmLandingActivity extends Activity {
                      * times up. Here we moved to another main activity class
                      */
                     startActivity(new Intent(AlarmLandingActivity.this,
-                            MainActivity.class));
+                            AlarmListActivity.class));
                     finish();
                 }
             }
