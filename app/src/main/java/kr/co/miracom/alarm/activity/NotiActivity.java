@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import kr.co.miracom.alarm.R;
+
 /**
  * Created by jiwoon-won on 2016-05-25.
  */
@@ -15,7 +17,7 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.noti_main_alarm);
+        setContentView(R.layout.noti_main);
 
         seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
         textView = (TextView) findViewById(R.id.progressPosition);
