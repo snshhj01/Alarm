@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AlarmListActivity" />
+        <activity android:name=".activity.AlarmAddActivity" />
+
     </application>
 
 </manifest>
