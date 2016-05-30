@@ -27,6 +27,12 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         btnSettingsCancel.setOnClickListener(this);
         btnSettingsOk.setOnClickListener(this);
 
+        initLayout();
+
+    }
+
+    public void initLayout(){
+
     }
 
     @Override
