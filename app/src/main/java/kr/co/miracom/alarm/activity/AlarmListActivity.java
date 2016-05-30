@@ -1,5 +1,6 @@
 package kr.co.miracom.alarm.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -30,6 +31,12 @@ public class AlarmListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CharSequence pageTitle = adapter.getPageTitle(pager.getCurrentItem());
+                if(pageTitle ==  "Tab One"){
+                    Intent myintent = new Intent(v.getContext(), AlarmAddActivity.class);
+                    startActivity(myintent);
+                }else{
+
+                }
                 Logger.d(this.getClass(), "%s", pageTitle);
             }
         });
