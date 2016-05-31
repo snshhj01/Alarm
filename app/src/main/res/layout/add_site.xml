@@ -241,11 +241,21 @@
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:text="위치"/>
-                <TextView
-                    android:id="@+id/alram_site_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/alram_site_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)" />
+                    <Button
+                        android:id="@+id/btnMapSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="검색"/>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
