@@ -208,22 +208,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="다시 울림"
-                        android:textSize="17sp" />
-
+                        android:textSize="17sp"
+                        android:text="다시 울림" />
                     <TextView
                         android:id="@+id/alram_repeat_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5분,3회" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
-
                     <Switch
                         android:id="@+id/repeat_settting_switch"
                         android:layout_width="wrap_content"
@@ -231,7 +228,6 @@
                         android:layout_gravity="right" />
                 </LinearLayout>
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/alarm_site_setting"
                 android:layout_width="match_parent"
@@ -240,18 +236,26 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="위치"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    android:text="위치"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/alram_site_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)" />
+                    <Button
+                        android:id="@+id/btnMapSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="검색"/>
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/alram_site_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

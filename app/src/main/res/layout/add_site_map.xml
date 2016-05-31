@@ -13,61 +13,60 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:text="위치 선택"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
             android:orientation="horizontal">
             <EditText
-                android:id="@+id/site_address"
+                android:id="@+id/editCond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
-                android:text="주소를 입력 하세요."/>
+                android:hint="주소를 입력 하세요."/>
             <Button
-                android:id="@+id/find_site_btn"
+                android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="찾기"/>
+                android:text="검색"/>
         </LinearLayout>
         <!--하단 LinearLayout에 지도가 들어가면 될것 같습니다. -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="355dp">
-
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                tools:context="miracom.co.kr.map.MapsActivity"
+                android:name="com.google.android.gms.maps.SupportMapFragment"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@id/alarm_site_setting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="20dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
+            <Button
+                android:id="@+id/btnSave"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:text="설정하기"/>
 
 
