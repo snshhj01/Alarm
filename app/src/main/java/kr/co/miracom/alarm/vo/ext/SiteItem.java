@@ -1,9 +1,11 @@
-package kr.co.miracom.alarm.activity;
+package kr.co.miracom.alarm.vo.ext;
+
+import kr.co.miracom.alarm.vo.AbstractVO;
 
 /**
  * Created by admin on 2016-05-31.
  */
-public class SiteItem {
+public class SiteItem extends AbstractVO{
     private String[] data;
 
     public SiteItem(){

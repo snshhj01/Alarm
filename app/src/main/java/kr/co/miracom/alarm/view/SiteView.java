@@ -1,4 +1,4 @@
-package kr.co.miracom.alarm.activity;
+package kr.co.miracom.alarm.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.vo.ext.SiteItem;
 
 /**
  * Created by admin on 2016-05-31.
