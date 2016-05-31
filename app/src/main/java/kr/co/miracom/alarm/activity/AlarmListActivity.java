@@ -30,14 +30,15 @@ public class AlarmListActivity extends AppCompatActivity {
         addAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence pageTitle = adapter.getPageTitle(pager.getCurrentItem());
-                if(pageTitle ==  "Tab One"){
-                    Intent myintent = new Intent(v.getContext(), AlarmAddActivity.class);
-                    startActivity(myintent);
-                }else{
+                Intent intent = null;
+                Logger.d(this.getClass(), "%s", pager.getCurrentItem());
+                if(pager.getCurrentItem() ==  0){
+                    intent = new Intent(v.getContext(), AlarmAddActivity.class);
 
+                }else{
+                    intent = new Intent(v.getContext(), SiteAddActivity.class);
                 }
-                Logger.d(this.getClass(), "%s", pageTitle);
+                startActivity(intent);
             }
         });
 

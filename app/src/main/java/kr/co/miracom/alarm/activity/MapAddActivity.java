@@ -15,7 +15,7 @@ import kr.co.miracom.alarm.R;
 /**
  * Created by admin on 2016-05-26.
  */
-public class AddSiteMap extends FragmentActivity implements OnMapReadyCallback {
+public class MapAddActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 

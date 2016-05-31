@@ -13,4 +13,9 @@
 
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!--START AlarmListActivity -->
+    <string name="tab_alarm">알람</string>
+    <string name="tab_location">위치알람</string>
+    <!--END AlarmListActivity -->
 </resources>

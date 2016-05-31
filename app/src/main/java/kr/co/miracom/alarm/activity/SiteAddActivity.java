@@ -8,7 +8,7 @@ import kr.co.miracom.alarm.R;
 /**
  * Created by admin on 2016-05-26.
  */
-public class AddSite extends AppCompatActivity {
+public class SiteAddActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

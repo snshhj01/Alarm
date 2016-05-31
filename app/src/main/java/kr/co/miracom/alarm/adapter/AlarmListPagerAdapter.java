@@ -64,9 +64,9 @@ public class AlarmListPagerAdapter extends PagerAdapter {
 
         switch (position) {
             case 0:
-                return "Tab One";
+                return context.getString(R.string.tab_alarm);
             case 1:
-                return "Tab Two";
+                return context.getString(R.string.tab_location);
         }
 
         return super.getPageTitle(position);
