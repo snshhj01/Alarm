@@ -1,4 +1,4 @@
-package kr.co.miracom.alarm.activity;
+package kr.co.miracom.alarm.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.miracom.alarm.view.SiteView;
+import kr.co.miracom.alarm.vo.ext.SiteItem;
 
 /**
  * Created by admin on 2016-05-31.

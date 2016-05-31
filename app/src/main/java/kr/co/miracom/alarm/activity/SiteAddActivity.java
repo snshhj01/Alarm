@@ -27,7 +27,7 @@ public class SiteAddActivity extends AppCompatActivity {
         btnMapSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), AddSiteMap.class);
+                Intent intent = new Intent(getBaseContext(), MapAddActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_ADD_MAP);
             }
         });
