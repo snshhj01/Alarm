@@ -24,6 +24,9 @@
         <activity android:name=".activity.MapAddActivity" />
         <activity android:name=".activity.NotiActivity" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDBtOAWHlKs4N_a_5jozE450OhhMrhFZfs" />
     </application>
 
 </manifest>
