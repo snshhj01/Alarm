@@ -138,6 +138,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         audio.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
         alarmVolum = audio.getStreamVolume(AudioManager.STREAM_ALARM);
+        Logger.d(this.getClass(),"%d",alarmVolum);
     }
 
     @Override
