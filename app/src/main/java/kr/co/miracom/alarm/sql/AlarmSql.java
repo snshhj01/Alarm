@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import kr.co.miracom.alarm.util.DBHelper;
+import kr.co.miracom.alarm.vo.SimpleVo;
 
 /**
  * Created by kimsungmog on 2016-05-30.
@@ -20,7 +21,7 @@ public class AlarmSql {
         db = helper.getWritableDatabase();
     }
 
-    public void insertSimpleAlarm(){
+    public void insertSimpleAlarm(SimpleVo simpleVo){
         db.execSQL("");
         db.close();
     }
