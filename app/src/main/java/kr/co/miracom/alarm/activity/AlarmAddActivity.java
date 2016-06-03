@@ -96,7 +96,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         //넘어온 데이터 획득
         alarmId = intent.getIntExtra("id",999999);
 
-        Logger.v(this.getClass(),"%s",intent.getIntExtra("id",99999));
+        Logger.v(this.getClass(),"%s",intent.getIntExtra("id",999999));
 
         sql = new AlarmSql(this);
         mPlayer = new Player(this);
@@ -120,20 +120,16 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
         }else{
             Cursor cursor = sql.selectSimpleAlarm(alarmId);
-
-            while (cursor.moveToNext()){
-                simpleVo.setId(cursor.getInt(0));
-                simpleVo.setDate(cursor.getString(1));
-                simpleVo.setDays(cursor.getString(2));
-                simpleVo.setCycle(cursor.getInt(3));
-                simpleVo.setType(cursor.getString(4));
-                simpleVo.setUri(cursor.getString(5));
-                simpleVo.setSound(cursor.getString(6));
-                simpleVo.setVolum(cursor.getInt(7));
-                simpleVo.setUsed(cursor.getInt(8));
-                simpleVo.setRepeat(cursor.getInt(9));
-            }
-
+            simpleVo.setId(cursor.getInt(0));
+            simpleVo.setDate(cursor.getString(1));
+            simpleVo.setDays(cursor.getString(2));
+            simpleVo.setCycle(cursor.getInt(3));
+            simpleVo.setType(cursor.getString(4));
+            simpleVo.setUri(cursor.getString(5));
+            simpleVo.setSound(cursor.getString(6));
+            simpleVo.setVolum(cursor.getInt(7));
+            simpleVo.setUsed(cursor.getInt(8));
+            simpleVo.setRepeat(cursor.getInt(9));
         }
     }
 
