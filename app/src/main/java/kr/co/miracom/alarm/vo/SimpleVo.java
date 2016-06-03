@@ -1,19 +1,19 @@
 package kr.co.miracom.alarm.vo;
 
-import java.util.Date;
-
 /**
  * Created by kimsungmog on 2016-06-01.
  */
 public class SimpleVo {
     private int id;
-    private Date date;
+    private String date;
     private String days;
-    private boolean cycle;
+    private int cycle;
     private String type;
+    private String uri;
     private String sound;
     private int volum;
-    private boolean repeat;
+    private int used;
+    private int repeat;
 
     public int getId() {
         return id;
@@ -23,11 +23,11 @@ public class SimpleVo {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -39,16 +39,24 @@ public class SimpleVo {
         this.days = days;
     }
 
-    public boolean getCycle(){
+    public int getCycle(){
         return cycle;
     }
 
-    public void setCycle(boolean cycle) {
+    public void setCycle(int cycle) {
         this.cycle = cycle;
     }
 
     public String getType() {
         return type;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public void setType(String type) {
@@ -70,11 +78,20 @@ public class SimpleVo {
     public void setVolum(int volum) {
         this.volum = volum;
     }
-    public boolean getRepeat(){
+
+    public int getUsed(){
+        return used;
+    }
+
+    public void setUsed(int used) {
+        this.used = used;
+    }
+
+    public int getRepeat(){
         return repeat;
     }
 
-    public void setRepeat(boolean repeat) {
+    public void setRepeat(int repeat) {
         this.repeat = repeat;
     }
 }

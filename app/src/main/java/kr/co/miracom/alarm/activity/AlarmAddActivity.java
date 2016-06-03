@@ -2,6 +2,7 @@ package kr.co.miracom.alarm.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -16,6 +17,7 @@ import android.widget.ToggleButton;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.sql.AlarmSql;
+import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.util.Player;
 import kr.co.miracom.alarm.vo.SimpleVo;
 
@@ -44,10 +46,11 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     private Ringtone mRingtone;
     private Uri mUri;
+    private SimpleVo simpleVo;
 
     private int alarmVolum;
 
-    int alarmId = 0;
+    int alarmId = 999999;
 
 
     @Override
@@ -91,26 +94,47 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         //자신을 실행시킨 intent객체 획득
         Intent intent = getIntent();
         //넘어온 데이터 획득
-        //alarmId = intent.getIntExtra("id",0);
-        sql = new AlarmSql(this);
+        alarmId = intent.getIntExtra("id",999999);
 
+        Logger.v(this.getClass(),"%s",intent.getIntExtra("id",99999));
+
+        sql = new AlarmSql(this);
         mPlayer = new Player(this);
 
         //audiomanager 초기화
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        simpleVo = new SimpleVo();
         // 초기 시스템(alarm) volum을 가져와서 seekbar에 setprogress한다.
 
-        alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-        seekBarVolumeBar.setProgress(alarmVolum);
+        if(alarmId == 999999){
+            alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+            seekBarVolumeBar.setProgress(alarmVolum);
 
-        //초기 default alarm path를 TextView 에 setting
-        mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
-        tvAlarmContent.setText(mRingtone.getTitle(this));
+            //초기 default alarm path를 TextView 에 setting
+            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+            tvAlarmContent.setText(mRingtone.getTitle(this));
 
-        mPlayer.setUri(mUri);
+            mPlayer.setUri(mUri);
 
+        }else{
+            Cursor cursor = sql.selectSimpleAlarm(alarmId);
+
+            while (cursor.moveToNext()){
+                simpleVo.setId(cursor.getInt(0));
+                simpleVo.setDate(cursor.getString(1));
+                simpleVo.setDays(cursor.getString(2));
+                simpleVo.setCycle(cursor.getInt(3));
+                simpleVo.setType(cursor.getString(4));
+                simpleVo.setUri(cursor.getString(5));
+                simpleVo.setSound(cursor.getString(6));
+                simpleVo.setVolum(cursor.getInt(7));
+                simpleVo.setUsed(cursor.getInt(8));
+                simpleVo.setRepeat(cursor.getInt(9));
+            }
+
+        }
     }
 
     //버튼 클릭 이벤트

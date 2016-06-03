@@ -25,4 +25,11 @@ public class AlarmSql {
         db.execSQL("");
         db.close();
     }
+
+    public Cursor selectSimpleAlarm(int id){
+        Cursor cursor = db.rawQuery("select id, data, days, cycle, type, uri, sound, volum, used, repeat " +
+                "from tb_simple where id = ?",new String[]{String.valueOf(id)});
+        db.close();
+        return cursor;
+    }
 }
