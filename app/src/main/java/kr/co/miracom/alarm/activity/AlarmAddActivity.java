@@ -184,59 +184,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         }
 
         mPlay.start();
-        /*mPlay = MediaPlayer.create(getApplicationContext(),rAlarmUri);
-        mPlay.setAudioStreamType(AudioManager.STREAM_SYSTEM);
-        mPlay.setVolume(alarmVolum,alarmVolum);*/
 
-       /* mPlay.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
-
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
-        //mPlay.prepareAsync();
-        mPlay.start();*/
-
-
-
-        //rAlarm.play();
-
-
-
-
-        //audio.setStreamVolume(AudioManager.STREAM_ALARM,alarmVolum,AudioManager.FLAG_PLAY_SOUND);
-
-        //mPlay = MediaPlayer.create(getApplicationContext(),rAlarmUri);
-       /* mPlay.setAudioStreamType(AudioManager.STREAM_ALARM);
-        mPlay.setLooping(true);*/
-
-
-        /*try {
-
-            mPlay.setVolume((float) (alarmVolum/7.0),(float) (alarmVolum/7.0));
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }*/
-
-
-        //mPlay.start();
-
-        /*if(rAlarm != null){
-
-            rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
-            String alarmPath = rAlarm.getTitle(this);
-
-            mPlay.start();
-
-        }else{
-
-            rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
-            String alarmPath = rAlarm.getTitle(this);
-
-            mPlay.start();
-        }*/
     }
 
     public void ringtoneStop(){
