@@ -3,7 +3,6 @@ package kr.co.miracom.alarm.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,11 +14,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.io.IOException;
-
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.sql.AlarmSql;
-import kr.co.miracom.alarm.util.Logger;
+import kr.co.miracom.alarm.util.Player;
 import kr.co.miracom.alarm.vo.SimpleVo;
 
 /**
@@ -27,8 +24,10 @@ import kr.co.miracom.alarm.vo.SimpleVo;
  */
 public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     private AudioManager audioManager;
-    private MediaPlayer mPlay;
+    //private MediaPlayer mPlay;
     private AlarmSql sql;
+
+    private Player mPlayer;
 
     private Button btnSettingsCancel;
     private Button btnSettingsOk;
@@ -43,8 +42,8 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private Intent ringtoneIntent;
     private SeekBar seekBarVolumeBar;
 
-    private Ringtone rAlarm;
-    private Uri rAlarmUri;
+    private Ringtone mRingtone;
+    private Uri mUri;
 
     private int alarmVolum;
 
@@ -56,22 +55,6 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.add_simple_alarm);
-
-        //자신을 실행시킨 intent객체 획득
-        Intent intent = getIntent();
-        //넘어온 데이터 획득
-        //alarmId = intent.getIntExtra("id",0);
-
-        sql = new AlarmSql(this);
-
-        mPlay = new MediaPlayer();
-
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        rAlarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
-
 
         toggleBtnSunday = (ToggleButton) findViewById(R.id.toggleBtnSunday);
         toggleBtnMonday = (ToggleButton) findViewById(R.id.toggleBtnMonday);
@@ -105,13 +88,28 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     //화면 초기화...
     public void initLayout() {
 
+        //자신을 실행시킨 intent객체 획득
+        Intent intent = getIntent();
+        //넘어온 데이터 획득
+        //alarmId = intent.getIntExtra("id",0);
+        sql = new AlarmSql(this);
+
+        mPlayer = new Player(this);
+
+        //audiomanager 초기화
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         // 초기 시스템(alarm) volum을 가져와서 seekbar에 setprogress한다.
+
         alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
         seekBarVolumeBar.setProgress(alarmVolum);
 
         //초기 default alarm path를 TextView 에 setting
-        String alarmPath = rAlarm.getTitle(this);
-        tvAlarmContent.setText(alarmPath);
+        mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+        tvAlarmContent.setText(mRingtone.getTitle(this));
+
+        mPlayer.setUri(mUri);
 
     }
 
@@ -146,7 +144,6 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
-
     }
 
     @Override
@@ -156,42 +153,26 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        ringtonePlay();
+       ringtonePlay();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        rAlarmUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-        rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
-        String alarmPath = rAlarm.getTitle(this);
-        tvAlarmContent.setText(alarmPath);
+        mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+        tvAlarmContent.setText(mRingtone.getTitle(this));
+
+        mPlayer.setUri(mUri);
     }
 
     public void ringtonePlay(){
-        alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-        Logger.v(this.getClass(),"%s","--------------------------");
-        Logger.v(this.getClass(),"%s",alarmVolum);
-
-        mPlay = new MediaPlayer();
-        try {
-            mPlay.setDataSource(getApplicationContext(),rAlarmUri);
-            mPlay.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mPlay.setLooping(true);
-            mPlay.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mPlay.start();
-
+        mPlayer.setMediaPlayerMode();
+        mPlayer.play();
     }
 
     public void ringtoneStop(){
-        //rAlarm.stop();
-        if(mPlay != null){
-            mPlay.stop();
-        }
+        mPlayer.stop();
     }
 
 }
