@@ -15,6 +15,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.io.IOException;
+
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.sql.AlarmSql;
 import kr.co.miracom.alarm.util.Logger;
@@ -24,7 +26,7 @@ import kr.co.miracom.alarm.vo.SimpleVo;
  * Created by kimsungmog on 2016-05-26.
  */
 public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    private AudioManager audio;
+    private AudioManager audioManager;
     private MediaPlayer mPlay;
     private AlarmSql sql;
 
@@ -42,10 +44,11 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private SeekBar seekBarVolumeBar;
 
     private Ringtone rAlarm;
-    private Ringtone defaultAlarm;
     private Uri rAlarmUri;
 
     private int alarmVolum;
+
+    int alarmId = 0;
 
 
     @Override
@@ -54,15 +57,20 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.add_simple_alarm);
 
+        //자신을 실행시킨 intent객체 획득
+        Intent intent = getIntent();
+        //넘어온 데이터 획득
+        //alarmId = intent.getIntExtra("id",0);
+
         sql = new AlarmSql(this);
 
         mPlay = new MediaPlayer();
 
 
-        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         rAlarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        defaultAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
+        rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
 
 
         toggleBtnSunday = (ToggleButton) findViewById(R.id.toggleBtnSunday);
@@ -98,11 +106,11 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     public void initLayout() {
 
         // 초기 시스템(alarm) volum을 가져와서 seekbar에 setprogress한다.
-        alarmVolum = audio.getStreamVolume(AudioManager.STREAM_ALARM);
+        alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
         seekBarVolumeBar.setProgress(alarmVolum);
 
         //초기 default alarm path를 TextView 에 setting
-        String alarmPath = defaultAlarm.getTitle(this);
+        String alarmPath = rAlarm.getTitle(this);
         tvAlarmContent.setText(alarmPath);
 
     }
@@ -123,6 +131,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             finish();
         } else if (v == tvAlarmContent) {
             //alarm textview click시 이벤트 alarm 선택 intent 실행
+            ringtoneStop();
             ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
 
             ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select RingTone");
@@ -136,9 +145,8 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        audio.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
-        alarmVolum = audio.getStreamVolume(AudioManager.STREAM_ALARM);
-        Logger.d(this.getClass(),"%d",alarmVolum);
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
+
     }
 
     @Override
@@ -155,35 +163,67 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         rAlarmUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-
-        //alarm선택 액티비티에서 alarm을 선택안하고 액티비티를 종료 혹은 선택하고 종료
-        //알람을 선택하고 종료하면 그대로
-        //알람을 선택하지 않고 종료하면 rAlarm이 null(기존에 선택을 한번도 안했을경우)
-        //defaultAlarm을 가진다.
-        //rAlarm이 not null일경우 (기존에 선택을 한번이라도 했을 경우)
-        //기존 alarm을 가진다.
-
-        if(rAlarmUri != null){
-            rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
-            String alarmPath = rAlarm.getTitle(this);
-            tvAlarmContent.setText(alarmPath);
-        }else{
-            if (rAlarm != null){
-                String alarmPath = rAlarm.getTitle(this);
-                tvAlarmContent.setText(alarmPath);
-            }else{
-                String alarmPath = defaultAlarm.getTitle(this);
-                tvAlarmContent.setText(alarmPath);
-            }
-        }
+        rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
+        String alarmPath = rAlarm.getTitle(this);
+        tvAlarmContent.setText(alarmPath);
     }
 
     public void ringtonePlay(){
-        mPlay = MediaPlayer.create(this,rAlarmUri);
-        mPlay.setVolume(alarmVolum,alarmVolum);
+        alarmVolum = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        Logger.v(this.getClass(),"%s","--------------------------");
+        Logger.v(this.getClass(),"%s",alarmVolum);
+
+        mPlay = new MediaPlayer();
+        try {
+            mPlay.setDataSource(getApplicationContext(),rAlarmUri);
+            mPlay.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mPlay.setLooping(true);
+            mPlay.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mPlay.start();
+        /*mPlay = MediaPlayer.create(getApplicationContext(),rAlarmUri);
+        mPlay.setAudioStreamType(AudioManager.STREAM_SYSTEM);
+        mPlay.setVolume(alarmVolum,alarmVolum);*/
+
+       /* mPlay.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+        //mPlay.prepareAsync();
+        mPlay.start();*/
 
 
-        if(rAlarm != null){
+
+        //rAlarm.play();
+
+
+
+
+        //audio.setStreamVolume(AudioManager.STREAM_ALARM,alarmVolum,AudioManager.FLAG_PLAY_SOUND);
+
+        //mPlay = MediaPlayer.create(getApplicationContext(),rAlarmUri);
+       /* mPlay.setAudioStreamType(AudioManager.STREAM_ALARM);
+        mPlay.setLooping(true);*/
+
+
+        /*try {
+
+            mPlay.setVolume((float) (alarmVolum/7.0),(float) (alarmVolum/7.0));
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }*/
+
+
+        //mPlay.start();
+
+        /*if(rAlarm != null){
 
             rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
             String alarmPath = rAlarm.getTitle(this);
@@ -191,15 +231,16 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             mPlay.start();
 
         }else{
+
             rAlarm = RingtoneManager.getRingtone(getApplicationContext(), rAlarmUri);
             String alarmPath = rAlarm.getTitle(this);
 
             mPlay.start();
-
-        }
+        }*/
     }
 
     public void ringtoneStop(){
+        //rAlarm.stop();
         if(mPlay != null){
             mPlay.stop();
         }
