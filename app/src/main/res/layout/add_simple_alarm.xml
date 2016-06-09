@@ -189,6 +189,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:max="15"
                     android:layout_weight="9" />
             </LinearLayout>
 

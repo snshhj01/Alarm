@@ -18,6 +18,13 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
             android:orientation="horizontal">
+
+            <fragment
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <!--
             <EditText
                 android:id="@+id/editCond"
                 android:layout_width="wrap_content"
@@ -30,30 +37,37 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="검색"/>
+            -->
         </LinearLayout>
         <!--하단 LinearLayout에 지도가 들어가면 될것 같습니다. -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="355dp">
+            android:layout_height="360dp">
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/map"
-                tools:context="miracom.co.kr.map.MapsActivity"
+                tools:context="kr.co.miracom.alarm.activity.MapAddActivity"
                 android:name="com.google.android.gms.maps.SupportMapFragment"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="15dp"
             android:orientation="vertical"
             android:layout_weight="1">
+            <TextView
+                android:id="@+id/tvDetail"
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+            <!--
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+            -->
         </LinearLayout>
 
         <LinearLayout
