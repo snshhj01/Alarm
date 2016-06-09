@@ -7,6 +7,10 @@
     <string name="sound_vibrate">진동 및 소리</string>
     <string name="alram_content">알람음</string>
     <string name="no_content">No Content</string>
+    <string name="alarm_name">알람이름</string>
+    <string name="default_alarm_name">알람</string>
+    <string name="repeat_weekly">매주반복</string>
+
 
     <string name="save">완료</string>
     <string name="cancelation">취소</string>

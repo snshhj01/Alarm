@@ -15,6 +15,24 @@
             android:divider="@drawable/divider"
             android:orientation="vertical"
             android:showDividers="middle|end">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_name"
+                    android:textSize="17sp" />
+                <EditText
+                    android:id="@+id/alarm_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:textSize="15sp"
+                    android:hint="@string/default_alarm_name"
+                    android:focusableInTouchMode="true"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,66 +53,94 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnSunday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/red"
-                    android:textOff="일"
-                    android:textOn="일" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnSunday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/red"
+                        android:textOff="일"
+                        android:textOn="일" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnMonday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="월"
-                    android:textOn="월" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnMonday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="월"
+                        android:textOn="월" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnTuesday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="화"
-                    android:textOn="화" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnTuesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="화"
+                        android:textOn="화" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnWednesday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="수"
-                    android:textOn="수" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnWednesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="수"
+                        android:textOn="수" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnThursday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="목"
-                    android:textOn="목" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnThursday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="목"
+                        android:textOn="목" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnFriday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="금"
-                    android:textOn="금" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnFriday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="금"
+                        android:textOn="금" />
 
-                <ToggleButton
-                    android:id="@+id/toggleBtnSaturday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/blue"
-                    android:textOff="토"
-                    android:textOn="토" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnSaturday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/blue"
+                        android:textOff="토"
+                        android:textOn="토" />
+                </LinearLayout>
 
+                <!--<RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <CheckBox
+                        android:id="@+id/repeatCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/repeatCheckBox"
+                        android:layout_marginRight="3dp"
+                        android:text="@string/repeat_weekly"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_alignBaseline="@id/repeatCheckBox"/>
+                </RelativeLayout>-->
             </LinearLayout>
 
             <LinearLayout
@@ -121,6 +167,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
+                    android:checkedButton="@+id/radioBtnSound"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -147,7 +194,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/contentLayoutAddAlarm"
+                android:id="@+id/addAlramContentBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
@@ -162,7 +209,7 @@
                     android:textSize="17sp" />
 
                 <TextView
-                    android:id="@+id/tvAlarmContent"
+                    android:id="@+id/alarmSoundContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no_content"
@@ -224,7 +271,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <Switch
-                        android:id="@+id/switchRepeatSettting"
+                        android:id="@+id/switchRepeatSetting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right" />
