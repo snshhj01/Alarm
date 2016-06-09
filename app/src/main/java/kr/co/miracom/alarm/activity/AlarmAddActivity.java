@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import kr.co.miracom.alarm.R;
@@ -31,8 +32,10 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     private Player mPlayer;
 
+    private TimePicker timePickerAddAlarm;
     private Button btnSettingsCancel;
     private Button btnSettingsOk;
+
     private ToggleButton toggleBtnSunday;
     private ToggleButton toggleBtnMonday;
     private ToggleButton toggleBtnTuesday;
@@ -58,6 +61,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.add_simple_alarm);
+        timePickerAddAlarm = (TimePicker)findViewById(R.id.timePickerAddAlarm);
 
         toggleBtnSunday = (ToggleButton) findViewById(R.id.toggleBtnSunday);
         toggleBtnMonday = (ToggleButton) findViewById(R.id.toggleBtnMonday);
@@ -94,9 +98,9 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         //자신을 실행시킨 intent객체 획득
         Intent intent = getIntent();
         //넘어온 데이터 획득
-        alarmId = intent.getIntExtra("id",999999);
+        alarmId = intent.getIntExtra("id",0);
 
-        Logger.v(this.getClass(),"%s",intent.getIntExtra("id",999999));
+        Logger.v(this.getClass(),"%s",intent.getIntExtra("id",0));
 
         sql = new AlarmSql(this);
         mPlayer = new Player(this);
@@ -146,6 +150,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             SimpleVo simpleVo = new SimpleVo();
             //sql.insertSimpleAlarm(simpleVo);
             ringtoneStop();
+            insertAlarm();
             finish();
         } else if (v == tvAlarmContent) {
             //alarm textview click시 이벤트 alarm 선택 intent 실행
@@ -193,6 +198,21 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     public void ringtoneStop(){
         mPlayer.stop();
+    }
+
+    public void insertAlarm(){
+
+
+        /*simpleVo.setDate();
+        simpleVo.setDays();
+        simpleVo.setCycle();
+        simpleVo.setType();
+        simpleVo.setUri();
+        simpleVo.setSound();
+        simpleVo.setVolum();
+        simpleVo.setUsed();
+        simpleVo.setRepeat();*/
+
     }
 
 }
