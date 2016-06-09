@@ -4,6 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,11 +27,11 @@ import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.common.Constants;
-import kr.co.miracom.alarm.dialog.AlarmSoundSelectDialog;
 import kr.co.miracom.alarm.service.AlarmReceiver;
 import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
+import kr.co.miracom.alarm.util.Player;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -62,8 +66,14 @@ public class AlarmAddActivity extends AppCompatActivity{
     private HashMap<String,String> soundMap;
     private HashMap<String,Integer> snoozeMap;
 
-    private int volume = 50;
+    private int volume;
     private int alarmType = 1;
+
+    private AudioManager audioManager;
+    private Ringtone mRingtone;
+    private Intent ringtoneIntent;
+    private Uri mUri;
+    private Player mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +81,10 @@ public class AlarmAddActivity extends AppCompatActivity{
         setContentView(R.layout.add_simple_alarm);
         mDbHelper = new DBHelper(this);
         mDbHelper.open();
+
+        mPlayer = new Player(this);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         //intent에서 넘겨준 AlramId를 가져옴
         Intent intent = getIntent();
         initLayout();
@@ -82,6 +96,16 @@ public class AlarmAddActivity extends AppCompatActivity{
             setExistAlarmInfo(alarm);
         } else {
             alartUniqId = CommonUtils.getAlarmId();
+            volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+            volSeekBar.setProgress(volume);
+
+            //초기 default alarm path를 TextView 에 setting
+            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+            alramSoundName.setText(mRingtone.getTitle(this));
+
+            mPlayer.setUri(mUri);
         }
     }
 
@@ -142,47 +166,63 @@ public class AlarmAddActivity extends AppCompatActivity{
                 }
                 setAlarmType();
                 registerAlram();
+                ringtoneStop();
                 finish();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ringtoneStop();
                 finish();
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                AlarmSoundSelectDialog soundSelectDialog = new AlarmSoundSelectDialog(AlarmAddActivity.this);
-                soundSelectDialog.mSoundSelectListner = new AlarmSoundSelectDialog.SoundSelectFinish(){
-                    @Override
-                    public void onSelect(HashMap<String, String> selectedSound) {
-                        alramSoundName.setText(selectedSound.get("title"));
-                        soundMap = new HashMap<String,String>();
-                        soundMap.put(Constants.TITLE, selectedSound.get(Constants.TITLE));
-                        soundMap.put(Constants.PATH, selectedSound.get(Constants.PATH));
-                    }
-                };
-                soundSelectDialog.show(getFragmentManager(), "Select sound");
+                alarmSelectDialog();
             }
         });
 
         volSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                volume = progress;
-                Logger.d(this.getClass(), "%d", volume);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                ringtoneStop();
                 //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                ringtonePlay();
                 //
             }
         });
+    }
+
+    private void alarmSelectDialog(){
+        ringtoneStop();
+        ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select RingTone");
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+
+        startActivityForResult(ringtoneIntent, 0);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+        alramSoundName.setText(mRingtone.getTitle(this));
+
+        mPlayer.setUri(mUri);
     }
 
     /**
@@ -299,6 +339,15 @@ public class AlarmAddActivity extends AppCompatActivity{
         if (currentTime > settingTime)
             triggerTime += 1000 * 60 * 60 * 24;
         return triggerTime;
+    }
+
+    public void ringtonePlay(){
+        mPlayer.setMediaPlayerMode();
+        mPlayer.play();
+    }
+
+    public void ringtoneStop(){
+        mPlayer.stop();
     }
 
 }
