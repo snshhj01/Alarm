@@ -72,26 +72,12 @@ public class DBHelper {
         return this;
     }
 
-<<<<<<< Updated upstream
-        String simpleAlarmSql = "create table tb_simple ("+
-                "id integer primary key autoincrement,"+
-                "date not null," +
-                "days," +
-                "cycle," +
-                "type," +
-                "uri," +
-                "sound," +
-                "volum," +
-                "used,"+
-                "repeat)";
-=======
     /**
      * 새로운 알람 추가시 Insert 함.
      * @param alarmInfo
      */
     public void insertAlarmInfo(AlarmInfo alarmInfo) {
         ContentValues cv = new ContentValues();
->>>>>>> Stashed changes
 
         String timeJson = gson.toJson(alarmInfo.getTime());
         String soundJson = gson.toJson(alarmInfo.getAlarmSound());
@@ -110,12 +96,6 @@ public class DBHelper {
         sqlDB.insert(ALARM_TABLE, null, cv);
     }
 
-<<<<<<< Updated upstream
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion == DATABASE_VERSION) {
-            db.execSQL("drop table tb_simple");
-=======
     /**
      * 모든 알람 리스트를 가져 옴
      * @return
@@ -170,7 +150,6 @@ public class DBHelper {
         cursor.close();
         return alarmList;
     }
->>>>>>> Stashed changes
 
     /**
      * 선택 된 알람 정보를 가져 옴
