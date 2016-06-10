@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#EAEAEA"
+        android:text="간격"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="horizontal">
+        <RadioGroup
+            android:id="@+id/radioInterval"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioButton
+                android:id="@+id/interval_five"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="5분"/>
+
+            <RadioButton
+                android:id="@+id/interval_ten"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="10분"/>
+
+            <RadioButton
+                android:id="@+id/interval_fifteen"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="15분"/>
+
+            <RadioButton
+                android:id="@+id/interval_thirty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="30분"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#EAEAEA"
+        android:text="반복"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/radioRepeat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RadioButton
+                    android:id="@+id/repeat_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="3회"/>
+
+                <RadioButton
+                    android:id="@+id/repeat_five"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="5회"/>
+
+                <RadioButton
+                    android:id="@+id/repeat_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="계속"/>
+            </RadioGroup>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnrepeat"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:layout_alignParentRight="true"
+            android:text="확인"/>
+
+    </RelativeLayout>
+
+
+
+
+
+</LinearLayout>

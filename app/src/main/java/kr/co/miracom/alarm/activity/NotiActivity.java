@@ -1,9 +1,18 @@
 package kr.co.miracom.alarm.activity;
 
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
 
@@ -13,6 +22,8 @@ import kr.co.miracom.alarm.R;
 public class NotiActivity extends AppCompatActivity {
     SeekBar seekBar;
     TextView textView;
+    Vibrator vib;
+    MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,5 +59,83 @@ public class NotiActivity extends AppCompatActivity {
         });
     }
 
+    public void startAlarm(Boolean isVib, Boolean isRing, Uri uri, int volume) {
+        if(isVib) {
+            startVibrate(this);
+        }
 
+        if(isRing) {
+            startPlayer(uri, volume);
+        }
+
+        Timer timer = null;
+        //1분뒤 알람 중지
+        timer.schedule(new MyTimer(), 0, 60000);
+    }
+
+    public void stopAlarm() {
+        if(vib != null) {
+            stopVibrate();
+            vib = null;
+        }
+
+        if(player != null) {
+            stopPlayer();
+            player = null;
+        }
+    }
+
+    public void startVibrate(Context context) {
+        vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        long[] pattern = {1000, 2000};
+        vib.vibrate(pattern, 0);
+    }
+
+    public void stopVibrate() {
+        vib.cancel();
+    }
+
+    public void  startPlayer(Uri uri, int volume) {
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(this, uri);
+        } catch (IllegalArgumentException e1) {
+            e1.printStackTrace();
+        } catch (SecurityException e1) {
+            e1.printStackTrace();
+        } catch (IllegalStateException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        final AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        //set volume
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0);
+
+        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+            player.setAudioStreamType(AudioManager.STREAM_ALARM);
+            player.setLooping(true);
+            try {
+                player.prepare();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            player.start();
+        }
+    }
+
+    public void stopPlayer() {
+        if(player.isPlaying()){
+            player.stop();
+            player.release();
+        }
+    }
+
+    private class MyTimer extends TimerTask {
+        public void run() {
+            stopAlarm();
+        }
+    }
 }
