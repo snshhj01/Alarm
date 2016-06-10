@@ -29,16 +29,12 @@
         <activity android:name=".activity.SiteAddActivity" />
         <activity android:name=".activity.MapAddActivity" />
         <activity android:name=".activity.NotiActivity" />
+        <activity android:name=".activity.AlarmRepeatActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAeiq6JD8AVNa_HfbVTSTX6ePxqZX1diw0" />
 
-        <receiver android:name=".service.AlarmReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".service.DeviceBootReceiver"
             android:enabled="false">

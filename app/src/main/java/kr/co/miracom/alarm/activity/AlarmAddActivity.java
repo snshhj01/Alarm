@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -198,6 +199,65 @@ public class AlarmAddActivity extends AppCompatActivity{
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ringtonePlay();
                 //
+            }
+        });
+
+        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    Intent intent = new Intent(getApplicationContext(), AlarmRepeatActivity.class);
+                    startActivityForResult(intent,100);
+
+                    /*AlertDialog.Builder builder = new AlertDialog.Builder(AlarmAddActivity.this);
+
+                    final LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View layoutView = inflater.inflate(R.layout.repeat_list_layout,null);
+
+                    final Button[] radio_btn = new Button[1];
+
+                    builder.setView(layoutView);
+
+
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Logger.v(this.getClass(),"%s","----------------------------");
+                            Logger.v(this.getClass(),"%s",radio_btn[0]);
+                            Logger.v(this.getClass(),"%s",radio_btn[1]);
+                            dialog.dismiss();
+                        }
+                    });
+
+                    final AlertDialog alert = builder.create();
+                    alert.show();
+
+
+                    final RadioGroup radioInterval = (RadioGroup) findViewById(R.id.radioInterval);
+
+                    radioInterval.setOnClickListener(new View.OnClickListener(){
+
+                        @Override
+                        public void onClick(View v) {
+                            int interval_Id = radioInterval.getCheckedRadioButtonId();
+                            radio_btn[0] = (Button)findViewById(interval_Id);
+
+                        }
+                    });
+
+                    final RadioGroup radioRepeat = (RadioGroup)findViewById(R.id.radioRepeat);
+                    radioRepeat.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int repeat_id = radioRepeat.getCheckedRadioButtonId();
+                            radio_btn[1] = (Button)findViewById(repeat_id);
+
+                        }
+                    });
+*/
+                }
             }
         });
     }
