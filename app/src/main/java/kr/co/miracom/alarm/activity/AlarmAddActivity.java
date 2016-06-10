@@ -185,16 +185,18 @@ public class AlarmAddActivity extends AppCompatActivity{
             }
         });
 
-        volSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+        volSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, progress, 0);
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 ringtoneStop();
                 //
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ringtonePlay();
@@ -202,14 +204,14 @@ public class AlarmAddActivity extends AppCompatActivity{
             }
         });
 
-        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
 
                     Intent intent = new Intent(getApplicationContext(), AlarmRepeatActivity.class);
-                    startActivityForResult(intent,100);
+                    startActivityForResult(intent, 100);
 
                     /*AlertDialog.Builder builder = new AlertDialog.Builder(AlarmAddActivity.this);
 
@@ -325,12 +327,14 @@ public class AlarmAddActivity extends AppCompatActivity{
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra("one_time", false);
             intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra("id", alartUniqId);
             pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
         } else {
             intent.putExtra("one_time", true);
             intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra("id", alartUniqId);
             pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
             alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
