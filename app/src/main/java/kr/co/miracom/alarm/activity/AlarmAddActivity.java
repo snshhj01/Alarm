@@ -40,6 +40,8 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
  * Created by kimsungmog on 2016-05-26.
  */
 public class AlarmAddActivity extends AppCompatActivity{
+    public static final String COLUMN_ID = "_id";
+
     //Layout variable
     private Button okBtn;
     private Button cancelBtn;
@@ -97,7 +99,7 @@ public class AlarmAddActivity extends AppCompatActivity{
         if(intent.getIntExtra(Constants.ALARM_ID,0) != 0) {
             isModify = true;
             _id = intent.getIntExtra(Constants.ALARM_ID,0);
-            AlarmInfo alarm = mDbHelper.selectAlarm(_id);
+            AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ID);
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {

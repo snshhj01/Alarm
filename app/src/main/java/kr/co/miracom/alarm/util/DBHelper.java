@@ -161,7 +161,7 @@ public class DBHelper {
      * @param id
      * @return
      */
-    public AlarmInfo selectAlarm(int id) {
+    public AlarmInfo selectAlarm(int id, String selection) {
         Logger.d(this.getClass(), "%s", "Get alarm");
         AlarmInfo alarm = new AlarmInfo();
         String[] columns = new String[] {
@@ -176,7 +176,7 @@ public class DBHelper {
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE
         };
-        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, COLUMN_ID+"="+id, null, null, null, null);
+        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, selection+"="+id, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 alarm.set_id(cursor.getInt(0));
