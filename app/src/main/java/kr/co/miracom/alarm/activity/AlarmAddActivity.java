@@ -50,7 +50,8 @@ public class AlarmAddActivity extends AppCompatActivity{
     private LinearLayout alramSoundSelector;
     private SeekBar volSeekBar;
     private Switch repeatSwich;
-    private TextView alramSoundName;
+    private TextView alramSoundName, textViewAlramRepeatSetting;
+
 
     //User define variable
     private DBHelper mDbHelper;
@@ -158,6 +159,11 @@ public class AlarmAddActivity extends AppCompatActivity{
         //반복설정 스위치
         repeatSwich = (Switch) findViewById(R.id.switchRepeatSetting);
 
+        textViewAlramRepeatSetting = (TextView) findViewById(R.id.textViewAlramRepeatSetting);
+
+        String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
+        textViewAlramRepeatSetting.setText(repeatText);
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,8 +171,8 @@ public class AlarmAddActivity extends AppCompatActivity{
                     //실제 Dialog에서 세팅해주나 샘플로 데이터 넣음
                     //5분간 3회
                     snoozeMap = new HashMap<String,Integer>();
-                    snoozeMap.put(Constants.INTERVAL, 5);
-                    snoozeMap.put(Constants.COUNT, 3);
+                    snoozeMap.put(Constants.INTERVAL, interval);
+                    snoozeMap.put(Constants.COUNT, count);
                 }
                 setAlarmType();
                 registerAlram();
@@ -192,6 +198,7 @@ public class AlarmAddActivity extends AppCompatActivity{
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
+                volume = progress;
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -249,6 +256,9 @@ public class AlarmAddActivity extends AppCompatActivity{
         }else{
             interval = data.getIntExtra("interval",5);
             count = data.getIntExtra("count",3);
+            String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
+            textViewAlramRepeatSetting.setText(repeatText);
+
         }
 
     }
