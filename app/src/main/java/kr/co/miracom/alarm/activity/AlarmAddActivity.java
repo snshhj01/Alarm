@@ -29,6 +29,7 @@ import java.util.HashMap;
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.service.AlarmReceiver;
+import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
@@ -39,6 +40,8 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
  * Created by kimsungmog on 2016-05-26.
  */
 public class AlarmAddActivity extends AppCompatActivity{
+    public static final String COLUMN_ID = "_id";
+
     //Layout variable
     private Button okBtn;
     private Button cancelBtn;
@@ -96,7 +99,7 @@ public class AlarmAddActivity extends AppCompatActivity{
         if(intent.getIntExtra(Constants.ALARM_ID,0) != 0) {
             isModify = true;
             _id = intent.getIntExtra(Constants.ALARM_ID,0);
-            AlarmInfo alarm = mDbHelper.selectAlarm(_id);
+            AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ID);
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
@@ -304,16 +307,18 @@ public class AlarmAddActivity extends AppCompatActivity{
             intent.putExtra("one_time", false);
             intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
             intent.putExtra("one_time", true);
             intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+           // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
         alarmInfo.setAlarmName(alarmName.getText().toString());
         alarmInfo.setAlarmId(alartUniqId);

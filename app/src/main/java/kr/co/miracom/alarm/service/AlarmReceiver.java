@@ -29,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private int _id;
     private int active;
     private ArrayList<Integer> dbDays;
-
+    public static final String COLUMN_ALARM_ID = "alarm_id";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,7 +46,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             if(intent.getIntExtra("alartUniqId",0) != 0) {
 
                 _id = intent.getIntExtra("alartUniqId", 0);
-                AlarmInfo alarm = mDbHelper.selectAlarm(_id);
+                AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ALARM_ID);
                 //수정 시 기존 알람 정보를 세팅해 줌.
 
                 dbDays = new ArrayList<Integer>();
@@ -56,16 +56,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Calendar cal = Calendar.getInstance();
 
                 if(active == 1){
-                    for(Integer i : dbDays){
-                        if(dbDays.get(i) == cal.get(Calendar.DAY_OF_WEEK)){
-                            Intent alarmIntent = new Intent(context, NotiActivity.class);
-                            alarmIntent.putExtra("AlarmInfo",alarm);
-                            alarmIntent.putExtra("alartUniqId",_id);
-                            PendingIntent p = PendingIntent.getActivity(context, _id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                            try {
-                                p.send();
-                            } catch (PendingIntent.CanceledException e) {
-                                e.printStackTrace();
+                    if(dbDays.isEmpty()){
+                        intentNotiActivity(context, alarm,_id);
+                    }else{
+                        for(Integer i : dbDays){
+                            if(i == cal.get(Calendar.DAY_OF_WEEK)){
+                                intentNotiActivity(context, alarm,_id);
                             }
                         }
                     }
@@ -73,4 +69,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }
     }
+
+    private void intentNotiActivity(Context context, AlarmInfo alarm,int _id){
+        Log.e("AlarmReceiver connect", "AlarmReceiver connect");
+
+        Intent alarmIntent = new Intent(context, NotiActivity.class);
+        alarmIntent.putExtra("AlarmInfo",alarm);
+        alarmIntent.putExtra("alartUniqId",_id);
+        PendingIntent p = PendingIntent.getActivity(context, _id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        try {
+            p.send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
+    };
 }
