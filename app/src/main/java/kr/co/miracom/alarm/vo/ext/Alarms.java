@@ -13,6 +13,7 @@ public class Alarms {
     private String loc;
     private String locRange;
     private String bell;
+    private int _Id;
 
     public String getTitle() {
         return title;
@@ -70,10 +71,18 @@ public class Alarms {
         this.bell = bell;
     }
 
+    public int get_Id() {
+        return _Id;
+    }
+
+    public void set_Id(int _Id) {
+        this._Id = _Id;
+    }
+
     public Alarms() {
     }
 
-    public Alarms(String title, String amPm, String timeFromTo, String dayOfWeek, String loc, String locRange, String bell) {
+    public Alarms(String title, String amPm, String timeFromTo, String dayOfWeek, String loc, String locRange, String bell, int _Id) {
         this.title = title;
         this.amPm = amPm;
         this.timeFromTo = timeFromTo;
@@ -81,6 +90,7 @@ public class Alarms {
         this.loc = loc;
         this.locRange = locRange;
         this.bell = bell;
+        this._Id = _Id;
     }
 
     private final static String M12 = "h:mm aa";

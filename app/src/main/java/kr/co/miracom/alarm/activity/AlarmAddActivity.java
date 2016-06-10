@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -68,12 +69,15 @@ public class AlarmAddActivity extends AppCompatActivity{
 
     private int volume;
     private int alarmType = 1;
+    private int interval=5;
+    private int count=3;
 
     private AudioManager audioManager;
     private Ringtone mRingtone;
     private Intent ringtoneIntent;
     private Uri mUri;
     private Player mPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +204,24 @@ public class AlarmAddActivity extends AppCompatActivity{
                 //
             }
         });
+
+        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    Intent intent = new Intent(getApplicationContext(), AlarmRepeatActivity.class);
+                    intent.putExtra("interval",interval);
+                    intent.putExtra("count",count);
+                    startActivityForResult(intent,100);
+                }
+            }
+        });
     }
+
+
+
 
     private void alarmSelectDialog(){
         ringtoneStop();
@@ -211,18 +232,25 @@ public class AlarmAddActivity extends AppCompatActivity{
         ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-        startActivityForResult(ringtoneIntent, 0);
+        startActivityForResult(ringtoneIntent, 99);
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
-        alramSoundName.setText(mRingtone.getTitle(this));
+        if(requestCode == 99){
+            mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+            alramSoundName.setText(mRingtone.getTitle(this));
 
-        mPlayer.setUri(mUri);
+            mPlayer.setUri(mUri);
+
+        }else{
+            interval = data.getIntExtra("interval",5);
+            count = data.getIntExtra("count",3);
+        }
+
     }
 
     /**
