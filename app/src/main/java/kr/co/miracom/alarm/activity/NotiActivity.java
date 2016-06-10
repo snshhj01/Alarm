@@ -1,6 +1,7 @@
 package kr.co.miracom.alarm.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -25,26 +26,63 @@ public class NotiActivity extends AppCompatActivity {
     Vibrator vib;
     MediaPlayer player;
 
+    TextView alertMsgTextView;
+    boolean progressSelectFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_main);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setContentView(R.layout.noti_main);
+
+        alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
         seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
         textView = (TextView) findViewById(R.id.progressPosition);
+
+        Intent intent = getIntent();
+        String msg = intent.getStringExtra("msg");
+        //intent  받기.
+
+
+        alertMsgTextView.setText(msg);
+
+       // vib = startVibrate(this);
+        startAlarm(null, null, null, 0);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int seekBarProgress = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 seekBarProgress = progress;
-                if (progress > 80) {
+                if (progress > 80 && progressSelectFlag == false) {
                     //    Toast.makeText(getApplicationContext(), "SeekBar End", Toast.LENGTH_SHORT).show();
-                    textView.setText("Right Cancel");
-                } else if (progress < 20) {
-                    textView.setText("Left Cancel");
+                    progressSelectFlag = true;
+
+                    //stopVibrate(vib);
+                    stopAlarm();
+
+                    // textView.setText("Right Cancel");
+
+                    //    AlarmUtils.getInstance().locUnRegister(getApplicationContext());
+
+                    finish();
+                } else if (progress < 20 && progressSelectFlag == false) {
+                    progressSelectFlag = true;
+
+                    //stopVibrate(vib);
+                    stopAlarm();
+                    //  textView.setText("Left Cancel");
+
+                    //AlarmUtils.getInstance().startInstantAlram(getApplicationContext(), getIntent());
+                    finish();
                 } else {
-                    textView.setText("Not QUIT");
+                    //  textView.setText("Not QUIT");
                 }
             }
 
@@ -70,7 +108,7 @@ public class NotiActivity extends AppCompatActivity {
 
         Timer timer = null;
         //1분뒤 알람 중지
-        timer.schedule(new MyTimer(), 0, 60000);
+      //  timer.schedule(new MyTimer(), 0, 60000);
     }
 
     public void stopAlarm() {
