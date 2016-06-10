@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
  * Created by jiwoon-won on 2016-05-25.
@@ -23,8 +26,8 @@ import kr.co.miracom.alarm.R;
 public class NotiActivity extends AppCompatActivity {
     SeekBar seekBar;
     TextView textView;
-    Vibrator vib;
-    MediaPlayer player;
+    Vibrator vib = null;
+    MediaPlayer player = null;
 
     TextView alertMsgTextView;
     boolean progressSelectFlag = false;
@@ -53,7 +56,9 @@ public class NotiActivity extends AppCompatActivity {
         alertMsgTextView.setText(msg);
 
        // vib = startVibrate(this);
-        startAlarm(null, null, null, 0);
+        AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
+        startAlarm(2, null, alarm.getVolume());
+        Log.d("test", "volume : " + alarm.getVolume());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int seekBarProgress = 0;
@@ -97,16 +102,30 @@ public class NotiActivity extends AppCompatActivity {
         });
     }
 
-    public void startAlarm(Boolean isVib, Boolean isRing, Uri uri, int volume) {
-        if(isVib) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PushWakeLock.releaseCpuLock();
+    }
+
+    public void startAlarm(int alarmType, Uri uri, int volume) {
+        if(alarmType == 2 || alarmType == 3) {
             startVibrate(this);
         }
 
-        if(isRing) {
+        if(alarmType == 1 || alarmType == 3) {
             startPlayer(uri, volume);
         }
 
-        Timer timer = null;
+        //Timer timer = null;
         //1분뒤 알람 중지
       //  timer.schedule(new MyTimer(), 0, 60000);
     }
