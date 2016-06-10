@@ -264,12 +264,14 @@ public class AlarmAddActivity extends AppCompatActivity{
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra("one_time", false);
+            intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
             pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
         } else {
             intent.putExtra("one_time", true);
+            intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
             pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
