@@ -29,6 +29,7 @@ import java.util.HashMap;
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.service.AlarmReceiver;
+import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
@@ -304,16 +305,18 @@ public class AlarmAddActivity extends AppCompatActivity{
             intent.putExtra("one_time", false);
             intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
             intent.putExtra("one_time", true);
             intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+           // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
         alarmInfo.setAlarmName(alarmName.getText().toString());
         alarmInfo.setAlarmId(alartUniqId);

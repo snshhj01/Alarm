@@ -16,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.util.AlarmUtils;
 
 /**
  * Created by jiwoon-won on 2016-05-25.
@@ -79,7 +80,7 @@ public class NotiActivity extends AppCompatActivity {
                     stopAlarm();
                     //  textView.setText("Left Cancel");
 
-                    //AlarmUtils.getInstance().startInstantAlram(getApplicationContext(), getIntent());
+                    AlarmUtils.getInstance().startInstantAlarm(getApplicationContext(), getIntent());
                     finish();
                 } else {
                     //  textView.setText("Not QUIT");
