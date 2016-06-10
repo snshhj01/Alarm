@@ -1,15 +1,20 @@
 package kr.co.miracom.alarm.adapter;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.util.DBHelper;
+import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 import kr.co.miracom.alarm.vo.ext.Alarms;
 
 
@@ -20,6 +25,10 @@ public class AlarmListPagerAdapter extends PagerAdapter {
     private LayoutInflater inflater;
     private Context context;
     private final int TAB_CNT = 2;
+
+    protected DBHelper mDbHelper;
+
+
 
     @Override
     public int getCount() {
@@ -82,25 +91,53 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
         AlarmListAdapter adapter = new AlarmListAdapter();
 
-        Alarms aV = new Alarms("카메라 스티커 확인","오전","08:00~09:00","일월화수목금토","향군타워","50m", "소리");
-        Alarms aV1 = new Alarms("가방 보안 체크","오후","06:00~07:00","일월화수목금토","잠실 동관","100m", "진동");
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
 
+        List<AlarmInfo> siteList = mDbHelper.selectAll();
+        for(AlarmInfo aInfo : siteList){
 
-        adapter.add(aV);
-        adapter.add(aV);
-        adapter.add(aV1);
-        adapter.add(aV);
-        adapter.add(aV);
-        adapter.add(aV1);
-        adapter.add(aV);
+            String amPm =  (aInfo.getTime().get("hour")<13 ? "오전": "오후");
+            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + aInfo.getTime().get("minute") + "~" + (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + aInfo.getTime().get("minute");
+
+            Alarms aV = new Alarms();
+            aV.setTitle(aInfo.getAlarmName());
+            aV.setAmPm(amPm);
+            aV.setTimeFromTo(timeFromTo);
+            aV.setBell(aInfo.getAlarmSound()==null?"진동":"소리");
+            aV.setDayOfWeek(korDayOfWeek(aInfo.getDays()));
+            aV.set_Id(aInfo.get_id());
+
+            adapter.add(aV);
+        }
+
+//        Alarms aV = new Alarms("카메라 스티커 확인","오전","08:00~09:00","일월화수목금토","향군타워","50m", "소리", 123);
+//        Alarms aV1 = new Alarms("가방 보안 체크","오후","06:00~07:00","일월화수목금토","잠실 동관","100m", "진동", 123);
+//        adapter.add(aV);
+//        adapter.add(aV1);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, position, Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(context, AlarmAddActivity.class);
+//                Toast.makeText(context, position, Toast.LENGTH_SHORT).show();
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
+
+    public String korDayOfWeek(ArrayList<Integer> arrInt){
+        String korDOW = "";
+        String[] arrStr= {"월", "화", "수", "목", "금", "토", "일"};
+        for(int i=0; i<arrInt.size(); i++){
+            korDOW += arrStr[arrInt.get(i)];
+        }
+
+        return korDOW;
+    }
+
+
 }

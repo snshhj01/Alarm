@@ -1,5 +1,6 @@
 package kr.co.miracom.alarm.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,8 +17,9 @@ public class AlarmRepeatActivity extends AppCompatActivity{
     RadioGroup radioInterval;
     RadioGroup radioRepeat;
     Button btnrepeat;
-    int interval_min;
-    int repeat_count;
+    Intent intent;
+    int interval;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +32,13 @@ public class AlarmRepeatActivity extends AppCompatActivity{
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.interval_five){
-                    interval_min = 5;
+                    interval = 5;
                 }else if (checkedId == R.id.interval_ten){
-                    interval_min = 10;
+                    interval = 10;
                 }else if (checkedId == R.id.interval_fifteen){
-                    interval_min = 15;
+                    interval = 15;
                 }else{
-                    interval_min = 30;
+                    interval = 30;
                 }
             }
         });
@@ -47,11 +49,11 @@ public class AlarmRepeatActivity extends AppCompatActivity{
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.repeat_three){
-                    repeat_count = 3;
+                    count = 3;
                 }else if (checkedId == R.id.repeat_five){
-                    repeat_count = 5;
+                    count = 5;
                 }else{
-                    repeat_count = 10;
+                    count = 10;
                 }
             }
         });
@@ -60,6 +62,9 @@ public class AlarmRepeatActivity extends AppCompatActivity{
         btnrepeat.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                intent.putExtra("interval",interval);
+                intent.putExtra("count",count);
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });
@@ -69,7 +74,27 @@ public class AlarmRepeatActivity extends AppCompatActivity{
     }
 
     public void initLayout(){
-        radioInterval.check(R.id.interval_five);
-        radioRepeat.check(R.id.repeat_three);
+        intent = getIntent();
+        interval = intent.getIntExtra("interval",5);
+        count = intent.getIntExtra("count",3);
+
+        if(interval == 5){
+            radioInterval.check(R.id.interval_five);
+        }else if( interval == 10){
+            radioInterval.check(R.id.interval_ten);
+        }else if( interval == 15){
+            radioInterval.check(R.id.interval_fifteen);
+        }else{
+            radioInterval.check(R.id.interval_thirty);
+        }
+
+        if(count == 3){
+            radioRepeat.check(R.id.repeat_three);
+        }else if(count == 5){
+            radioRepeat.check(R.id.repeat_five);
+        }else{
+            radioRepeat.check(R.id.repeat_continue);
+        }
+
     }
 }
