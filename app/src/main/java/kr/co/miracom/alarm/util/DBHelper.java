@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,9 @@ public class DBHelper {
     public static final String COLUMN_ALARM_TYPE = "alarm_type";
     public static final String COLUMN_ALARM_VOLUME = "alarm_volume";
     public static final String COLUMN_ALARM_SNOOZE = "alarm_snooze";
+
+    Type hashTypeSI = new TypeToken<HashMap<String, Integer>>(){}.getType();
+    Type arrTypeI = new TypeToken<ArrayList<Integer>>(){}.getType();
 
     private class DatabaseHelper extends SQLiteOpenHelper {
         public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -123,12 +128,12 @@ public class DBHelper {
                 alarm.setAlarmName(cursor.getString(1));
                 alarm.setAlarmId(cursor.getInt(2));
                 alarm.setActive(cursor.getInt(3));
-                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),HashMap.class));
-                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
+                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
                 alarm.setAlarmType(cursor.getInt(7));
                 alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
                 alarmList.add(alarm);
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
@@ -138,9 +143,9 @@ public class DBHelper {
         ==> 아래와 같이 값이 저장되며 map형태의 값은 map에서 꺼내서 사용해야 함.
          alarmName=알람테스트
          alarmSound={path=/storage/emulated/0/melon/5 Seconds Of Summer-01-Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)-128.mp3, title=Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)}
-         days=[2.0, 3.0, 4.0, 7.0]
-         snooze={count=3.0, interval=5.0}
-         time={hour=18.0, minute=43.0}
+         days=[2, 3, 4, 7]
+         snooze={count=3, interval=5}
+         time={hour=18, minute=43}
          _id=2
          active=1
          alarmId=1768778836
@@ -178,12 +183,13 @@ public class DBHelper {
                 alarm.setAlarmName(cursor.getString(1));
                 alarm.setAlarmId(cursor.getInt(2));
                 alarm.setActive(cursor.getInt(3));
-                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),HashMap.class));
-                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+
+                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
+                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
                 alarm.setAlarmType(cursor.getInt(7));
                 alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
         }

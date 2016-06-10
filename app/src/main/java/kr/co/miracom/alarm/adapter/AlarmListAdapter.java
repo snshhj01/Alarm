@@ -1,6 +1,7 @@
 package kr.co.miracom.alarm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.activity.AlarmAddActivity;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.vo.ext.Alarms;
 
 /**
@@ -81,6 +84,9 @@ public class AlarmListAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
                     Toast.makeText(context, "리스트 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, AlarmAddActivity.class);
+                    intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_Id());
+                    context.startActivity(intent);
                 }
             });
 
