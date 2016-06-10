@@ -47,7 +47,6 @@ public class NotiActivity extends AppCompatActivity {
 
         alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
         seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
-        textView = (TextView) findViewById(R.id.progressPosition);
 
         Intent intent = getIntent();
         String msg = intent.getStringExtra("msg");
