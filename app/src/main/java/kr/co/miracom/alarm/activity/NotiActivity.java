@@ -14,6 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,16 +50,14 @@ public class NotiActivity extends AppCompatActivity {
         seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
 
         Intent intent = getIntent();
-        String msg = intent.getStringExtra("msg");
-        //intent  받기.
 
-
-        alertMsgTextView.setText(msg);
-
-       // vib = startVibrate(this);
         AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
-        startAlarm(2, null, alarm.getVolume());
-        Log.d("test", "volume : " + alarm.getVolume());
+        //String strUri = alarm.getAlarmSound().get("sound");
+        String strUri = "content://settings/system/alarm_alert";
+        Uri mUri = Uri.parse(strUri);
+        startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
+
+        alertMsgTextView.setText(alarm.getAlarmName());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int seekBarProgress = 0;
@@ -69,21 +68,12 @@ public class NotiActivity extends AppCompatActivity {
                     //    Toast.makeText(getApplicationContext(), "SeekBar End", Toast.LENGTH_SHORT).show();
                     progressSelectFlag = true;
 
-                    //stopVibrate(vib);
                     stopAlarm();
-
-                    // textView.setText("Right Cancel");
-
-                    //    AlarmUtils.getInstance().locUnRegister(getApplicationContext());
-
                     finish();
                 } else if (progress < 20 && progressSelectFlag == false) {
                     progressSelectFlag = true;
 
-                    //stopVibrate(vib);
                     stopAlarm();
-                    //  textView.setText("Left Cancel");
-
                     AlarmUtils.getInstance().startInstantAlarm(getApplicationContext(), getIntent());
                     finish();
                 } else {
