@@ -209,9 +209,12 @@ public class AlarmUtils implements LocationListener {
     //일반 알람-----------------------------------------------------------------------------------------------------------------------
 
     public void startInstantAlarm(Context context, Intent intent) {
+        // AlarmManager 호출
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        alarmIntent.putExtra("alartUniqId", intent.getIntExtra("alartUniqId", 0));
 
         pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        // startAlram(context, pendingIntent, FIVE_SECOND);
