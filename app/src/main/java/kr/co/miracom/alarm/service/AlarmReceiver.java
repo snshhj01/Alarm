@@ -6,16 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import kr.co.miracom.alarm.activity.NotiActivity;
-import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.DBHelper;
-import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -34,7 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.e("AlarmReceiver connect", "AlarmReceiver connect");
+        Log.e("AlarmReceiver connect", "AlarmReceiver connect1 : " +  intent.getIntExtra("alartUniqId", 0));
 
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
@@ -44,7 +41,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (extra != null) {
 
             if(intent.getIntExtra("alartUniqId",0) != 0) {
-
                 _id = intent.getIntExtra("alartUniqId", 0);
                 AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ALARM_ID);
                 //수정 시 기존 알람 정보를 세팅해 줌.
@@ -56,9 +52,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Calendar cal = Calendar.getInstance();
 
                 if(active == 1){
-                    if(dbDays.isEmpty()){
+                    if (1 == 1){ //위치 알람이면.
+                        Log.e("AlarmReceiver connect", "AlarmReceiver site : " +  intent.getIntExtra("alartUniqId", 0));
+
+                        //GPS init 후 3번 정도?? GPS enabl
+                        AlarmUtils.getInstance().isGPSEnabled = true;
+                        AlarmUtils.getInstance().gpsInit(context);
+
+                        intent.putExtra("AlarmInfo", alarm);
+                        AlarmUtils.getInstance().setAlarmIntent(intent);
+                    } else if(dbDays.isEmpty()){
                         intentNotiActivity(context, alarm,_id);
-                    }else{
+                    } else {
                         for(Integer i : dbDays){
                             if(i == cal.get(Calendar.DAY_OF_WEEK)){
                                 intentNotiActivity(context, alarm,_id);
@@ -71,11 +76,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void intentNotiActivity(Context context, AlarmInfo alarm,int _id){
-        Log.e("AlarmReceiver connect", "AlarmReceiver connect");
+        Log.e("AlarmReceiver connect", "AlarmReceiver connect2");
 
         Intent alarmIntent = new Intent(context, NotiActivity.class);
+
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
         alarmIntent.putExtra("AlarmInfo",alarm);
-        alarmIntent.putExtra("alartUniqId",_id);
+        alarmIntent.putExtra("alartUniqId", _id);
         PendingIntent p = PendingIntent.getActivity(context, _id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             p.send();

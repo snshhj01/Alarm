@@ -8,14 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
