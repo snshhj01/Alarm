@@ -15,6 +15,24 @@
             android:divider="@drawable/divider"
             android:orientation="vertical"
             android:showDividers="middle|end">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_name"
+                    android:textSize="17sp" />
+                <EditText
+                    android:id="@+id/alarm_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:textSize="15sp"
+                    android:hint="@string/default_alarm_name"
+                    android:focusableInTouchMode="true"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -22,7 +40,7 @@
                 android:orientation="vertical">
 
                 <TimePicker
-                    android:id="@+id/timePicker"
+                    android:id="@+id/timePickerAddAlarm"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:timePickerMode="spinner" />
@@ -35,66 +53,94 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                <ToggleButton
-                    android:id="@+id/sunday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/red"
-                    android:textOff="일"
-                    android:textOn="일" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnSunday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/red"
+                        android:textOff="일"
+                        android:textOn="일" />
 
-                <ToggleButton
-                    android:id="@+id/monday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="월"
-                    android:textOn="월" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnMonday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="월"
+                        android:textOn="월" />
 
-                <ToggleButton
-                    android:id="@+id/tuesday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="화"
-                    android:textOn="화" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnTuesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="화"
+                        android:textOn="화" />
 
-                <ToggleButton
-                    android:id="@+id/wednesday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="수"
-                    android:textOn="수" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnWednesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="수"
+                        android:textOn="수" />
 
-                <ToggleButton
-                    android:id="@+id/thursday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="목"
-                    android:textOn="목" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnThursday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="목"
+                        android:textOn="목" />
 
-                <ToggleButton
-                    android:id="@+id/friday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textOff="금"
-                    android:textOn="금" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnFriday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOff="금"
+                        android:textOn="금" />
 
-                <ToggleButton
-                    android:id="@+id/saturday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/blue"
-                    android:textOff="토"
-                    android:textOn="토" />
+                    <ToggleButton
+                        android:id="@+id/toggleBtnSaturday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/blue"
+                        android:textOff="토"
+                        android:textOn="토" />
+                </LinearLayout>
 
+                <!--<RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <CheckBox
+                        android:id="@+id/repeatCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/repeatCheckBox"
+                        android:layout_marginRight="3dp"
+                        android:text="@string/repeat_weekly"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_alignBaseline="@id/repeatCheckBox"/>
+                </RelativeLayout>-->
             </LinearLayout>
 
             <LinearLayout
@@ -114,31 +160,32 @@
                     android:textStyle="bold" />
 
                 <RadioGroup
-                    android:id="@+id/radiogroup"
+                    android:id="@+id/radioGroupAdd"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
+                    android:checkedButton="@+id/radioBtnSound"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radio_sound"
+                        android:id="@+id/radioBtnSound"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/sound" />
 
                     <RadioButton
-                        android:id="@+id/radio_vibrate"
+                        android:id="@+id/radioBtnVibrate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/vibrate" />
 
                     <RadioButton
-                        android:id="@+id/radio_both"
+                        android:id="@+id/radioBtnSoundVibrate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -147,7 +194,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/alram_content_area"
+                android:id="@+id/addAlramContentBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
@@ -162,7 +209,8 @@
                     android:textSize="17sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/alarmSoundContent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no_content"
                     android:textSize="15sp" />
@@ -177,17 +225,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/volume_img"
+                    android:id="@+id/imageViewViewImg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:src="@drawable/speaker_on_blue" />
 
                 <SeekBar
-                    android:id="@+id/volume_bar"
+                    android:id="@+id/seekBarVolumeBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:max="15"
                     android:layout_weight="9" />
             </LinearLayout>
 
@@ -211,7 +260,7 @@
                         android:textSize="17sp"
                         android:text="다시 울림" />
                     <TextView
-                        android:id="@+id/alram_repeat_setting"
+                        android:id="@+id/textViewAlramRepeatSetting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5분,3회" />
@@ -222,14 +271,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <Switch
-                        android:id="@+id/repeat_settting_switch"
+                        android:id="@+id/switchRepeatSetting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/alarm_site_setting"
+                android:id="@+id/alarmSiteSetting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
@@ -245,7 +294,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/alram_site_name"
+                        android:id="@+id/alramSiteName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)" />
@@ -255,7 +304,6 @@
                         android:layout_height="wrap_content"
                         android:text="검색"/>
                 </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -275,7 +323,7 @@
             android:showDividers="end">
 
             <Button
-                android:id="@+id/settings_cancel"
+                android:id="@+id/btnSettingsCancel"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
@@ -294,7 +342,7 @@
             android:showDividers="beginning">
 
             <Button
-                android:id="@+id/settings_ok"
+                android:id="@+id/btnSettingsOk"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
