@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,9 @@ public class DBHelper {
     public static final String COLUMN_SITE_RADIUS = "alarm_radius";
     public static final String COLUMN_SITE_ADDR = "alarm_addr";
 
+    Type hashTypeSI = new TypeToken<HashMap<String, Integer>>(){}.getType();
+    Type arrTypeI = new TypeToken<ArrayList<Integer>>(){}.getType();
+
     private class DatabaseHelper extends SQLiteOpenHelper {
         public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
@@ -67,29 +72,11 @@ public class DBHelper {
                     + COLUMN_SITE_RADIUS + " INTEGER, "
                     + COLUMN_SITE_ADDR + " TEXT)";
             db.execSQL(createTable);
-
-//            String siteCreateTable = "CREATE TABLE IF NOT EXISTS " + SITE_ALARM_TABLE + " ( "
-//                    + COLUMN_ID + " INTEGER primary key autoincrement, "
-//                    + COLUMN_ALARM_NAME + " TEXT NOT NULL, "
-//                    + COLUMN_ALARM_ID + " INTEGER NOT NULL, "
-//                    + COLUMN_ALARM_ACTIVE + " INTEGER NOT NULL, "
-//                    + COLUMN_ALARM_TIME + " TEXT NOT NULL, "
-//                    + COLUMN_ALARM_DAYS + " TEXT NOT NULL, "
-//                    + COLUMN_ALARM_SOUND + " TEXT NOT NULL, "
-//                    + COLUMN_ALARM_TYPE + " INTEGER NOT NULL, "
-//                    + COLUMN_ALARM_VOLUME + " INTEGER NOT NULL, "
-//                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL, "
-//                    + COLUMN_SITE_LATITUDE + " INTEGER NOT NULL, "
-//                    + COLUMN_SITE_LONGITUDE + " INTEGER NOT NULL, "
-//                    + COLUMN_SITE_RADIUS + " INTEGER NOT NULL, "
-//                    + COLUMN_SITE_ADDR + " TEXT NOT NULL)";
-//            db.execSQL(siteCreateTable);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + ALARM_TABLE);
-            //db.execSQL("DROP TABLE IF EXISTS " + SITE_ALARM_TABLE);
             onCreate(db);
         }
     }
@@ -181,12 +168,12 @@ public class DBHelper {
                 alarm.setAlarmName(cursor.getString(1));
                 alarm.setAlarmId(cursor.getInt(2));
                 alarm.setActive(cursor.getInt(3));
-                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),HashMap.class));
-                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
+                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
                 alarm.setAlarmType(cursor.getInt(7));
                 alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
                 alarmList.add(alarm);
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
@@ -196,9 +183,9 @@ public class DBHelper {
         ==> 아래와 같이 값이 저장되며 map형태의 값은 map에서 꺼내서 사용해야 함.
          alarmName=알람테스트
          alarmSound={path=/storage/emulated/0/melon/5 Seconds Of Summer-01-Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)-128.mp3, title=Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)}
-         days=[2.0, 3.0, 4.0, 7.0]
-         snooze={count=3.0, interval=5.0}
-         time={hour=18.0, minute=43.0}
+         days=[2, 3, 4, 7]
+         snooze={count=3, interval=5}
+         time={hour=18, minute=43}
          _id=2
          active=1
          alarmId=1768778836
@@ -214,7 +201,7 @@ public class DBHelper {
      * @param id
      * @return
      */
-    public AlarmInfo selectAlarm(int id) {
+    public AlarmInfo selectAlarm(int id, String selection) {
         Logger.d(this.getClass(), "%s", "Get alarm");
         AlarmInfo alarm = new AlarmInfo();
         String[] columns = new String[] {
@@ -229,19 +216,20 @@ public class DBHelper {
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE
         };
-        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, COLUMN_ID+"="+id, null, null, null, null);
+        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, selection+"="+id, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 alarm.set_id(cursor.getInt(0));
                 alarm.setAlarmName(cursor.getString(1));
                 alarm.setAlarmId(cursor.getInt(2));
                 alarm.setActive(cursor.getInt(3));
-                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), HashMap.class));
-                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+
+                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
+                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
                 alarm.setAlarmType(cursor.getInt(7));
                 alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
         }
@@ -318,7 +306,6 @@ public class DBHelper {
         cv.put(COLUMN_ALARM_TYPE, alarm.getAlarmType());
         cv.put(COLUMN_ALARM_VOLUME, alarm.getVolume());
         cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
-        cv.put(COLUMN_SITE_LATITUDE, alarm.getLatitude());
         return sqlDB.update(ALARM_TABLE, cv, COLUMN_ID+"="+alarm.get_id(), null);
     }
 

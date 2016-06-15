@@ -4,10 +4,15 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -23,17 +28,20 @@ import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.common.Constants;
-import kr.co.miracom.alarm.dialog.AlarmSoundSelectDialog;
 import kr.co.miracom.alarm.service.AlarmReceiver;
+import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
+import kr.co.miracom.alarm.util.Player;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
  * Created by kimsungmog on 2016-05-26.
  */
 public class AlarmAddActivity extends AppCompatActivity{
+    public static final String COLUMN_ID = "_id";
+
     //Layout variable
     private Button okBtn;
     private Button cancelBtn;
@@ -45,7 +53,8 @@ public class AlarmAddActivity extends AppCompatActivity{
     private LinearLayout alramSoundSelector;
     private SeekBar volSeekBar;
     private Switch repeatSwich;
-    private TextView alramSoundName;
+    private TextView alramSoundName, textViewAlramRepeatSetting;
+
 
     //User define variable
     private DBHelper mDbHelper;
@@ -62,8 +71,17 @@ public class AlarmAddActivity extends AppCompatActivity{
     private HashMap<String,String> soundMap;
     private HashMap<String,Integer> snoozeMap;
 
-    private int volume = 50;
+    private int volume;
     private int alarmType = 1;
+    private int interval=5;
+    private int count=3;
+
+    private AudioManager audioManager;
+    private Ringtone mRingtone;
+    private Intent ringtoneIntent;
+    private Uri mUri;
+    private Player mPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,17 +89,31 @@ public class AlarmAddActivity extends AppCompatActivity{
         setContentView(R.layout.add_simple_alarm);
         mDbHelper = new DBHelper(this);
         mDbHelper.open();
+
+        mPlayer = new Player(this);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         //intent에서 넘겨준 AlramId를 가져옴
         Intent intent = getIntent();
         initLayout();
         if(intent.getIntExtra(Constants.ALARM_ID,0) != 0) {
             isModify = true;
             _id = intent.getIntExtra(Constants.ALARM_ID,0);
-            AlarmInfo alarm = mDbHelper.selectAlarm(_id);
+            AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ID);
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
             alartUniqId = CommonUtils.getAlarmId();
+            volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+            volSeekBar.setProgress(volume);
+
+            //초기 default alarm path를 TextView 에 setting
+            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+            alramSoundName.setText(mRingtone.getTitle(this));
+
+            mPlayer.setUri(mUri);
         }
     }
 
@@ -130,6 +162,11 @@ public class AlarmAddActivity extends AppCompatActivity{
         //반복설정 스위치
         repeatSwich = (Switch) findViewById(R.id.switchRepeatSetting);
 
+        textViewAlramRepeatSetting = (TextView) findViewById(R.id.textViewAlramRepeatSetting);
+
+        String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
+        textViewAlramRepeatSetting.setText(repeatText);
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,52 +174,96 @@ public class AlarmAddActivity extends AppCompatActivity{
                     //실제 Dialog에서 세팅해주나 샘플로 데이터 넣음
                     //5분간 3회
                     snoozeMap = new HashMap<String,Integer>();
-                    snoozeMap.put(Constants.INTERVAL, 5);
-                    snoozeMap.put(Constants.COUNT, 3);
+                    snoozeMap.put(Constants.INTERVAL, interval);
+                    snoozeMap.put(Constants.COUNT, count);
                 }
                 setAlarmType();
                 registerAlram();
+                ringtoneStop();
                 finish();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ringtoneStop();
                 finish();
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                AlarmSoundSelectDialog soundSelectDialog = new AlarmSoundSelectDialog(AlarmAddActivity.this);
-                soundSelectDialog.mSoundSelectListner = new AlarmSoundSelectDialog.SoundSelectFinish(){
-                    @Override
-                    public void onSelect(HashMap<String, String> selectedSound) {
-                        alramSoundName.setText(selectedSound.get("title"));
-                        soundMap = new HashMap<String,String>();
-                        soundMap.put(Constants.TITLE, selectedSound.get(Constants.TITLE));
-                        soundMap.put(Constants.PATH, selectedSound.get(Constants.PATH));
-                    }
-                };
-                soundSelectDialog.show(getFragmentManager(), "Select sound");
+                alarmSelectDialog();
             }
         });
 
         volSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
                 volume = progress;
-                Logger.d(this.getClass(), "%d", volume);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                ringtoneStop();
                 //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                ringtonePlay();
                 //
             }
         });
+
+        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    Intent intent = new Intent(getApplicationContext(), AlarmRepeatActivity.class);
+                    intent.putExtra("interval",interval);
+                    intent.putExtra("count",count);
+                    startActivityForResult(intent,100);
+                }
+            }
+        });
+    }
+
+
+
+
+    private void alarmSelectDialog(){
+        ringtoneStop();
+        ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select RingTone");
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+
+        startActivityForResult(ringtoneIntent, 99);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == 99){
+            mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+            alramSoundName.setText(mRingtone.getTitle(this));
+
+            mPlayer.setUri(mUri);
+
+        }else{
+            interval = data.getIntExtra("interval",5);
+            count = data.getIntExtra("count",3);
+            String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
+            textViewAlramRepeatSetting.setText(repeatText);
+
+        }
+
     }
 
     /**
@@ -224,16 +305,20 @@ public class AlarmAddActivity extends AppCompatActivity{
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra("one_time", false);
+            intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
             intent.putExtra("one_time", true);
+            intent.putExtra("alartUniqId", alartUniqId);
             intent.putExtra("day_of_week", weekRepeatInfo);
-            pendingIntent = getPendingIntent(intent);
+            //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+           // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+            AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
         alarmInfo.setAlarmName(alarmName.getText().toString());
         alarmInfo.setAlarmId(alartUniqId);
@@ -299,6 +384,15 @@ public class AlarmAddActivity extends AppCompatActivity{
         if (currentTime > settingTime)
             triggerTime += 1000 * 60 * 60 * 24;
         return triggerTime;
+    }
+
+    public void ringtonePlay(){
+        mPlayer.setMediaPlayerMode();
+        mPlayer.play();
+    }
+
+    public void ringtoneStop(){
+        mPlayer.stop();
     }
 
 }

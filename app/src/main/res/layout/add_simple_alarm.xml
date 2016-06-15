@@ -212,7 +212,6 @@
                     android:id="@+id/alarmSoundContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_content"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -262,8 +261,7 @@
                     <TextView
                         android:id="@+id/textViewAlramRepeatSetting"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5분,3회" />
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
