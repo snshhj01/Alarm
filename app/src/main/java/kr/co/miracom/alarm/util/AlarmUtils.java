@@ -52,6 +52,7 @@ public class AlarmUtils implements LocationListener {
 
     public Context m_Activity;
     public boolean isGPSEnabled = false;
+    public boolean isGPSInit = false;
     private Intent saveIntent;
 
     public static AlarmUtils getInstance() {
@@ -94,6 +95,7 @@ public class AlarmUtils implements LocationListener {
             lngPoint = myLocation.getLongitude();
 
             Log.e("Receiver GetLocations()", "latPoint: " + latPoint + ", lngPoint: " + lngPoint);
+            Toast.makeText(m_Activity, "latPoint: " + latPoint + ", lngPoint: " + lngPoint, Toast.LENGTH_SHORT).show();
            /* latTextView =(TextView) findViewById(R.id.lat);
             lngTextView =(TextView) findViewById(R.id.lng);
 
@@ -101,7 +103,7 @@ public class AlarmUtils implements LocationListener {
             lngTextView.setText(String.valueOf(lngPoint)  + " : " + getProvider());*/
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.3680115, 127.1033245, 500, -1, intent); //정자
-            locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.516648, 127.1010280, 500, -1, intent); //잠실1
+            locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.516648, 127.1010280, 1000, -1, intent); //잠실1
        //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.5166423, 127.1010482, 100, -1, intent); //잠실2
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), latPoint, lngPoint, 500, -1, intent);
@@ -125,11 +127,12 @@ public class AlarmUtils implements LocationListener {
         lngTextView.setText(String.valueOf(location.getLongitude()));*/
         //Toast.makeText(m_Activity, "onLocationChanged!!", Toast.LENGTH_SHORT).show();
         Log.d("location", "location changed");
+       // Toast.makeText(m_Activity, "location changed!!", Toast.LENGTH_SHORT).show();
         myLocation = location;
 
         if (isGPSEnabled) {
             Log.d("location", "location isGPSEnabled");
-
+            Toast.makeText(m_Activity, "location isGPSEnabled!!", Toast.LENGTH_SHORT).show();
             GetLocations(getAlarmIntent());
         }
     }
@@ -144,10 +147,11 @@ public class AlarmUtils implements LocationListener {
         criteria.setSpeedRequired(false);
         criteria.setCostAllowed(true);
         String bestProvider = mLocationManger.getBestProvider(criteria, true);
-        if (bestProvider == null)
+        if (bestProvider == null) {
             bestProvider = "최적의 위치제공자를 찾을 수 없습니다.";
-        else
+        } else {
             bestProvider = "Best provider=" + bestProvider;
+        }
 
         return bestProvider;
     }
@@ -215,9 +219,10 @@ public class AlarmUtils implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         // TODO Auto-generated method stub
-       // Toast.makeText(MainActivity.this, "onProviderDisabled!!!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(m_Activity, "onProviderDisabled!!!!", Toast.LENGTH_SHORT).show();
         Log.e("AlarmReceiver connect", "onProviderDisabled ");
         isGPSEnabled = false;
+        isGPSInit = false;
 
         locUnRegister(m_Activity);
         /*if (mGpsIntentReceiver != null) {

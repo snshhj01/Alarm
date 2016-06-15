@@ -57,7 +57,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         //GPS init 후 3번 정도?? GPS enabl
                         AlarmUtils.getInstance().isGPSEnabled = true;
-                        AlarmUtils.getInstance().gpsInit(context);
+                        if (AlarmUtils.getInstance().isGPSInit == false) {
+                            AlarmUtils.getInstance().isGPSInit = true;
+                            AlarmUtils.getInstance().gpsInit(context);
+                        }
 
                         intent.putExtra("AlarmInfo", alarm);
                         AlarmUtils.getInstance().setAlarmIntent(intent);
