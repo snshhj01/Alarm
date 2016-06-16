@@ -40,7 +40,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 /**
  * Created by kimsungmog on 2016-05-26.
  */
-public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener{
+public class AlarmAddActivity extends AppCompatActivity {
     public static final String COLUMN_ID = "_id";
 
     //Layout variable
@@ -105,6 +105,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
+
             alartUniqId = CommonUtils.getAlarmId();
             volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             volSeekBar.setProgress(volume);
@@ -124,8 +125,10 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
         alartUniqId = alarm.getAlarmId();
-        if(alarm.getAlarmName() != null)
+        if(alarm.getAlarmName() != null){
             alarmName.setText(alarm.getAlarmName());
+        }
+
 
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
@@ -147,6 +150,12 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         alramSoundName.setText(mRingtone.getTitle(this));
 
         mPlayer.setUri(mUri);
+
+        // seekbar progress = volum
+        //audiomanager volum = volum
+        volume = alarm.getVolume();
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM,volume,0);
+        volSeekBar.setProgress(volume);
 
 
     }
@@ -278,7 +287,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        //Ringtone manager activtity
         if(requestCode == 99){
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
@@ -288,6 +297,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             mPlayer.setUri(mUri);
 
         }else{
+            //AlarmRepeatActivity
             interval = data.getIntExtra("interval",5);
             count = data.getIntExtra("count",3);
             String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
@@ -351,6 +361,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
+
         alarmInfo.setAlarmName(alarmName.getText().toString());
         alarmInfo.setAlarmId(alartUniqId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
@@ -428,9 +439,5 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         mPlayer.stop();
     }
 
-    @Override
-    public void onClick(View v) {
-        mPlayer.stop();
 
-    }
 }

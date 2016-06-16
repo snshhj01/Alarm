@@ -232,7 +232,6 @@ public class DBHelper {
                 alarm.setAlarmName(cursor.getString(1));
                 alarm.setAlarmId(cursor.getInt(2));
                 alarm.setActive(cursor.getInt(3));
-
                 alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
                 alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
