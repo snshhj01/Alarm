@@ -40,7 +40,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 /**
  * Created by kimsungmog on 2016-05-26.
  */
-public class AlarmAddActivity extends AppCompatActivity{
+public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String COLUMN_ID = "_id";
 
     //Layout variable
@@ -362,9 +362,9 @@ public class AlarmAddActivity extends AppCompatActivity{
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         saveAlarmInfo(alarmInfo);
-        Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+        /*Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
         returnIntent.putExtra(Constants.PAGER, 0);
-        startActivity(returnIntent);
+        startActivity(returnIntent);*/
     }
 
     /**
@@ -428,4 +428,9 @@ public class AlarmAddActivity extends AppCompatActivity{
         mPlayer.stop();
     }
 
+    @Override
+    public void onClick(View v) {
+        mPlayer.stop();
+
+    }
 }
