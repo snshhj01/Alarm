@@ -47,7 +47,7 @@ public class AlarmAddActivity extends AppCompatActivity{
     private Button okBtn;
     private Button cancelBtn;
     private EditText alarmName;
-    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat, thBtnSun;
+    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
     private TimePicker timePicker;
     //private CheckBox repeatCheckBox;
     private RadioGroup alramTypeGroup;
@@ -124,9 +124,29 @@ public class AlarmAddActivity extends AppCompatActivity{
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alarmName.setText(alarm.getAlarmName());
+        alartUniqId = alarm.getAlarmId();
+        if(alarm.getAlarmName() != null)
+            alarmName.setText(alarm.getAlarmName());
+
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
+        ArrayList<Integer> days = alarm.getDays();
+        ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        for(Integer inx : days) {
+            toogleButtons[inx -1].setChecked(true);
+        }
+        if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+            alramTypeGroup.check(R.id.radioBtnSound);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnVibrate);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnSoundVibrate);
+        }
+
+        if(alarm.getAlarmSound() != null)
+            alramSoundName.setText(alarm.getAlarmSound().get(Constants.TITLE));
+        volSeekBar.setProgress(alarm.getVolume());
+
     }
 
     /**
@@ -255,13 +275,17 @@ public class AlarmAddActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        soundMap = new HashMap<>();
         if(requestCode == 99){
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
-
+            Logger.d(this.getClass(),"%s","Uri : " + mUri.toString());
+            Logger.d(this.getClass(),"%s","Title : " + mRingtone.getTitle(this));
             mPlayer.setUri(mUri);
+            soundMap.put(Constants.TITLE, mRingtone.getTitle(this).toString());
+            soundMap.put(Constants.PATH, mUri.toString());
+
 
         }else{
             interval = data.getIntExtra("interval",5);
