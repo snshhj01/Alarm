@@ -65,12 +65,12 @@ public class DBHelper {
                     + COLUMN_ALARM_SOUND + " TEXT NOT NULL, "
                     + COLUMN_ALARM_TYPE + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_VOLUME + " INTEGER NOT NULL, "
-                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL,"
-                    + COLUMN_SITE_FLAG + "TEXT,"
+                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL, "
+                    + COLUMN_SITE_FLAG + " TEXT, "
                     + COLUMN_SITE_LATITUDE + " TEXT, "
                     + COLUMN_SITE_LONGITUDE + " TEXT, "
                     + COLUMN_SITE_RADIUS + " INTEGER, "
-                    + COLUMN_SITE_ADDR + " TEXT)";
+                    + COLUMN_SITE_ADDR + " TEXT) ";
             db.execSQL(createTable);
         }
 
@@ -138,6 +138,7 @@ public class DBHelper {
         cv.put(COLUMN_SITE_LATITUDE, alarmInfo.getLatitude());
         cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
         cv.put(COLUMN_SITE_RADIUS, alarmInfo.getRadius());
+        cv.put(COLUMN_SITE_ADDR, alarmInfo.getAddr());
         sqlDB.insert(ALARM_TABLE, null, cv);
     }
 
