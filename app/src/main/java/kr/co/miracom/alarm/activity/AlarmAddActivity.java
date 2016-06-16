@@ -133,7 +133,7 @@ public class AlarmAddActivity extends AppCompatActivity{
         ArrayList<Integer> days = alarm.getDays();
         ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
         for(Integer inx : days) {
-            toogleButtons[inx -1].setChecked(true);
+            toogleButtons[inx].setChecked(true);
         }
         if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
             alramTypeGroup.check(R.id.radioBtnSound);
