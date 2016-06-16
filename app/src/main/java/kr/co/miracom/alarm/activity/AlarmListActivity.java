@@ -16,14 +16,19 @@ public class AlarmListActivity extends AppCompatActivity {
     ViewPager pager;
     FloatingActionButton addAlarmBtn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setContentView(R.layout.alarm_list_layout);
-
+        AlarmListPagerAdapter adapter = new AlarmListPagerAdapter(this, getLayoutInflater());
         pager = (ViewPager) findViewById(R.id.container);
-
-        final AlarmListPagerAdapter adapter = new AlarmListPagerAdapter(this, getLayoutInflater());
         pager.setAdapter(adapter);
 
         addAlarmBtn = (FloatingActionButton) findViewById(R.id.add_alarm);
@@ -43,4 +48,5 @@ public class AlarmListActivity extends AppCompatActivity {
         });
 
     }
+
 }

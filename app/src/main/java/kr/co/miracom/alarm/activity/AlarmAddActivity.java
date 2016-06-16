@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -39,7 +40,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 /**
  * Created by kimsungmog on 2016-05-26.
  */
-public class AlarmAddActivity extends AppCompatActivity{
+public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String COLUMN_ID = "_id";
 
     //Layout variable
@@ -53,6 +54,7 @@ public class AlarmAddActivity extends AppCompatActivity{
     private LinearLayout alramSoundSelector;
     private SeekBar volSeekBar;
     private Switch repeatSwich;
+    private ImageView speakerImage;
     private TextView alramSoundName, textViewAlramRepeatSetting;
 
 
@@ -109,7 +111,6 @@ public class AlarmAddActivity extends AppCompatActivity{
 
             //초기 default alarm path를 TextView 에 setting
             mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
 
@@ -122,9 +123,32 @@ public class AlarmAddActivity extends AppCompatActivity{
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alarmName.setText(alarm.getAlarmName());
+        alartUniqId = alarm.getAlarmId();
+        if(alarm.getAlarmName() != null)
+            alarmName.setText(alarm.getAlarmName());
+
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
+        ArrayList<Integer> days = alarm.getDays();
+        ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        for(Integer inx : days) {
+            toogleButtons[inx].setChecked(true);
+        }
+        if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+            alramTypeGroup.check(R.id.radioBtnSound);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnVibrate);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnSoundVibrate);
+        }
+
+        mUri = alarm.getSoundUri();
+        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+        alramSoundName.setText(mRingtone.getTitle(this));
+
+        mPlayer.setUri(mUri);
+
+
     }
 
     /**
@@ -159,6 +183,7 @@ public class AlarmAddActivity extends AppCompatActivity{
         alramSoundName = (TextView) findViewById(R.id.alarmSoundContent);
         //볼륨조절Bar
         volSeekBar = (SeekBar) findViewById(R.id.seekBarVolumeBar);
+        speakerImage = (ImageView) findViewById(R.id.imageViewViewImg);
         //반복설정 스위치
         repeatSwich = (Switch) findViewById(R.id.switchRepeatSetting);
 
@@ -202,6 +227,10 @@ public class AlarmAddActivity extends AppCompatActivity{
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
                 volume = progress;
+                if(progress ==0)
+                    speakerImage.setImageResource(R.drawable.speaker_off);
+                else
+                    speakerImage.setImageResource(R.drawable.speaker_on_blue);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -211,6 +240,7 @@ public class AlarmAddActivity extends AppCompatActivity{
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ringtonePlay();
+
                 //
             }
         });
@@ -253,6 +283,7 @@ public class AlarmAddActivity extends AppCompatActivity{
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
+
 
             mPlayer.setUri(mUri);
 
@@ -317,7 +348,7 @@ public class AlarmAddActivity extends AppCompatActivity{
             intent.putExtra("day_of_week", weekRepeatInfo);
             //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
-           // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+            // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
         alarmInfo.setAlarmName(alarmName.getText().toString());
@@ -326,13 +357,14 @@ public class AlarmAddActivity extends AppCompatActivity{
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
+        alarmInfo.setSoundUri(mUri);
         alarmInfo.setAlarmSound(soundMap);
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         saveAlarmInfo(alarmInfo);
-        Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+        /*Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
         returnIntent.putExtra(Constants.PAGER, 0);
-        startActivity(returnIntent);
+        startActivity(returnIntent);*/
     }
 
     /**
@@ -387,6 +419,7 @@ public class AlarmAddActivity extends AppCompatActivity{
     }
 
     public void ringtonePlay(){
+
         mPlayer.setMediaPlayerMode();
         mPlayer.play();
     }
@@ -395,4 +428,9 @@ public class AlarmAddActivity extends AppCompatActivity{
         mPlayer.stop();
     }
 
+    @Override
+    public void onClick(View v) {
+        mPlayer.stop();
+
+    }
 }
