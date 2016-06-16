@@ -6,6 +6,8 @@ package kr.co.miracom.alarm.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import kr.co.miracom.alarm.R;
 
@@ -15,39 +17,16 @@ public class AlarmLandingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_landing);
-        /** set time to splash out */
-        final int welcomeScreenDisplay = 3000;
-        /** create a thread to show splash up to splash time */
-        Thread welcomeThread = new Thread() {
-
-            int wait = 0;
-
+        Handler handler = new Handler() {
             @Override
-            public void run() {
-                try {
-                    super.run();
-                    /**
-                     * use while to get the splash time. Use sleep() to increase
-                     * the wait variable for every 100L.
-                     */
-                    while (wait < welcomeScreenDisplay) {
-                        sleep(100);
-                        wait += 100;
-                    }
-                } catch (Exception e) {
-                    System.out.println("EXc=" + e);
-                } finally {
-                    /**
-                     * Called after splash times up. Do some action after splash
-                     * times up. Here we moved to another main activity class
-                     */
-                    startActivity(new Intent(AlarmLandingActivity.this,
-                            AlarmListActivity.class));
-                    finish();
-                }
+            public void handleMessage(Message msg) {
+                finish();
+                Intent intent = new Intent(AlarmLandingActivity.this, AlarmListActivity.class);
+                startActivity(intent);
             }
         };
-        welcomeThread.start();
+        // 2초 로딩 이후 종료
+        handler.sendEmptyMessageDelayed(0, 3000);
 
     }
 }

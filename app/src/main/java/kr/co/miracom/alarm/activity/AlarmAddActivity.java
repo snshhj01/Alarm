@@ -71,7 +71,6 @@ public class AlarmAddActivity extends AppCompatActivity{
 
     private HashMap<String,Integer> timeMap;
     private HashMap<String,String> soundMap;
-
     private HashMap<String,Integer> snoozeMap;
 
     private int volume;
@@ -124,38 +123,30 @@ public class AlarmAddActivity extends AppCompatActivity{
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alarmName.setText(alarm.getAlarmName());
-        volume = alarm.getVolume();
-        ArrayList<Integer> days = alarm.getDays();
-        for(int i = 0 ; i <days.size() ; i++){
-            switch (days.get(i)){
-                case 0:
-                    tgBtnSun.setChecked(true);
-                case 1:
-                    tgBtnSun.setChecked(true);
-                case 2:
-                    tgBtnSun.setChecked(true);
-                case 3:
-                    tgBtnSun.setChecked(true);
-                case 4:
-                    tgBtnSun.setChecked(true);
-                case 5:
-                    tgBtnSun.setChecked(true);
-                case 6:
-                    tgBtnSun.setChecked(true);
-            }
-        }
+        alartUniqId = alarm.getAlarmId();
+        if(alarm.getAlarmName() != null)
+            alarmName.setText(alarm.getAlarmName());
+
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
+        ArrayList<Integer> days = alarm.getDays();
+        ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        for(Integer inx : days) {
+            toogleButtons[inx].setChecked(true);
+        }
+        if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+            alramTypeGroup.check(R.id.radioBtnSound);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnVibrate);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnSoundVibrate);
+        }
 
         mUri = alarm.getSoundUri();
         mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
         alramSoundName.setText(mRingtone.getTitle(this));
 
         mPlayer.setUri(mUri);
-
-        volume = alarm.getVolume();
-        volSeekBar.setProgress(volume);
 
 
     }
@@ -331,7 +322,6 @@ public class AlarmAddActivity extends AppCompatActivity{
         }
         weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnThe.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
         ArrayList<Integer> days = new ArrayList<Integer>();
-
         for(int i=1; i<weekRepeatInfo.length;i++) {
             if(weekRepeatInfo[i]) {
                 days.add(i);
