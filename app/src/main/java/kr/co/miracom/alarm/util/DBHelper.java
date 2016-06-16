@@ -161,6 +161,7 @@ public class DBHelper {
                 COLUMN_ALARM_TIME,
                 COLUMN_ALARM_DAYS,
                 COLUMN_ALARM_SOUND,
+                COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE

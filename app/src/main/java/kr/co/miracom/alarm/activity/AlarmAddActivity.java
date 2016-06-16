@@ -154,6 +154,9 @@ public class AlarmAddActivity extends AppCompatActivity{
 
         mPlayer.setUri(mUri);
 
+        volume = alarm.getVolume();
+        volSeekBar.setProgress(volume);
+
 
     }
 
@@ -240,12 +243,12 @@ public class AlarmAddActivity extends AppCompatActivity{
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                ringtoneStop();
+                ringtonePlay();
                 //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ringtonePlay();
+                ringtoneStop();
                 //
             }
         });
