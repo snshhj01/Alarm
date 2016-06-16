@@ -193,7 +193,6 @@ public class SiteAddActivity extends AppCompatActivity {
                     snoozeMap.put(Constants.INTERVAL, interval);
                     snoozeMap.put(Constants.COUNT, count);
                 }
-                Log.i("LOG", "here!@#!@#!@#!@#!@#!@#!@#");
                 registerAlram();
                 setAlarmType();
                 ringtoneStop();
