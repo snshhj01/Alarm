@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -50,6 +51,7 @@ public class AlarmAddActivity extends AppCompatActivity{
     private LinearLayout alramSoundSelector;
     private SeekBar volSeekBar;
     private Switch repeatSwich;
+    private ImageView speakerImage;
     private TextView alramSoundName, textViewAlramRepeatSetting;
 
 
@@ -156,6 +158,7 @@ public class AlarmAddActivity extends AppCompatActivity{
         alramSoundName = (TextView) findViewById(R.id.alarmSoundContent);
         //볼륨조절Bar
         volSeekBar = (SeekBar) findViewById(R.id.seekBarVolumeBar);
+        speakerImage = (ImageView) findViewById(R.id.imageViewViewImg);
         //반복설정 스위치
         repeatSwich = (Switch) findViewById(R.id.switchRepeatSetting);
 
@@ -199,6 +202,10 @@ public class AlarmAddActivity extends AppCompatActivity{
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM,progress,0);
                 volume = progress;
+                if(progress ==0)
+                    speakerImage.setImageResource(R.drawable.speaker_off);
+                else
+                    speakerImage.setImageResource(R.drawable.speaker_on_blue);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
