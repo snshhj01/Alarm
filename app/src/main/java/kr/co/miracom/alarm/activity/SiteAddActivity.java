@@ -21,7 +21,6 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -42,6 +41,8 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
  * Created by admin on 2016-05-26.
  */
 public class SiteAddActivity extends AppCompatActivity {
+
+    private final String TAG = "SiteAddActivity";
 
     public static final int REQUEST_CODE_ADD_MAP = 1001;
 
@@ -88,6 +89,10 @@ public class SiteAddActivity extends AppCompatActivity {
     private Intent ringtoneIntent;
     private Uri mUri;
     private Player mPlayer;
+
+    String address;
+    String latitude;
+    String longitude;
 
 
     @Override
@@ -265,7 +270,22 @@ public class SiteAddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == 99){
+        Log.d(TAG, "============="+requestCode);
+
+        if(resultCode == REQUEST_CODE_ADD_MAP){
+            Log.d(TAG, data.getStringExtra("address"));
+            Log.d(TAG, String.valueOf(data.getDoubleExtra("latitude", 0.0)));
+            Log.d(TAG, String.valueOf(data.getDoubleExtra("longitude", 0.0)));
+
+
+            address = data.getStringExtra("address");
+            latitude = String.valueOf(data.getDoubleExtra("latitude", 0.0));
+            longitude = String.valueOf(data.getDoubleExtra("longitude", 0.0));
+
+            //Toast.makeText(getApplicationContext(), address+"||"+latitude+"longitude", Toast.LENGTH_LONG);
+
+            ((TextView)findViewById(R.id.alramSiteName)).setText(address);
+        }else if(requestCode == 99){
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
@@ -346,9 +366,9 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         alarmInfo.setFlag("Y");
-        alarmInfo.setLatitude("37.516929");
-        alarmInfo.setLongitude("127.100788");
-        alarmInfo.setAddr("서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)");
+        alarmInfo.setLatitude(latitude);
+        alarmInfo.setLongitude(longitude);
+        alarmInfo.setAddr(address);
         alarmInfo.setRadius("100");
         saveAlarmInfo(alarmInfo);
         Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
