@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +36,7 @@ public class DBHelper {
     public static final String COLUMN_ALARM_TIME = "alarm_time";
     public static final String COLUMN_ALARM_DAYS = "alarm_days";
     public static final String COLUMN_ALARM_SOUND = "alarm_sound";
+    public static final String COLUMN_ALARM_SOUND_URI = "alarm_sound_uri";
     public static final String COLUMN_ALARM_TYPE = "alarm_type";
     public static final String COLUMN_ALARM_VOLUME = "alarm_volume";
     public static final String COLUMN_ALARM_SNOOZE = "alarm_snooze";
@@ -63,6 +65,7 @@ public class DBHelper {
                     + COLUMN_ALARM_TIME + " TEXT NOT NULL, "
                     + COLUMN_ALARM_DAYS + " TEXT NOT NULL, "
                     + COLUMN_ALARM_SOUND + " TEXT NOT NULL, "
+                    + COLUMN_ALARM_SOUND_URI + " TEXT NOT NULL, "
                     + COLUMN_ALARM_TYPE + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_VOLUME + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL, "
@@ -100,6 +103,7 @@ public class DBHelper {
         String soundJson = gson.toJson(alarmInfo.getAlarmSound());
         String snoozeJson = gson.toJson(alarmInfo.getSnooze());
         String daysJson = gson.toJson(alarmInfo.getDays());
+        String dayssJson = gson.toJson(alarmInfo.getDayss());
 
         cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
         cv.put(COLUMN_ALARM_ID, alarmInfo.getAlarmId());
@@ -107,6 +111,7 @@ public class DBHelper {
         cv.put(COLUMN_ALARM_TIME, timeJson);
         cv.put(COLUMN_ALARM_DAYS, daysJson);
         cv.put(COLUMN_ALARM_SOUND, soundJson);
+        cv.put(COLUMN_ALARM_SOUND_URI, String.valueOf(alarmInfo.getSoundUri()));
         cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
         cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
         cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
@@ -172,12 +177,14 @@ public class DBHelper {
                 alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
                 alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                alarm.setAlarmType(cursor.getInt(7));
-                alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
+                alarm.setSoundUri(Uri.parse(cursor.getString(7)));
+                alarm.setAlarmType(cursor.getInt(8));
+                alarm.setVolume(cursor.getInt(9));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
                 alarmList.add(alarm);
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
+
         }
         Logger.d(this.getClass(), "%s", "Alarm count : " + alarmList.size());
         /*
@@ -213,6 +220,7 @@ public class DBHelper {
                 COLUMN_ALARM_TIME,
                 COLUMN_ALARM_DAYS,
                 COLUMN_ALARM_SOUND,
+                COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE
@@ -228,9 +236,10 @@ public class DBHelper {
                 alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4),hashTypeSI));
                 alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                 alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                alarm.setAlarmType(cursor.getInt(7));
-                alarm.setVolume(cursor.getInt(8));
-                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
+                alarm.setSoundUri(Uri.parse(cursor.getString(7)));
+                alarm.setAlarmType(cursor.getInt(8));
+                alarm.setVolume(cursor.getInt(9));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
         }
