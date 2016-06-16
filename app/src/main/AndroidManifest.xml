@@ -39,8 +39,9 @@
             android:value="AIzaSyAeiq6JD8AVNa_HfbVTSTX6ePxqZX1diw0" />
 
         <receiver
-            android:name=".service.DeviceBootReceiver"
-            android:enabled="false">
+            android:name=".service.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

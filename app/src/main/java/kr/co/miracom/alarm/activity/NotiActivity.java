@@ -1,20 +1,23 @@
 package kr.co.miracom.alarm.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.util.AlarmUtils;
+import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
  * Created by jiwoon-won on 2016-05-25.
@@ -22,29 +25,56 @@ import kr.co.miracom.alarm.R;
 public class NotiActivity extends AppCompatActivity {
     SeekBar seekBar;
     TextView textView;
-    Vibrator vib;
-    MediaPlayer player;
+    Vibrator vib = null;
+    MediaPlayer player = null;
+
+    TextView alertMsgTextView;
+    boolean progressSelectFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_main);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setContentView(R.layout.noti_main);
+
+        alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
         seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
-        textView = (TextView) findViewById(R.id.progressPosition);
+
+        Intent intent = getIntent();
+
+        AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
+        //String strUri = alarm.getAlarmSound().get("sound");
+        String strUri = "content://settings/system/alarm_alert";
+        Uri mUri = Uri.parse(strUri);
+        startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
+
+        alertMsgTextView.setText(alarm.getAlarmName());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int seekBarProgress = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 seekBarProgress = progress;
-                if (progress > 80) {
+                if (progress > 80 && progressSelectFlag == false) {
                     //    Toast.makeText(getApplicationContext(), "SeekBar End", Toast.LENGTH_SHORT).show();
-                    textView.setText("Right Cancel");
-                } else if (progress < 20) {
-                    textView.setText("Left Cancel");
+                    progressSelectFlag = true;
+
+                    stopAlarm();
+                    finish();
+                } else if (progress < 20 && progressSelectFlag == false) {
+                    progressSelectFlag = true;
+
+                    stopAlarm();
+                    AlarmUtils.getInstance().startInstantAlarm(getApplicationContext(), getIntent());
+                    finish();
                 } else {
-                    textView.setText("Not QUIT");
+                    //  textView.setText("Not QUIT");
                 }
             }
 
@@ -59,18 +89,32 @@ public class NotiActivity extends AppCompatActivity {
         });
     }
 
-    public void startAlarm(Boolean isVib, Boolean isRing, Uri uri, int volume) {
-        if(isVib) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PushWakeLock.releaseCpuLock();
+    }
+
+    public void startAlarm(int alarmType, Uri uri, int volume) {
+        if(alarmType == 2 || alarmType == 3) {
             startVibrate(this);
         }
 
-        if(isRing) {
+        if(alarmType == 1 || alarmType == 3) {
             startPlayer(uri, volume);
         }
 
-        Timer timer = null;
+        //Timer timer = null;
         //1분뒤 알람 중지
-        timer.schedule(new MyTimer(), 0, 60000);
+      //  timer.schedule(new MyTimer(), 0, 60000);
     }
 
     public void stopAlarm() {

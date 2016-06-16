@@ -18,7 +18,7 @@
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/alarm_clock"
+            android:src="@drawable/clock"
             android:clickable="true"
             android:maxWidth="150px"
             android:maxHeight="150px"
@@ -75,21 +75,11 @@
         android:progress="50"
         android:thumbTintMode="multiply"
         android:max="100"
-        android:thumb="@drawable/noti_thumb"
+        android:thumb="@drawable/circle_icon"
         android:layout_below="@+id/notiLinearLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:indeterminate="false" />
 
-
-    <TextView
-        android:id="@+id/progressPosition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NOT QUIT"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

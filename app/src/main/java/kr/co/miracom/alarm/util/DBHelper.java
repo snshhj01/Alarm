@@ -39,6 +39,13 @@ public class DBHelper {
     public static final String COLUMN_ALARM_VOLUME = "alarm_volume";
     public static final String COLUMN_ALARM_SNOOZE = "alarm_snooze";
 
+    //public static final String SITE_ALARM_TABLE = "tb_site_alarm_management";
+    public static final String COLUMN_SITE_FLAG = "alarm_site_flg";
+    public static final String COLUMN_SITE_LATITUDE = "alarm_latitude";
+    public static final String COLUMN_SITE_LONGITUDE = "alarm_longitude";
+    public static final String COLUMN_SITE_RADIUS = "alarm_radius";
+    public static final String COLUMN_SITE_ADDR = "alarm_addr";
+
     Type hashTypeSI = new TypeToken<HashMap<String, Integer>>(){}.getType();
     Type arrTypeI = new TypeToken<ArrayList<Integer>>(){}.getType();
 
@@ -58,7 +65,12 @@ public class DBHelper {
                     + COLUMN_ALARM_SOUND + " TEXT NOT NULL, "
                     + COLUMN_ALARM_TYPE + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_VOLUME + " INTEGER NOT NULL, "
-                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL)";
+                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL, "
+                    + COLUMN_SITE_FLAG + " TEXT, "
+                    + COLUMN_SITE_LATITUDE + " TEXT, "
+                    + COLUMN_SITE_LONGITUDE + " TEXT, "
+                    + COLUMN_SITE_RADIUS + " INTEGER, "
+                    + COLUMN_SITE_ADDR + " TEXT) ";
             db.execSQL(createTable);
         }
 
@@ -98,6 +110,35 @@ public class DBHelper {
         cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
         cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
         cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
+        sqlDB.insert(ALARM_TABLE, null, cv);
+    }
+
+    /**
+     * 새로운 위치 알람 추가시 Insert 함.
+     * @param alarmInfo
+     */
+    public void insertSiteAlarmInfo(AlarmInfo alarmInfo) {
+        ContentValues cv = new ContentValues();
+
+        String timeJson = gson.toJson(alarmInfo.getTime());
+        String soundJson = gson.toJson(alarmInfo.getAlarmSound());
+        String snoozeJson = gson.toJson(alarmInfo.getSnooze());
+        String daysJson = gson.toJson(alarmInfo.getDays());
+
+        cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
+        cv.put(COLUMN_ALARM_ID, alarmInfo.getAlarmId());
+        cv.put(COLUMN_ALARM_ACTIVE, alarmInfo.getActive());
+        cv.put(COLUMN_ALARM_TIME, timeJson);
+        cv.put(COLUMN_ALARM_DAYS, daysJson);
+        cv.put(COLUMN_ALARM_SOUND, soundJson);
+        cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
+        cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
+        cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
+        cv.put(COLUMN_SITE_FLAG, alarmInfo.getFlag());
+        cv.put(COLUMN_SITE_LATITUDE, alarmInfo.getLatitude());
+        cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
+        cv.put(COLUMN_SITE_RADIUS, alarmInfo.getRadius());
+        cv.put(COLUMN_SITE_ADDR, alarmInfo.getAddr());
         sqlDB.insert(ALARM_TABLE, null, cv);
     }
 
@@ -161,7 +202,7 @@ public class DBHelper {
      * @param id
      * @return
      */
-    public AlarmInfo selectAlarm(int id) {
+    public AlarmInfo selectAlarm(int id, String selection) {
         Logger.d(this.getClass(), "%s", "Get alarm");
         AlarmInfo alarm = new AlarmInfo();
         String[] columns = new String[] {
@@ -176,7 +217,7 @@ public class DBHelper {
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE
         };
-        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, COLUMN_ID+"="+id, null, null, null, null);
+        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, selection+"="+id, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 alarm.set_id(cursor.getInt(0));
@@ -191,6 +232,54 @@ public class DBHelper {
                 alarm.setVolume(cursor.getInt(8));
                 alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), hashTypeSI));
                 Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return alarm;
+    }
+
+    /**
+     * 선택 된 위치 알람 정보를 가져 옴
+     * @param id
+     * @return
+     */
+    public AlarmInfo selectSiteAlarm(int id) {
+        Logger.d(this.getClass(), "%s", "Get alarm");
+        AlarmInfo alarm = new AlarmInfo();
+        String[] columns = new String[] {
+                COLUMN_ID,
+                COLUMN_ALARM_NAME,
+                COLUMN_ALARM_ID,
+                COLUMN_ALARM_ACTIVE,
+                COLUMN_ALARM_TIME,
+                COLUMN_ALARM_DAYS,
+                COLUMN_ALARM_SOUND,
+                COLUMN_ALARM_TYPE,
+                COLUMN_ALARM_VOLUME,
+                COLUMN_ALARM_SNOOZE,
+                COLUMN_SITE_FLAG,
+                COLUMN_SITE_LATITUDE,
+                COLUMN_SITE_LONGITUDE,
+                COLUMN_SITE_RADIUS
+        };
+        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, COLUMN_ID+"="+id, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                alarm.set_id(cursor.getInt(0));
+                alarm.setAlarmName(cursor.getString(1));
+                alarm.setAlarmId(cursor.getInt(2));
+                alarm.setActive(cursor.getInt(3));
+                alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), HashMap.class));
+                alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+                alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
+                alarm.setAlarmType(cursor.getInt(7));
+                alarm.setVolume(cursor.getInt(8));
+                alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                alarm.setFlag(cursor.getString(10));
+                alarm.setLatitude(cursor.getString(11));
+                alarm.setLongitude(cursor.getString(12));
+                alarm.setRadius(cursor.getString(13));
+                Logger.d(this.getClass(), "%s", "Site Alarm info : " + alarm.toString());
             } while (cursor.moveToNext());
         }
         cursor.close();
