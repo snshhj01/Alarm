@@ -270,13 +270,10 @@ public class SiteAddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d(TAG, "============="+requestCode);
-
-        if(resultCode == REQUEST_CODE_ADD_MAP){
+        if(requestCode == REQUEST_CODE_ADD_MAP){
             Log.d(TAG, data.getStringExtra("address"));
             Log.d(TAG, String.valueOf(data.getDoubleExtra("latitude", 0.0)));
             Log.d(TAG, String.valueOf(data.getDoubleExtra("longitude", 0.0)));
-
 
             address = data.getStringExtra("address");
             latitude = String.valueOf(data.getDoubleExtra("latitude", 0.0));
