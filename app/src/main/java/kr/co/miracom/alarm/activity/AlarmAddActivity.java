@@ -234,12 +234,13 @@ public class AlarmAddActivity extends AppCompatActivity{
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                ringtonePlay();
+                ringtoneStop();
                 //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ringtoneStop();
+                ringtonePlay();
+
                 //
             }
         });
@@ -418,6 +419,7 @@ public class AlarmAddActivity extends AppCompatActivity{
     }
 
     public void ringtonePlay(){
+
         mPlayer.setMediaPlayerMode();
         mPlayer.play();
     }
