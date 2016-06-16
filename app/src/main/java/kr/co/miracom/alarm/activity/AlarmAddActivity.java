@@ -126,23 +126,23 @@ public class AlarmAddActivity extends AppCompatActivity{
     private void setExistAlarmInfo(AlarmInfo alarm) {
         alarmName.setText(alarm.getAlarmName());
         volume = alarm.getVolume();
-        ArrayList<Boolean> dayss = alarm.getDayss();
-        for(int i = 0 ; i <dayss.size() ; i++){
-            switch (i){
+        ArrayList<Integer> days = alarm.getDays();
+        for(int i = 0 ; i <days.size() ; i++){
+            switch (days.get(i)){
                 case 0:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 1:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 2:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 3:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 4:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 5:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
                 case 6:
-                    tgBtnSun.setChecked(dayss.get(i));
+                    tgBtnSun.setChecked(true);
             }
         }
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
@@ -328,12 +328,11 @@ public class AlarmAddActivity extends AppCompatActivity{
         }
         weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnThe.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
         ArrayList<Integer> days = new ArrayList<Integer>();
-        ArrayList<Boolean> dayss = new ArrayList<Boolean>();
+
         for(int i=1; i<weekRepeatInfo.length;i++) {
             if(weekRepeatInfo[i]) {
                 days.add(i);
                 isRepeat = true;
-                dayss.add(weekRepeatInfo[i]);
             }
         }
 
@@ -363,8 +362,6 @@ public class AlarmAddActivity extends AppCompatActivity{
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
-
-        alarmInfo.setDayss(dayss);
         alarmInfo.setAlarmType(alarmType);
         alarmInfo.setSoundUri(mUri);
         alarmInfo.setAlarmSound(soundMap);

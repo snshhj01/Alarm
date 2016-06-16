@@ -103,7 +103,6 @@ public class DBHelper {
         String soundJson = gson.toJson(alarmInfo.getAlarmSound());
         String snoozeJson = gson.toJson(alarmInfo.getSnooze());
         String daysJson = gson.toJson(alarmInfo.getDays());
-        String dayssJson = gson.toJson(alarmInfo.getDayss());
 
         cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
         cv.put(COLUMN_ALARM_ID, alarmInfo.getAlarmId());

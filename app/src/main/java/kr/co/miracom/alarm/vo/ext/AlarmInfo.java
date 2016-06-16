@@ -17,7 +17,6 @@ public class AlarmInfo extends AbstractVO {
     String alarmName;
     HashMap<String,Integer> time;
     int alarmId;
-    ArrayList<Boolean> dayss;
     ArrayList<Integer> days;
     int alarmType;
     HashMap<String,String> alarmSound;
@@ -99,14 +98,6 @@ public class AlarmInfo extends AbstractVO {
 
     public void setAlarmId(int alarmId) {
         this.alarmId = alarmId;
-    }
-
-    public ArrayList<Boolean> getDayss(){
-        return dayss;
-    }
-
-    public void setDayss(ArrayList<Boolean> dayss){
-        this.dayss = dayss;
     }
 
     public ArrayList<Integer> getDays() {
