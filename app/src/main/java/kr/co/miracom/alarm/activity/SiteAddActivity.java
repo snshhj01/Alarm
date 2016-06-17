@@ -363,9 +363,14 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         alarmInfo.setFlag("Y");
+
         alarmInfo.setLatitude(latitude);
         alarmInfo.setLongitude(longitude);
         alarmInfo.setAddr(address);
+//        alarmInfo.setLatitude("37.516929");
+//        alarmInfo.setLongitude("127.100788");
+//        alarmInfo.setAddr("서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)");
+
         alarmInfo.setRadius("100");
         saveAlarmInfo(alarmInfo);
         Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);

@@ -170,7 +170,8 @@ public class DBHelper {
                 COLUMN_SITE_FLAG,
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
-                COLUMN_SITE_RADIUS
+                COLUMN_SITE_RADIUS,
+                COLUMN_SITE_ADDR
         };
         Cursor cursor = sqlDB.query(ALARM_TABLE, columns, strWhere, null, null, null, COLUMN_ID);
         if (cursor.moveToFirst()) {

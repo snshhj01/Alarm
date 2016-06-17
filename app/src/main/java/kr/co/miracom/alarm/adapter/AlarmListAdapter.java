@@ -3,6 +3,7 @@ package kr.co.miracom.alarm.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.Alarms;
+
+import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
 
 /**
  * Created by hjinhwang on 2016-05-19.
@@ -63,17 +66,18 @@ public class AlarmListAdapter extends BaseAdapter {
             TextView tTitle = (TextView) convertView.findViewById(R.id.title);
             TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
             TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
-            TextView tDayOfWeek = (TextView) convertView.findViewById(R.id.dayOfWeek);
             TextView tLoc = (TextView) convertView.findViewById(R.id.loc);
             TextView tLocRange = (TextView) convertView.findViewById(R.id.locRange);
             TextView tBell = (TextView) convertView.findViewById(R.id.bell);
             tTitle.setText(aVO.getTitle());
             tAmPm.setText(aVO.getAmPm());
             tTimeFromTo.setText(aVO.getTimeFromTo());
-            tDayOfWeek.setText(aVO.getDayOfWeek());
+            setColorDOW(convertView, aVO.getDayOfWeek());
             tLoc.setText(aVO.getLoc());
             tLocRange.setText(aVO.getLocRange());
             tBell.setText(aVO.getBell());
+
+
 
             ImageView btnClose = (ImageView) convertView.findViewById(R.id.close);
             btnClose.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +140,17 @@ public class AlarmListAdapter extends BaseAdapter {
 
         this.notifyDataSetChanged();
 
+    }
+
+
+    public String korDayOfWeek(ArrayList<Integer> arrInt){
+        String korDOW = "";
+        String[] arrStr= {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+        for(int i=0; i<arrInt.size(); i++){
+            korDOW += arrStr[arrInt.get(i)];
+        }
+
+        return korDOW;
     }
 
 }

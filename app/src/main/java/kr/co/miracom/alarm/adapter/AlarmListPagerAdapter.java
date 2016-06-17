@@ -13,9 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 import kr.co.miracom.alarm.vo.ext.Alarms;
+
+import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
+import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
 
 
 /**
@@ -97,16 +101,27 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         List<AlarmInfo> alarmList = mDbHelper.selectAll("N");
         for(AlarmInfo aInfo : alarmList){
 
-            String amPm =  (aInfo.getTime().get("hour")<13 ? "오전": "오후");
-            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+            String amPm = getKorAmPm(aInfo.getTime().get("hour"));
+            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+
+            String aType = "";
+            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+                aType = "소리";
+            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+                aType = "진동";
+            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+                aType = "소리+진동";
+            }
 
             Alarms aV = new Alarms();
             aV.setTitle(aInfo.getAlarmName());
             aV.setAmPm(amPm);
             aV.setTimeFromTo(timeFromTo);
-            aV.setBell(aInfo.getAlarmSound()==null?"진동":"소리");
-            aV.setDayOfWeek(korDayOfWeek(aInfo.getDays()));
+            aV.setBell(aType);
+            aV.setDayOfWeek(aInfo.getDays());
             aV.set_Id(aInfo.get_id());
+
+
 
             adapter.add(aV);
         }
@@ -139,16 +154,27 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         List<AlarmInfo> siteList = mDbHelper.selectAll("Y");
         for(AlarmInfo aInfo : siteList){
 
-            String amPm =  (aInfo.getTime().get("hour")<13 ? "오전": "오후");
-            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
-                    + "~" + (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+            String amPm =  getKorAmPm(aInfo.getTime().get("hour"));
+            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
+                    + "~" + getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
+
+            String aType = "";
+            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+                aType = "소리";
+            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+                aType = "진동";
+            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+                aType = "소리+진동";
+            }
 
             Alarms aV = new Alarms();
             aV.setTitle(aInfo.getAlarmName());
             aV.setAmPm(amPm);
             aV.setTimeFromTo(timeFromTo);
-            aV.setBell(aInfo.getAlarmSound()==null?"진동":"소리");
-            aV.setDayOfWeek(korDayOfWeek(aInfo.getDays()));
+            aV.setBell(aType);
+            aV.setDayOfWeek(aInfo.getDays());
+            aV.setLoc(aInfo.getAddr());
+            aV.setLocRange(aInfo.getRadius());
             aV.set_Id(aInfo.get_id());
 
             adapter.add(aV);
@@ -172,15 +198,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         });
     }
 
-    public String korDayOfWeek(ArrayList<Integer> arrInt){
-        String korDOW = "";
-        String[] arrStr= {"월", "화", "수", "목", "금", "토", "일"};
-        for(int i=0; i<arrInt.size(); i++){
-            korDOW += arrStr[arrInt.get(i)];
-        }
 
-        return korDOW;
-    }
 
 
 }
