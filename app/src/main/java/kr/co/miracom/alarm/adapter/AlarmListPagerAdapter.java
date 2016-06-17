@@ -52,11 +52,11 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         switch (position) {
             case 0:
                 view = inflater.inflate(R.layout.alarm_list, null);
-                initListView(view);
+                alarmListView(view);
                 break;
             case 1:
                 view = inflater.inflate(R.layout.alarm_list, null);
-                initListView(view);
+                siteListView(view);
                 break;
             default:
                 break;
@@ -87,18 +87,61 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         super.destroyItem(container, position, object);
     }
 
-    private void initListView(View v){
+    private void alarmListView(View v){
         ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
         AlarmListAdapter adapter = new AlarmListAdapter();
 
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
 
-        List<AlarmInfo> siteList = mDbHelper.selectAll();
+        List<AlarmInfo> alarmList = mDbHelper.selectAll("N");
+        for(AlarmInfo aInfo : alarmList){
+
+            String amPm =  (aInfo.getTime().get("hour")<13 ? "오전": "오후");
+            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+
+            Alarms aV = new Alarms();
+            aV.setTitle(aInfo.getAlarmName());
+            aV.setAmPm(amPm);
+            aV.setTimeFromTo(timeFromTo);
+            aV.setBell(aInfo.getAlarmSound()==null?"진동":"소리");
+            aV.setDayOfWeek(korDayOfWeek(aInfo.getDays()));
+            aV.set_Id(aInfo.get_id());
+
+            adapter.add(aV);
+        }
+
+//        Alarms aV = new Alarms("카메라 스티커 확인","오전","08:00~09:00","일월화수목금토","향군타워","50m", "소리", 123);
+//        Alarms aV1 = new Alarms("가방 보안 체크","오후","06:00~07:00","일월화수목금토","잠실 동관","100m", "진동", 123);
+//        adapter.add(aV);
+//        adapter.add(aV1);
+
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(context, AlarmAddActivity.class);
+//                Toast.makeText(context, position, Toast.LENGTH_SHORT).show();
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    private void siteListView(View v){
+        ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
+        SiteListAdapter adapter = new SiteListAdapter();
+
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+
+        List<AlarmInfo> siteList = mDbHelper.selectAll("Y");
         for(AlarmInfo aInfo : siteList){
 
             String amPm =  (aInfo.getTime().get("hour")<13 ? "오전": "오후");
-            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + aInfo.getTime().get("minute") + "~" + (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + aInfo.getTime().get("minute");
+            String timeFromTo = (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
+                    + "~" + (aInfo.getTime().get("hour")<10 ? "0": "") + aInfo.getTime().get("hour") + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
 
             Alarms aV = new Alarms();
             aV.setTitle(aInfo.getAlarmName());

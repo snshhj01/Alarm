@@ -121,7 +121,6 @@ public class SiteAddActivity extends AppCompatActivity {
 
             //초기 default alarm path를 TextView 에 setting
             mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
 
@@ -359,6 +358,7 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
+        alarmInfo.setSoundUri(mUri);
         alarmInfo.setAlarmSound(soundMap);
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);

@@ -135,6 +135,7 @@ public class DBHelper {
         cv.put(COLUMN_ALARM_TIME, timeJson);
         cv.put(COLUMN_ALARM_DAYS, daysJson);
         cv.put(COLUMN_ALARM_SOUND, soundJson);
+        cv.put(COLUMN_ALARM_SOUND_URI, String.valueOf(alarmInfo.getSoundUri()));
         cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
         cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
         cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
@@ -150,8 +151,9 @@ public class DBHelper {
      * 모든 알람 리스트를 가져 옴
      * @return
      */
-    public List<AlarmInfo> selectAll() {
+    public List<AlarmInfo> selectAll(String flag) {
         Logger.d(this.getClass(), "%s", "Get all alarm list");
+        String strWhere = ("Y".equals(flag) ? COLUMN_SITE_FLAG+"='"+flag +"'" : COLUMN_SITE_FLAG+" IS NULL ");
         List<AlarmInfo> alarmList = new ArrayList<AlarmInfo>();
         String[] columns = new String[] {
                 COLUMN_ID,
@@ -164,9 +166,13 @@ public class DBHelper {
                 COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
-                COLUMN_ALARM_SNOOZE
+                COLUMN_ALARM_SNOOZE,
+                COLUMN_SITE_FLAG,
+                COLUMN_SITE_LATITUDE,
+                COLUMN_SITE_LONGITUDE,
+                COLUMN_SITE_RADIUS
         };
-        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, null, null, null, null, COLUMN_ID);
+        Cursor cursor = sqlDB.query(ALARM_TABLE, columns, strWhere, null, null, null, COLUMN_ID);
         if (cursor.moveToFirst()) {
             do {
                 AlarmInfo alarm = new AlarmInfo();
