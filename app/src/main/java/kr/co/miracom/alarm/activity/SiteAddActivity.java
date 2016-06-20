@@ -374,7 +374,7 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setRadius("100");
         saveAlarmInfo(alarmInfo);
         Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-        returnIntent.putExtra(Constants.PAGER, 0);
+        returnIntent.putExtra(Constants.PAGER, 1);
         startActivity(returnIntent);
     }
 

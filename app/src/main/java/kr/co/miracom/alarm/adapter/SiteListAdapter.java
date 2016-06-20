@@ -15,6 +15,7 @@ import java.util.List;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.AlarmAddActivity;
+import kr.co.miracom.alarm.activity.SiteAddActivity;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.view.SiteView;
@@ -119,7 +120,7 @@ public class SiteListAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
                     //Toast.makeText(context, "사이트리스트 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, AlarmAddActivity.class);
+                    Intent intent = new Intent(context, SiteAddActivity.class);
                     intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_Id());
                     context.startActivity(intent);
                 }
