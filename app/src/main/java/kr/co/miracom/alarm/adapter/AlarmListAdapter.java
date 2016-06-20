@@ -1,12 +1,15 @@
 package kr.co.miracom.alarm.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +18,11 @@ import java.util.ArrayList;
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.AlarmAddActivity;
 import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.util.DBHelper;
+import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.Alarms;
+
+import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
 
 /**
  * Created by hjinhwang on 2016-05-19.
@@ -23,6 +30,7 @@ import kr.co.miracom.alarm.vo.ext.Alarms;
 public class AlarmListAdapter extends BaseAdapter {
 
     private ArrayList<Alarms> m_list;
+    protected DBHelper mDbHelper;
 
     public AlarmListAdapter() {
         m_list = new ArrayList<Alarms>();
@@ -58,32 +66,34 @@ public class AlarmListAdapter extends BaseAdapter {
             TextView tTitle = (TextView) convertView.findViewById(R.id.title);
             TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
             TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
-            TextView tDayOfWeek = (TextView) convertView.findViewById(R.id.dayOfWeek);
             TextView tLoc = (TextView) convertView.findViewById(R.id.loc);
             TextView tLocRange = (TextView) convertView.findViewById(R.id.locRange);
             TextView tBell = (TextView) convertView.findViewById(R.id.bell);
             tTitle.setText(aVO.getTitle());
             tAmPm.setText(aVO.getAmPm());
             tTimeFromTo.setText(aVO.getTimeFromTo());
-            tDayOfWeek.setText(aVO.getDayOfWeek());
+            setColorDOW(convertView, aVO.getDayOfWeek());
             tLoc.setText(aVO.getLoc());
             tLocRange.setText(aVO.getLocRange());
             tBell.setText(aVO.getBell());
 
-//            Button btn = (Button) convertView.findViewById(R.id.btn_test);
-//            btn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(context, m_list.get(pos), Toast.LENGTH_SHORT).show();
-//                }
-//            });
+
+
+            ImageView btnClose = (ImageView) convertView.findViewById(R.id.close);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
+                    remove(pos, context);
+                }
+            });
 
             convertView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
-                    Toast.makeText(context, "리스트 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "알람리스트 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, AlarmAddActivity.class);
                     intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_Id());
                     context.startActivity(intent);
@@ -95,7 +105,7 @@ public class AlarmListAdapter extends BaseAdapter {
                 @Override
                 public boolean onLongClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
-                    Toast.makeText(context, "리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "알람리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
@@ -109,7 +119,38 @@ public class AlarmListAdapter extends BaseAdapter {
         m_list.add(vo);
     }
 
-//    public void remove(int _position){
-//        m_list.remove(_position);
-//    }
+
+
+    public void remove(int _position, Context context){
+
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+        //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
+        mDbHelper.deleteAlarm(m_list.get(_position).get_Id());
+
+//        for(Alarms a : m_list){
+//            Logger.d(this.getClass(), "%S", a.getTitle());
+//        }
+//        Logger.d(this.getClass(), "%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        m_list.remove(getItem(_position));
+
+//        for(Alarms a : m_list){
+//            Logger.d(this.getClass(), "%S", a.getTitle());
+//        }
+
+        this.notifyDataSetChanged();
+
+    }
+
+
+    public String korDayOfWeek(ArrayList<Integer> arrInt){
+        String korDOW = "";
+        String[] arrStr= {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+        for(int i=0; i<arrInt.size(); i++){
+            korDOW += arrStr[arrInt.get(i)];
+        }
+
+        return korDOW;
+    }
+
 }

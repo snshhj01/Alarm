@@ -2,6 +2,8 @@ package kr.co.miracom.alarm.vo.ext;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 /**
  * Created by kimsungmog on 2016-05-19.
  */
@@ -9,7 +11,7 @@ public class Alarms {
     private String title;
     private String amPm;
     private String timeFromTo;
-    private String dayOfWeek;
+    private ArrayList<Integer> dayOfWeek;
     private String loc;
     private String locRange;
     private String bell;
@@ -39,11 +41,11 @@ public class Alarms {
         this.timeFromTo = timeFromTo;
     }
 
-    public String getDayOfWeek() {
+    public ArrayList<Integer> getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(String dayOfWeek) {
+    public void setDayOfWeek(ArrayList<Integer> dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
@@ -82,7 +84,7 @@ public class Alarms {
     public Alarms() {
     }
 
-    public Alarms(String title, String amPm, String timeFromTo, String dayOfWeek, String loc, String locRange, String bell, int _Id) {
+    public Alarms(String title, String amPm, String timeFromTo, ArrayList<Integer> dayOfWeek, String loc, String locRange, String bell, int _Id) {
         this.title = title;
         this.amPm = amPm;
         this.timeFromTo = timeFromTo;

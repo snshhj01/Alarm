@@ -45,7 +45,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
     SiteListAdapter adapter;
     Button btnSave;
     Button btnSearch;
-    String addr;
+    String address;
     double latitude;
     double longitude;
 
@@ -136,7 +136,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         // 결과값이 들어갈 리스트 선언
         List<Address> addressList = null;
 
-        adapter = new SiteListAdapter(this);
+        adapter = new SiteListAdapter();
 
         try {
             addressList = gc.getFromLocationName(searchStr, 3);
@@ -151,6 +151,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
                         buf.append(addr.getAddressLine(k));
                     }
 
+                    address = buf.toString();
                     latitude = addr.getLatitude();
                     longitude = addr.getLongitude();
 
@@ -197,7 +198,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
     private void save(){
         Intent resultIntent = new Intent();
 
-        resultIntent.putExtra("addr", addr);
+        resultIntent.putExtra("address", address);
         resultIntent.putExtra("latitude", latitude);
         resultIntent.putExtra("longitude", longitude);
 

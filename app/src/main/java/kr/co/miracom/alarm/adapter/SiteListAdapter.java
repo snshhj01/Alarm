@@ -1,43 +1,61 @@
 package kr.co.miracom.alarm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.activity.AlarmAddActivity;
+import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.view.SiteView;
+import kr.co.miracom.alarm.vo.ext.Alarms;
 import kr.co.miracom.alarm.vo.ext.SiteItem;
+
+import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
 
 /**
  * Created by admin on 2016-05-31.
  */
 public class SiteListAdapter extends BaseAdapter {
-    private final String TAG = "SiteListAdapter";
 
-    private Context mContext;
 
-    private List<SiteItem> items = new ArrayList<SiteItem>();
+    //private final String TAG = "SiteListAdapter";
 
-    public SiteListAdapter(Context context){
-        mContext = context;
+    //private Context mContext;
+
+    //private List<SiteItem> items = new ArrayList<SiteItem>();
+
+    private ArrayList<Alarms> m_list;
+    protected DBHelper mDbHelper;
+
+
+    public SiteListAdapter() {
+        m_list = new ArrayList<Alarms>();
     }
 
 
-    public void setItem(SiteItem item){
-        items.add(item);
-    }
+    //public void setItem(SiteItem item) {
+    //    items.add(item);
+    //}
 
     @Override
     public int getCount() {
-        return items.size();
+        return m_list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return items.get(position);
+        return m_list.get(position);
     }
 
     @Override
@@ -45,17 +63,105 @@ public class SiteListAdapter extends BaseAdapter {
         return position;
     }
 
+
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//
+//        SiteView itemView;
+//        if (convertView == null) {
+//            itemView = new SiteView(mContext, items.get(position));
+//        } else {
+//            itemView = (SiteView) convertView;
+//
+//            itemView.setText(items.get(position).getData(0));
+//        }
+//
+//        return itemView;
+//    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SiteView itemView;
-        if (convertView == null) {
-            itemView = new SiteView(mContext, items.get(position));
-        } else {
-            itemView = (SiteView) convertView;
+        final int pos = position;
+        final Context context = parent.getContext();
 
-            itemView.setText(items.get(position).getData(0));
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.alarm_list_item, parent, false);
+
+            Alarms aVO = m_list.get(position);
+
+            ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
+            TextView tTitle = (TextView) convertView.findViewById(R.id.title);
+            TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
+            TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
+            TextView tLoc = (TextView) convertView.findViewById(R.id.loc);
+            TextView tLocRange = (TextView) convertView.findViewById(R.id.locRange);
+            TextView tBell = (TextView) convertView.findViewById(R.id.bell);
+            tTitle.setText(aVO.getTitle());
+            tAmPm.setText(aVO.getAmPm());
+            tTimeFromTo.setText(aVO.getTimeFromTo());
+            setColorDOW(convertView, aVO.getDayOfWeek());
+            tLoc.setText(aVO.getLoc());
+            tLocRange.setText(aVO.getLocRange());
+            tBell.setText(aVO.getBell());
+
+            ImageView btnClose = (ImageView) convertView.findViewById(R.id.close);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
+                    remove(pos, context);
+                }
+            });
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // 터치 시 해당 아이템 이름 출력
+                    //Toast.makeText(context, "사이트리스트 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, AlarmAddActivity.class);
+                    intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_Id());
+                    context.startActivity(intent);
+                }
+            });
+
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    // 터치 시 해당 아이템 이름 출력
+                    Toast.makeText(context, "사이트리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+
         }
 
-        return itemView;
+        return convertView;
+    }
+
+    public void add(Alarms vo) {
+        m_list.add(vo);
+    }
+
+    public void remove(int _position, Context context){
+
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+        //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
+        mDbHelper.deleteAlarm(m_list.get(_position).get_Id());
+
+//        for(Alarms a : m_list){
+//            Logger.d(this.getClass(), "%S", a.getTitle());
+//        }
+//        Logger.d(this.getClass(), "%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        m_list.remove(getItem(_position));
+
+//        for(Alarms a : m_list){
+//            Logger.d(this.getClass(), "%S", a.getTitle());
+//        }
+
+        this.notifyDataSetChanged();
+
     }
 }
