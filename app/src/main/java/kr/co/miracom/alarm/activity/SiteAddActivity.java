@@ -111,7 +111,7 @@ public class SiteAddActivity extends AppCompatActivity {
         if(intent.getIntExtra(Constants.ALARM_ID,0) != 0) {
             isModify = true;
             _id = intent.getIntExtra(Constants.ALARM_ID,0);
-            AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ID);
+            AlarmInfo alarm = mDbHelper.selectSiteAlarm(_id, COLUMN_ID);
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
@@ -125,7 +125,7 @@ public class SiteAddActivity extends AppCompatActivity {
             alramSoundName.setText(mRingtone.getTitle(this));
 
             mPlayer.setUri(mUri);
-        }
+    }
 
         btnMapSetting = (Button) findViewById(R.id.btnMapSetting);
         btnMapSetting.setOnClickListener(new View.OnClickListener() {
@@ -142,9 +142,40 @@ public class SiteAddActivity extends AppCompatActivity {
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alarmName.setText(alarm.getAlarmName());
+        alartUniqId = alarm.getAlarmId();
+        if(alarm.getAlarmName() != null){
+            alarmName.setText(alarm.getAlarmName());
+        }
+
+
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
+        ArrayList<Integer> days = alarm.getDays();
+        ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        for(Integer inx : days) {
+            toogleButtons[inx].setChecked(true);
+        }
+        if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+            alramTypeGroup.check(R.id.radioBtnSound);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnVibrate);
+        } else if (alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+            alramTypeGroup.check(R.id.radioBtnSoundVibrate);
+        }
+
+        mUri = alarm.getSoundUri();
+        mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+        alramSoundName.setText(mRingtone.getTitle(this));
+
+        mPlayer.setUri(mUri);
+
+        // seekbar progress = volum
+        //audiomanager volum = volum
+        volume = alarm.getVolume();
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM,volume,0);
+        volSeekBar.setProgress(volume);
+
+
     }
 
     /**

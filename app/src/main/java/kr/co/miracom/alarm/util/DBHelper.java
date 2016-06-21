@@ -272,8 +272,8 @@ public class DBHelper {
      * @param id
      * @return
      */
-    public AlarmInfo selectSiteAlarm(int id) {
-        Logger.d(this.getClass(), "%s", "Get alarm");
+    public AlarmInfo selectSiteAlarm(int id, String selection) {
+        Logger.d(this.getClass(), "%s", "Get Site alarm");
         AlarmInfo alarm = new AlarmInfo();
         String[] columns = new String[] {
                 COLUMN_ID,
@@ -283,13 +283,15 @@ public class DBHelper {
                 COLUMN_ALARM_TIME,
                 COLUMN_ALARM_DAYS,
                 COLUMN_ALARM_SOUND,
+                COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
                 COLUMN_ALARM_SNOOZE,
                 COLUMN_SITE_FLAG,
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
-                COLUMN_SITE_RADIUS
+                COLUMN_SITE_RADIUS,
+                COLUMN_SITE_ADDR
         };
         Cursor cursor = null;
         try {
@@ -300,16 +302,18 @@ public class DBHelper {
                     alarm.setAlarmName(cursor.getString(1));
                     alarm.setAlarmId(cursor.getInt(2));
                     alarm.setActive(cursor.getInt(3));
-                    alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), HashMap.class));
-                    alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), ArrayList.class));
+                    alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), hashTypeSI));
+                    alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
                     alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                    alarm.setAlarmType(cursor.getInt(7));
-                    alarm.setVolume(cursor.getInt(8));
-                    alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(9), HashMap.class));
+                    alarm.setSoundUri(Uri.parse(cursor.getString(7)));
+                    alarm.setAlarmType(cursor.getInt(8));
+                    alarm.setVolume(cursor.getInt(9));
+                    alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
                     alarm.setFlag(cursor.getString(10));
                     alarm.setLatitude(cursor.getString(11));
                     alarm.setLongitude(cursor.getString(12));
                     alarm.setRadius(cursor.getString(13));
+                    alarm.setAddr(cursor.getString(14));
                     Logger.d(this.getClass(), "%s", "Site Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
             }
