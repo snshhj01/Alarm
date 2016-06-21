@@ -94,7 +94,21 @@ public class AlarmListAdapter extends BaseAdapter {
             tLocRange.setText(aVO.getLocRange());
             tBell.setText(aVO.getBell());
 
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
 
+                    int active = m_list.get(pos).getActive();
+                    int alarmUniqId = m_list.get(pos).getAlarmId();
+
+                    if (active == 1) {
+                        disableExistAlarm(alarmUniqId, context);
+                    } else {
+                        enableExistAlarm(m_list.get(pos), context);
+                    }
+                }
+            });
 
             ImageView btnClose = (ImageView) convertView.findViewById(R.id.close);
             btnClose.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +190,7 @@ public class AlarmListAdapter extends BaseAdapter {
 //        return korDOW;
 //    }
 
-    private void cancelExistAlarm(int alartUniqId, Context context) {
+    private void disableExistAlarm(int alartUniqId, Context context) {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
@@ -184,5 +198,21 @@ public class AlarmListAdapter extends BaseAdapter {
         alarmManager.cancel(pIntent);
         pIntent.cancel();
     }
+
+    private void enableExistAlarm(Alarms aVO, Context context) {
+
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        long triggerTime = 0;
+        long intervalTime = 24 * 60 * 60 * 1000;// 24시간
+
+        boolean isRepeat = aVO.getDayOfWeek().size() > 0;
+        int alartUniqId = aVO.getAlarmId();
+
+        intent.putExtra("one_time", isRepeat);
+        intent.putExtra("alartUniqId", alartUniqId);
+//        triggerTime = CommonUtils.setTriggerTime();
+//        AlarmUtils.getInstance().startAlarm(context, intent, triggerTime, (isRepeat ? 1 : 0) );
+    }
+
 
 }
