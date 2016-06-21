@@ -50,7 +50,9 @@ public class NotiActivity extends AppCompatActivity {
 
         AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
         //String strUri = "content://settings/system/alarm_alert";
-        Uri mUri = alarm.getSoundUri();
+       // Uri mUri = alarm.getSoundUri();
+        String strUri = alarm.getSoundUri();
+        Uri mUri = Uri.parse(strUri);
         startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
 
         alertMsgTextView.setText(alarm.getAlarmName());

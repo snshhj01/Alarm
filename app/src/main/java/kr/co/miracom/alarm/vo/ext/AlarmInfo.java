@@ -67,7 +67,7 @@ public class AlarmInfo extends AbstractVO {
         this.flag = flag;
     }
 
-    Uri soundUri;
+    String soundUri;
 
     public int get_id() {
         return _id;
@@ -148,11 +148,11 @@ public class AlarmInfo extends AbstractVO {
         this.active = active;
     }
 
-    public Uri getSoundUri() {
+    public String getSoundUri() {
         return soundUri;
     }
 
-    public void setSoundUri(Uri soundUri) {
+    public void setSoundUri(String soundUri) {
         this.soundUri = soundUri;
     }
 }

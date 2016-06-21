@@ -396,7 +396,7 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
-        alarmInfo.setSoundUri(mUri);
+        alarmInfo.setSoundUri(mUri.toString());
         alarmInfo.setAlarmSound(soundMap);
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
