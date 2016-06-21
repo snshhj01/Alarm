@@ -1,6 +1,8 @@
 package kr.co.miracom.alarm.adapter;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.AlarmAddActivity;
 import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.service.AlarmReceiver;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.Alarms;
@@ -31,6 +34,8 @@ public class AlarmListAdapter extends BaseAdapter {
 
     private ArrayList<Alarms> m_list;
     protected DBHelper mDbHelper;
+
+    private AlarmManager alarmManager;
 
     public AlarmListAdapter() {
         m_list = new ArrayList<Alarms>();
@@ -55,6 +60,8 @@ public class AlarmListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -123,10 +130,13 @@ public class AlarmListAdapter extends BaseAdapter {
 
     public void remove(int _position, Context context){
 
+        int alarmUniqId = m_list.get(_position).getAlarmId();
+        int _id = m_list.get(_position).get_Id();
+
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
         //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
-        mDbHelper.deleteAlarm(m_list.get(_position).get_Id());
+        mDbHelper.deleteAlarm(_id);
 
 //        for(Alarms a : m_list){
 //            Logger.d(this.getClass(), "%S", a.getTitle());
@@ -137,6 +147,8 @@ public class AlarmListAdapter extends BaseAdapter {
 //        for(Alarms a : m_list){
 //            Logger.d(this.getClass(), "%S", a.getTitle());
 //        }
+
+        cancelExistAlarm(alarmUniqId, context) ;
 
         this.notifyDataSetChanged();
 
@@ -151,6 +163,15 @@ public class AlarmListAdapter extends BaseAdapter {
         }
 
         return korDOW;
+    }
+
+    private void cancelExistAlarm(int alartUniqId, Context context) {
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pIntent);
+        pIntent.cancel();
     }
 
 }

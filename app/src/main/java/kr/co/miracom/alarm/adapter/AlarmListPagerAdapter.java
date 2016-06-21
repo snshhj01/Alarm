@@ -176,6 +176,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
             aV.setLoc(aInfo.getAddr());
             aV.setLocRange(aInfo.getRadius());
             aV.set_Id(aInfo.get_id());
+            aV.setAlarmId(aInfo.getAlarmId());
 
             adapter.add(aV);
         }

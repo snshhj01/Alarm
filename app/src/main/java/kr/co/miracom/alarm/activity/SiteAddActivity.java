@@ -197,10 +197,13 @@ public class SiteAddActivity extends AppCompatActivity {
                     snoozeMap.put(Constants.INTERVAL, interval);
                     snoozeMap.put(Constants.COUNT, count);
                 }
-                registerAlram();
                 setAlarmType();
+                registerAlram();
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 1);
+                startActivity(returnIntent);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +211,10 @@ public class SiteAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 1);
+                startActivity(returnIntent);
+
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
@@ -373,9 +380,6 @@ public class SiteAddActivity extends AppCompatActivity {
 
         alarmInfo.setRadius("100");
         saveAlarmInfo(alarmInfo);
-        Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-        returnIntent.putExtra(Constants.PAGER, 1);
-        startActivity(returnIntent);
     }
 
     /**

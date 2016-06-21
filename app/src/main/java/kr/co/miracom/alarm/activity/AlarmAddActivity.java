@@ -215,6 +215,9 @@ public class AlarmAddActivity extends AppCompatActivity {
                 registerAlram();
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 0);
+                startActivity(returnIntent);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +225,9 @@ public class AlarmAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 0);
+                startActivity(returnIntent);
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
@@ -373,9 +379,7 @@ public class AlarmAddActivity extends AppCompatActivity {
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         saveAlarmInfo(alarmInfo);
-        /*Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
-        returnIntent.putExtra(Constants.PAGER, 0);
-        startActivity(returnIntent);*/
+
     }
 
     /**

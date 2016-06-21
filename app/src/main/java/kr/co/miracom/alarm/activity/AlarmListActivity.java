@@ -40,9 +40,11 @@ public class AlarmListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-//        Logger.d( this.getClass(), "%s",  "인텐트 뭐 받앗니 : " + intent.getIntExtra(Constants.PAGER, 0));
+        Logger.d( this.getClass(), "%s",  "인텐트 뭐 받앗니 : " + intent.getIntExtra(Constants.PAGER, 0));
         if(intent.getIntExtra(Constants.PAGER, 0) == 1){
             pager.setCurrentItem(1);  // SiteList로 이동
+        }else{
+            pager.setCurrentItem(0);
         }
 
         addAlarmBtn = (FloatingActionButton) findViewById(R.id.add_alarm);
