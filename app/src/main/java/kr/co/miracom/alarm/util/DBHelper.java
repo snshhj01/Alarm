@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -238,7 +237,12 @@ public class DBHelper {
                 COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
-                COLUMN_ALARM_SNOOZE
+                COLUMN_ALARM_SNOOZE,
+                COLUMN_SITE_FLAG,
+                COLUMN_SITE_LATITUDE,
+                COLUMN_SITE_LONGITUDE,
+                COLUMN_SITE_RADIUS,
+                COLUMN_SITE_ADDR
         };
         Cursor cursor = null;
         try {
@@ -257,6 +261,10 @@ public class DBHelper {
                     alarm.setAlarmType(cursor.getInt(8));
                     alarm.setVolume(cursor.getInt(9));
                     alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
+                    alarm.setFlag(cursor.getString(11));
+                    alarm.setLatitude(cursor.getString(12));
+                    alarm.setLongitude(cursor.getString(13));
+                    alarm.setRadius(cursor.getString(14));
                     Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
             }
