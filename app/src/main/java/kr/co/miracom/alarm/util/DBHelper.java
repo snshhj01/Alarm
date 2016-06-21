@@ -34,11 +34,9 @@ public class DBHelper {
     public static final String COLUMN_ALARM_ACTIVE = "alarm_active";
     public static final String COLUMN_ALARM_TIME = "alarm_time";
     public static final String COLUMN_ALARM_DAYS = "alarm_days";
-    public static final String COLUMN_ALARM_SOUND = "alarm_sound";
     public static final String COLUMN_ALARM_SOUND_URI = "alarm_sound_uri";
     public static final String COLUMN_ALARM_TYPE = "alarm_type";
     public static final String COLUMN_ALARM_VOLUME = "alarm_volume";
-    public static final String COLUMN_ALARM_SNOOZE = "alarm_snooze";
 
     //public static final String SITE_ALARM_TABLE = "tb_site_alarm_management";
     public static final String COLUMN_SITE_FLAG = "alarm_site_flg";
@@ -63,11 +61,9 @@ public class DBHelper {
                     + COLUMN_ALARM_ACTIVE + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_TIME + " TEXT NOT NULL, "
                     + COLUMN_ALARM_DAYS + " TEXT NOT NULL, "
-                    + COLUMN_ALARM_SOUND + " TEXT NOT NULL, "
                     + COLUMN_ALARM_SOUND_URI + " TEXT NOT NULL, "
                     + COLUMN_ALARM_TYPE + " INTEGER NOT NULL, "
                     + COLUMN_ALARM_VOLUME + " INTEGER NOT NULL, "
-                    + COLUMN_ALARM_SNOOZE + " TEXT NOT NULL, "
                     + COLUMN_SITE_FLAG + " TEXT, "
                     + COLUMN_SITE_LATITUDE + " TEXT, "
                     + COLUMN_SITE_LONGITUDE + " TEXT, "
@@ -99,8 +95,6 @@ public class DBHelper {
         ContentValues cv = new ContentValues();
 
         String timeJson = gson.toJson(alarmInfo.getTime());
-        String soundJson = gson.toJson(alarmInfo.getAlarmSound());
-        String snoozeJson = gson.toJson(alarmInfo.getSnooze());
         String daysJson = gson.toJson(alarmInfo.getDays());
 
         cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
@@ -108,36 +102,9 @@ public class DBHelper {
         cv.put(COLUMN_ALARM_ACTIVE, alarmInfo.getActive());
         cv.put(COLUMN_ALARM_TIME, timeJson);
         cv.put(COLUMN_ALARM_DAYS, daysJson);
-        cv.put(COLUMN_ALARM_SOUND, soundJson);
         cv.put(COLUMN_ALARM_SOUND_URI, String.valueOf(alarmInfo.getSoundUri()));
         cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
         cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
-        cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
-        sqlDB.insert(ALARM_TABLE, null, cv);
-    }
-
-    /**
-     * 새로운 위치 알람 추가시 Insert 함.
-     * @param alarmInfo
-     */
-    public void insertSiteAlarmInfo(AlarmInfo alarmInfo) {
-        ContentValues cv = new ContentValues();
-
-        String timeJson = gson.toJson(alarmInfo.getTime());
-        String soundJson = gson.toJson(alarmInfo.getAlarmSound());
-        String snoozeJson = gson.toJson(alarmInfo.getSnooze());
-        String daysJson = gson.toJson(alarmInfo.getDays());
-
-        cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
-        cv.put(COLUMN_ALARM_ID, alarmInfo.getAlarmId());
-        cv.put(COLUMN_ALARM_ACTIVE, alarmInfo.getActive());
-        cv.put(COLUMN_ALARM_TIME, timeJson);
-        cv.put(COLUMN_ALARM_DAYS, daysJson);
-        cv.put(COLUMN_ALARM_SOUND, soundJson);
-        cv.put(COLUMN_ALARM_SOUND_URI, String.valueOf(alarmInfo.getSoundUri()));
-        cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
-        cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
-        cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
         cv.put(COLUMN_SITE_FLAG, alarmInfo.getFlag());
         cv.put(COLUMN_SITE_LATITUDE, alarmInfo.getLatitude());
         cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
@@ -147,7 +114,7 @@ public class DBHelper {
     }
 
     /**
-     * 모든 알람 리스트를 가져 옴
+     * Type별 모든 알람 리스트를 가져 옴
      * @return
      */
     public List<AlarmInfo> selectAll(String flag) {
@@ -161,11 +128,9 @@ public class DBHelper {
                 COLUMN_ALARM_ACTIVE,
                 COLUMN_ALARM_TIME,
                 COLUMN_ALARM_DAYS,
-                COLUMN_ALARM_SOUND,
                 COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
-                COLUMN_ALARM_SNOOZE,
                 COLUMN_SITE_FLAG,
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
@@ -184,31 +149,15 @@ public class DBHelper {
                     alarm.setActive(cursor.getInt(3));
                     alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), hashTypeSI));
                     alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
-                    alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                    //alarm.setSoundUri(Uri.parse(cursor.getString(7)));
-                    alarm.setSoundUri(cursor.getString(7));
-                    alarm.setAlarmType(cursor.getInt(8));
-                    alarm.setVolume(cursor.getInt(9));
-                    alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
+                    alarm.setSoundUri(cursor.getString(6));
+                    alarm.setAlarmType(cursor.getInt(7));
+                    alarm.setVolume(cursor.getInt(8));
                     alarmList.add(alarm);
                     Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
 
             }
             Logger.d(this.getClass(), "%s", "Alarm count : " + alarmList.size());
-        /*
-        ==> 아래와 같이 값이 저장되며 map형태의 값은 map에서 꺼내서 사용해야 함.
-         alarmName=알람테스트
-         alarmSound={path=/storage/emulated/0/melon/5 Seconds Of Summer-01-Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)-128.mp3, title=Amnesia (삼성 갤럭시 노트 엣지 광고 삽입곡)}
-         days=[2, 3, 4, 7]
-         snooze={count=3, interval=5}
-         time={hour=18, minute=43}
-         _id=2
-         active=1
-         alarmId=1768778836
-         alarmType=2
-         volume=9
-         */
         }finally {
             if(cursor != null){
                 cursor.close();
@@ -218,13 +167,14 @@ public class DBHelper {
         return alarmList;
     }
 
+
     /**
-     * 선택 된 알람 정보를 가져 옴
+     * 선택 된 알람정보를 가져 옴
      * @param id
      * @return
      */
     public AlarmInfo selectAlarm(int id, String selection) {
-        Logger.d(this.getClass(), "%s", "Get alarm");
+        Logger.d(this.getClass(), "%s", "Get alarm, id:"+id);
         AlarmInfo alarm = new AlarmInfo();
         String[] columns = new String[] {
                 COLUMN_ID,
@@ -233,11 +183,9 @@ public class DBHelper {
                 COLUMN_ALARM_ACTIVE,
                 COLUMN_ALARM_TIME,
                 COLUMN_ALARM_DAYS,
-                COLUMN_ALARM_SOUND,
                 COLUMN_ALARM_SOUND_URI,
                 COLUMN_ALARM_TYPE,
                 COLUMN_ALARM_VOLUME,
-                COLUMN_ALARM_SNOOZE,
                 COLUMN_SITE_FLAG,
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
@@ -255,75 +203,14 @@ public class DBHelper {
                     alarm.setActive(cursor.getInt(3));
                     alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), hashTypeSI));
                     alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
-                    alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                    //alarm.setSoundUri(Uri.parse(cursor.getString(7)));
-                    alarm.setSoundUri(cursor.getString(7));
-                    alarm.setAlarmType(cursor.getInt(8));
-                    alarm.setVolume(cursor.getInt(9));
-                    alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
-                    alarm.setFlag(cursor.getString(11));
-                    alarm.setLatitude(cursor.getString(12));
-                    alarm.setLongitude(cursor.getString(13));
-                    alarm.setRadius(cursor.getString(14));
-                    Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
-                } while (cursor.moveToNext());
-            }
-        }finally {
-            if(cursor != null){
-                cursor.close();
-
-            }
-        }
-        return alarm;
-    }
-
-    /**
-     * 선택 된 위치 알람 정보를 가져 옴
-     * @param id
-     * @return
-     */
-    public AlarmInfo selectSiteAlarm(int id, String selection) {
-        Logger.d(this.getClass(), "%s", "Get Site alarm");
-        AlarmInfo alarm = new AlarmInfo();
-        String[] columns = new String[] {
-                COLUMN_ID,
-                COLUMN_ALARM_NAME,
-                COLUMN_ALARM_ID,
-                COLUMN_ALARM_ACTIVE,
-                COLUMN_ALARM_TIME,
-                COLUMN_ALARM_DAYS,
-                COLUMN_ALARM_SOUND,
-                COLUMN_ALARM_SOUND_URI,
-                COLUMN_ALARM_TYPE,
-                COLUMN_ALARM_VOLUME,
-                COLUMN_ALARM_SNOOZE,
-                COLUMN_SITE_FLAG,
-                COLUMN_SITE_LATITUDE,
-                COLUMN_SITE_LONGITUDE,
-                COLUMN_SITE_RADIUS,
-                COLUMN_SITE_ADDR
-        };
-        Cursor cursor = null;
-        try {
-            cursor = sqlDB.query(ALARM_TABLE, columns, COLUMN_ID + "=" + id, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    alarm.set_id(cursor.getInt(0));
-                    alarm.setAlarmName(cursor.getString(1));
-                    alarm.setAlarmId(cursor.getInt(2));
-                    alarm.setActive(cursor.getInt(3));
-                    alarm.setTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(4), hashTypeSI));
-                    alarm.setDays((ArrayList<Integer>) gson.fromJson(cursor.getString(5), arrTypeI));
-                    alarm.setAlarmSound((HashMap<String, String>) gson.fromJson(cursor.getString(6), HashMap.class));
-                    alarm.setSoundUri(cursor.getString(7));
-                    alarm.setAlarmType(cursor.getInt(8));
-                    alarm.setVolume(cursor.getInt(9));
-                    alarm.setSnooze((HashMap<String, Integer>) gson.fromJson(cursor.getString(10), hashTypeSI));
-                    alarm.setFlag(cursor.getString(10));
-                    alarm.setLatitude(cursor.getString(11));
-                    alarm.setLongitude(cursor.getString(12));
-                    alarm.setRadius(cursor.getString(13));
-                    alarm.setAddr(cursor.getString(14));
+                    alarm.setSoundUri(cursor.getString(6));
+                    alarm.setAlarmType(cursor.getInt(7));
+                    alarm.setVolume(cursor.getInt(8));
+                    alarm.setFlag(cursor.getString(9));
+                    alarm.setLatitude(cursor.getString(10));
+                    alarm.setLongitude(cursor.getString(11));
+                    alarm.setRadius(cursor.getString(12));
+                    alarm.setAddr(cursor.getString(13));
                     Logger.d(this.getClass(), "%s", "Site Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
             }
@@ -339,26 +226,28 @@ public class DBHelper {
 
     /**
      * 알람 수정 된 내용 update
-     * @param alarm
+     * @param alarmInfo
      * @return
      */
-    public int update(AlarmInfo alarm) {
+    public int updateAlarm(AlarmInfo alarmInfo) {
         ContentValues cv = new ContentValues();
-        String timeJson = gson.toJson(alarm.getTime());
-        String soundJson = gson.toJson(alarm.getAlarmSound());
-        String snoozeJson = gson.toJson(alarm.getSnooze());
-        String daysJson = gson.toJson(alarm.getDays());
+        String timeJson = gson.toJson(alarmInfo.getTime());
+        String daysJson = gson.toJson(alarmInfo.getDays());
 
-        cv.put(COLUMN_ALARM_NAME, alarm.getAlarmName());
-        cv.put(COLUMN_ALARM_ID, alarm.getAlarmId());
-        cv.put(COLUMN_ALARM_ACTIVE, alarm.getActive());
+        cv.put(COLUMN_ALARM_NAME, alarmInfo.getAlarmName());
+        cv.put(COLUMN_ALARM_ID, alarmInfo.getAlarmId());
+        cv.put(COLUMN_ALARM_ACTIVE, alarmInfo.getActive());
         cv.put(COLUMN_ALARM_TIME, timeJson);
         cv.put(COLUMN_ALARM_DAYS, daysJson);
-        cv.put(COLUMN_ALARM_SOUND, soundJson);
-        cv.put(COLUMN_ALARM_TYPE, alarm.getAlarmType());
-        cv.put(COLUMN_ALARM_VOLUME, alarm.getVolume());
-        cv.put(COLUMN_ALARM_SNOOZE, snoozeJson);
-        return sqlDB.update(ALARM_TABLE, cv, COLUMN_ID+"="+alarm.get_id(), null);
+        cv.put(COLUMN_ALARM_SOUND_URI, String.valueOf(alarmInfo.getSoundUri()));
+        cv.put(COLUMN_ALARM_TYPE, alarmInfo.getAlarmType());
+        cv.put(COLUMN_ALARM_VOLUME, alarmInfo.getVolume());
+        cv.put(COLUMN_SITE_FLAG, alarmInfo.getFlag());
+        cv.put(COLUMN_SITE_LATITUDE, alarmInfo.getLatitude());
+        cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
+        cv.put(COLUMN_SITE_RADIUS, alarmInfo.getRadius());
+        cv.put(COLUMN_SITE_ADDR, alarmInfo.getAddr());
+        return sqlDB.update(ALARM_TABLE, cv, COLUMN_ID+"="+alarmInfo.get_id(), null);
     }
 
     /**

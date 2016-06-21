@@ -1,7 +1,5 @@
 package kr.co.miracom.alarm.vo.ext;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,15 +17,14 @@ public class AlarmInfo extends AbstractVO {
     int alarmId;
     ArrayList<Integer> days;
     int alarmType;
-    HashMap<String,String> alarmSound;
     int volume;
-    HashMap<String,Integer> snooze;
     int active;
     String latitude;
     String longitude;
     String radius;
     String flag;
     String addr;
+    String soundUri;
 
     public String getAddr() {
         return addr;
@@ -66,8 +63,6 @@ public class AlarmInfo extends AbstractVO {
     public void setFlag(String flag) {
         this.flag = flag;
     }
-
-    String soundUri;
 
     public int get_id() {
         return _id;
@@ -116,28 +111,12 @@ public class AlarmInfo extends AbstractVO {
         this.alarmType = alarmType;
     }
 
-    public HashMap<String, String> getAlarmSound() {
-        return alarmSound;
-    }
-
-    public void setAlarmSound(HashMap<String, String> alarmSound) {
-        this.alarmSound = alarmSound;
-    }
-
     public int getVolume() {
         return volume;
     }
 
     public void setVolume(int volume) {
         this.volume = volume;
-    }
-
-    public HashMap<String, Integer> getSnooze() {
-        return snooze;
-    }
-
-    public void setSnooze(HashMap<String, Integer> snooze) {
-        this.snooze = snooze;
     }
 
     public int getActive() {

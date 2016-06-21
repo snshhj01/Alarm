@@ -12,13 +12,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
@@ -53,30 +51,24 @@ public class AlarmAddActivity extends AppCompatActivity {
     private RadioGroup alramTypeGroup;
     private LinearLayout alramSoundSelector;
     private SeekBar volSeekBar;
-    private Switch repeatSwich;
     private ImageView speakerImage;
-    private TextView alramSoundName, textViewAlramRepeatSetting;
+    private TextView alramSoundName;
 
 
     //User define variable
     private DBHelper mDbHelper;
+    private HashMap<String,Integer> timeMap;
+
     private boolean[] weekRepeatInfo;
     private boolean isRepeat = false;
     private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
 
+    private PendingIntent pendingIntent;
     private boolean isModify;
     private int alartUniqId;
     private int _id;
-
-    private HashMap<String,Integer> timeMap;
-    private HashMap<String,String> soundMap;
-    private HashMap<String,Integer> snoozeMap;
-
     private int volume;
     private int alarmType = 1;
-    private int interval=5;
-    private int count=3;
 
     private AudioManager audioManager;
     private Ringtone mRingtone;
@@ -157,8 +149,6 @@ public class AlarmAddActivity extends AppCompatActivity {
         volume = alarm.getVolume();
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM,volume,0);
         volSeekBar.setProgress(volume);
-
-
     }
 
     /**
@@ -193,25 +183,11 @@ public class AlarmAddActivity extends AppCompatActivity {
         alramSoundName = (TextView) findViewById(R.id.alarmSoundContent);
         //볼륨조절Bar
         volSeekBar = (SeekBar) findViewById(R.id.seekBarVolumeBar);
-        speakerImage = (ImageView) findViewById(R.id.imageViewViewImg);
-        //반복설정 스위치
-        repeatSwich = (Switch) findViewById(R.id.switchRepeatSetting);
-
-        textViewAlramRepeatSetting = (TextView) findViewById(R.id.textViewAlramRepeatSetting);
-
-        String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
-        textViewAlramRepeatSetting.setText(repeatText);
+        speakerImage = (ImageView) findViewById(R.id.speakerImg);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(repeatSwich.isChecked()) {
-                    //실제 Dialog에서 세팅해주나 샘플로 데이터 넣음
-                    //5분간 3회
-                    snoozeMap = new HashMap<String,Integer>();
-                    snoozeMap.put(Constants.INTERVAL, interval);
-                    snoozeMap.put(Constants.COUNT, count);
-                }
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
@@ -251,27 +227,10 @@ public class AlarmAddActivity extends AppCompatActivity {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 ringtoneStop();
-                //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ringtonePlay();
-
-                //
-            }
-        });
-
-        repeatSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-
-                    Intent intent = new Intent(getApplicationContext(), AlarmRepeatActivity.class);
-                    intent.putExtra("interval",interval);
-                    intent.putExtra("count",count);
-                    startActivityForResult(intent,100);
-                }
             }
         });
     }
@@ -307,19 +266,8 @@ public class AlarmAddActivity extends AppCompatActivity {
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
-
-
             mPlayer.setUri(mUri);
-
-        }else{
-            //AlarmRepeatActivity
-            interval = data.getIntExtra("interval",5);
-            count = data.getIntExtra("count",3);
-            String repeatText = String.valueOf(interval) + " 분, " + String.valueOf(count) + "회";
-            textViewAlramRepeatSetting.setText(repeatText);
-
         }
-
     }
 
     /**
@@ -376,7 +324,8 @@ public class AlarmAddActivity extends AppCompatActivity {
             // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
-
+        if(isModify)
+            alarmInfo.set_id(_id);
         alarmInfo.setAlarmName(alarmName.getText().toString());
         alarmInfo.setAlarmId(alartUniqId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
@@ -384,11 +333,8 @@ public class AlarmAddActivity extends AppCompatActivity {
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
         alarmInfo.setSoundUri(mUri.toString());
-        alarmInfo.setAlarmSound(soundMap);
         alarmInfo.setVolume(volume);
-        alarmInfo.setSnooze(snoozeMap);
         saveAlarmInfo(alarmInfo);
-
     }
 
     /**
@@ -396,7 +342,10 @@ public class AlarmAddActivity extends AppCompatActivity {
      * @param alarmInfo
      */
     private void saveAlarmInfo(AlarmInfo alarmInfo) {
-        mDbHelper.insertAlarmInfo(alarmInfo);
+        if(!isModify)
+            mDbHelper.insertAlarmInfo(alarmInfo);
+        else
+            mDbHelper.updateAlarm(alarmInfo);
     }
 
     /**

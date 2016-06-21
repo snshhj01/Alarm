@@ -258,8 +258,8 @@ public class AlarmUtils implements LocationListener {
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra("alartUniqId", intent.getIntExtra("alartUniqId", 0));
-
-        pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, CommonUtils.getAlarmId(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        // startAlram(context, pendingIntent, FIVE_SECOND);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + FIVE_MINUTE, pendingIntent);
     }
