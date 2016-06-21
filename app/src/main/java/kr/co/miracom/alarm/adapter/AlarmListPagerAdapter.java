@@ -120,8 +120,8 @@ public class AlarmListPagerAdapter extends PagerAdapter {
             aV.setBell(aType);
             aV.setDayOfWeek(aInfo.getDays());
             aV.set_Id(aInfo.get_id());
-
-
+            aV.setAlarmId(aInfo.getAlarmId());
+            aV.setActive(aInfo.getActive());
 
             adapter.add(aV);
         }
@@ -177,6 +177,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
             aV.setLocRange(aInfo.getRadius());
             aV.set_Id(aInfo.get_id());
             aV.setAlarmId(aInfo.getAlarmId());
+            aV.setActive(aInfo.getActive());
 
             adapter.add(aV);
         }
