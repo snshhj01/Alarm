@@ -98,15 +98,18 @@ public class AlarmUtils implements LocationListener {
             lngPoint = myLocation.getLongitude();
 
             Log.e("Receiver GetLocations()", "latPoint: " + latPoint + ", lngPoint: " + lngPoint);
-            Toast.makeText(m_Activity, "latPoint: " + latPoint + ", lngPoint: " + lngPoint, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(m_Activity, "latPoint: " + latPoint + ", lngPoint: " + lngPoint, Toast.LENGTH_SHORT).show();
            /* latTextView =(TextView) findViewById(R.id.lat);
             lngTextView =(TextView) findViewById(R.id.lng);
 
             latTextView.setText(String.valueOf(latPoint));
             lngTextView.setText(String.valueOf(lngPoint)  + " : " + getProvider());*/
+            Double lat = intent.getDoubleExtra("latitude", 0.0);
+            Double lng = intent.getDoubleExtra("longitude", 0.0);
+            Toast.makeText(m_Activity, "latPoint: " + lat + ", lngPoint: " + lng, Toast.LENGTH_SHORT).show();
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.3680115, 127.1033245, 500, -1, intent); //정자
-            locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.516648, 127.1010280, 1000, -1, intent); //잠실1
+            locRegister(m_Activity, intent.getIntExtra("alartUniqId", 0), 37.516648, 127.1010280, 1000, -1, intent); //잠실1
        //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.5166423, 127.1010482, 100, -1, intent); //잠실2
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), latPoint, lngPoint, 500, -1, intent);

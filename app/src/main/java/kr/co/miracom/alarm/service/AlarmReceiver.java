@@ -52,7 +52,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Calendar cal = Calendar.getInstance();
 
                 if(active == 1){
-                    if (1 == 1){ //위치 알람이면.
+                    if ("Y".equals(alarm.getFlag())){ //위치 알람이면.
                         Log.e("AlarmReceiver connect", "AlarmReceiver site : " +  intent.getIntExtra("alartUniqId", 0));
 
                         //GPS init 후 3번 정도?? GPS enabl
