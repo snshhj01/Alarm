@@ -22,7 +22,7 @@ public class AlarmListActivity extends AppCompatActivity {
 
     ViewPager pager;
     FloatingActionButton addAlarmBtn;
-
+    Integer posion = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +41,8 @@ public class AlarmListActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         Logger.d( this.getClass(), "%s",  "인텐트 뭐 받앗니 : " + intent.getIntExtra(Constants.PAGER, 0));
-        if(intent.getIntExtra(Constants.PAGER, 0) == 1){
-            pager.setCurrentItem(1);  // SiteList로 이동
-        }else{
-            pager.setCurrentItem(0);
-        }
+        posion = intent.getIntExtra(Constants.PAGER, 0);
+        pager.setCurrentItem(posion);
 
         addAlarmBtn = (FloatingActionButton) findViewById(R.id.add_alarm);
         addAlarmBtn.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +57,23 @@ public class AlarmListActivity extends AppCompatActivity {
                     intent = new Intent(v.getContext(), SiteAddActivity.class);
                 }
                 startActivity(intent);
+                finish();
             }
         });
         enableGPSSetting();
        // AlarmUtils.getInstance().gpsInit(getApplicationContext());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.PAGER, pager.getCurrentItem());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        posion = savedInstanceState.getInt(Constants.PAGER, 0);
     }
 
     public void enableGPSSetting() {

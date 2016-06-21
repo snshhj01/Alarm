@@ -214,20 +214,20 @@ public class AlarmAddActivity extends AppCompatActivity {
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
-                finish();
                 Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, 0);
                 startActivity(returnIntent);
+                finish();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ringtoneStop();
-                finish();
                 Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, 0);
                 startActivity(returnIntent);
+                finish();
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
@@ -275,7 +275,15 @@ public class AlarmAddActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ringtoneStop();
+        Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+        returnIntent.putExtra(Constants.PAGER, 0);
+        startActivity(returnIntent);
+        finish();
+    }
 
 
     private void alarmSelectDialog(){

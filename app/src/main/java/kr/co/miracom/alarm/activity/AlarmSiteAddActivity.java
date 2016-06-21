@@ -188,6 +188,15 @@ public class AlarmSiteAddActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent(AlarmSiteAddActivity.this, AlarmListActivity.class);
+        returnIntent.putExtra(Constants.PAGER, 1);
+        startActivity(returnIntent);
+        finish();
+    }
+
     /**
      * Radio버튼 항목에 따라 알람 타입 설정
      */

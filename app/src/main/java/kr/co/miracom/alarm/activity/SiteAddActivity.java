@@ -210,10 +210,10 @@ public class SiteAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ringtoneStop();
-                finish();
                 Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, 1);
                 startActivity(returnIntent);
+                finish();
 
             }
         });
@@ -257,8 +257,15 @@ public class SiteAddActivity extends AppCompatActivity {
         });
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ringtoneStop();
+        finish();
+        Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
+        returnIntent.putExtra(Constants.PAGER, 1);
+        startActivity(returnIntent);
+    }
 
     private void alarmSelectDialog(){
         ringtoneStop();
