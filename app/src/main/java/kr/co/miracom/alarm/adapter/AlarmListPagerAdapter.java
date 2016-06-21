@@ -93,7 +93,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
 
     private void alarmListView(View v){
         ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
-        AlarmListAdapter adapter = new AlarmListAdapter();
+        AlarmListAdapter adapter = new AlarmListAdapter(context, listView);
 
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
@@ -121,23 +121,14 @@ public class AlarmListPagerAdapter extends PagerAdapter {
             aV.setDayOfWeek(aInfo.getDays());
             aV.set_Id(aInfo.get_id());
 
-
-
             adapter.add(aV);
         }
-
-//        Alarms aV = new Alarms("카메라 스티커 확인","오전","08:00~09:00","일월화수목금토","향군타워","50m", "소리", 123);
-//        Alarms aV1 = new Alarms("가방 보안 체크","오후","06:00~07:00","일월화수목금토","잠실 동관","100m", "진동", 123);
-//        adapter.add(aV);
-//        adapter.add(aV1);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(context, AlarmAddActivity.class);
-//                Toast.makeText(context, position, Toast.LENGTH_SHORT).show();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -146,7 +137,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
 
     private void siteListView(View v){
         ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
-        SiteListAdapter adapter = new SiteListAdapter();
+        SiteListAdapter adapter = new SiteListAdapter(context, listView);
 
         mDbHelper = new DBHelper(context);
         mDbHelper.open();

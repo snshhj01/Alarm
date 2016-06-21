@@ -33,12 +33,20 @@ import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
 public class AlarmListAdapter extends BaseAdapter {
 
     private ArrayList<Alarms> m_list;
+    private Context mContext;
+    private ListView mListView;
     protected DBHelper mDbHelper;
 
     private AlarmManager alarmManager;
 
     public AlarmListAdapter() {
         m_list = new ArrayList<Alarms>();
+    }
+
+    public AlarmListAdapter(Context context, ListView listView) {
+        m_list = new ArrayList<Alarms>();
+        mContext = context;
+        mListView = listView;
     }
 
     @Override
@@ -150,7 +158,7 @@ public class AlarmListAdapter extends BaseAdapter {
 //        }
 
         cancelExistAlarm(alarmUniqId, context) ;
-
+        this.mListView.setAdapter(this);
         this.notifyDataSetChanged();
 
     }
