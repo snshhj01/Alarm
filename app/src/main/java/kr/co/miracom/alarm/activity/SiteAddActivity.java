@@ -163,7 +163,7 @@ public class SiteAddActivity extends AppCompatActivity {
             alramTypeGroup.check(R.id.radioBtnSoundVibrate);
         }
 
-        mUri = alarm.getSoundUri();
+        mUri = Uri.parse(alarm.getSoundUri());
         mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
         alramSoundName.setText(mRingtone.getTitle(this));
 
