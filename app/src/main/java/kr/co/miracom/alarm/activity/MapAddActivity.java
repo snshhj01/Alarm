@@ -136,7 +136,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         // 결과값이 들어갈 리스트 선언
         List<Address> addressList = null;
 
-        adapter = new SiteListAdapter(this);
+        adapter = new SiteListAdapter();
 
         try {
             addressList = gc.getFromLocationName(searchStr, 3);

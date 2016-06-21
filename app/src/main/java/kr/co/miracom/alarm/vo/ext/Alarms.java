@@ -2,6 +2,8 @@ package kr.co.miracom.alarm.vo.ext;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 /**
  * Created by kimsungmog on 2016-05-19.
  */
@@ -9,11 +11,12 @@ public class Alarms {
     private String title;
     private String amPm;
     private String timeFromTo;
-    private String dayOfWeek;
+    private ArrayList<Integer> dayOfWeek;
     private String loc;
     private String locRange;
     private String bell;
     private int _Id;
+    private int alarmId;
 
     public String getTitle() {
         return title;
@@ -39,11 +42,11 @@ public class Alarms {
         this.timeFromTo = timeFromTo;
     }
 
-    public String getDayOfWeek() {
+    public ArrayList<Integer> getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(String dayOfWeek) {
+    public void setDayOfWeek(ArrayList<Integer> dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
@@ -79,10 +82,18 @@ public class Alarms {
         this._Id = _Id;
     }
 
+    public int getAlarmId() {
+        return alarmId;
+    }
+
+    public void setAlarmId(int alarmId) {
+        this.alarmId = alarmId;
+    }
+
     public Alarms() {
     }
 
-    public Alarms(String title, String amPm, String timeFromTo, String dayOfWeek, String loc, String locRange, String bell, int _Id) {
+    public Alarms(String title, String amPm, String timeFromTo, ArrayList<Integer> dayOfWeek, String loc, String locRange, String bell, int _Id, int alarmId) {
         this.title = title;
         this.amPm = amPm;
         this.timeFromTo = timeFromTo;
@@ -91,6 +102,7 @@ public class Alarms {
         this.locRange = locRange;
         this.bell = bell;
         this._Id = _Id;
+        this.alarmId = alarmId;
     }
 
     private final static String M12 = "h:mm aa";
@@ -100,4 +112,6 @@ public class Alarms {
     public static boolean get24HourMode(final Context context) {
         return android.text.format.DateFormat.is24HourFormat(context);
     }
+
+
 }

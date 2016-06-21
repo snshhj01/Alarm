@@ -121,7 +121,6 @@ public class SiteAddActivity extends AppCompatActivity {
 
             //초기 default alarm path를 TextView 에 setting
             mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            mUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
 
@@ -198,10 +197,13 @@ public class SiteAddActivity extends AppCompatActivity {
                     snoozeMap.put(Constants.INTERVAL, interval);
                     snoozeMap.put(Constants.COUNT, count);
                 }
-                registerAlram();
                 setAlarmType();
+                registerAlram();
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 1);
+                startActivity(returnIntent);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -209,6 +211,10 @@ public class SiteAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ringtoneStop();
                 finish();
+                Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 1);
+                startActivity(returnIntent);
+
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
@@ -270,13 +276,10 @@ public class SiteAddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d(TAG, "============="+requestCode);
-
-        if(resultCode == REQUEST_CODE_ADD_MAP){
+        if(requestCode == REQUEST_CODE_ADD_MAP){
             Log.d(TAG, data.getStringExtra("address"));
             Log.d(TAG, String.valueOf(data.getDoubleExtra("latitude", 0.0)));
             Log.d(TAG, String.valueOf(data.getDoubleExtra("longitude", 0.0)));
-
 
             address = data.getStringExtra("address");
             latitude = String.valueOf(data.getDoubleExtra("latitude", 0.0));
@@ -362,18 +365,21 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
+        alarmInfo.setSoundUri(mUri);
         alarmInfo.setAlarmSound(soundMap);
         alarmInfo.setVolume(volume);
         alarmInfo.setSnooze(snoozeMap);
         alarmInfo.setFlag("Y");
+
         alarmInfo.setLatitude(latitude);
         alarmInfo.setLongitude(longitude);
         alarmInfo.setAddr(address);
+//        alarmInfo.setLatitude("37.516929");
+//        alarmInfo.setLongitude("127.100788");
+//        alarmInfo.setAddr("서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)");
+
         alarmInfo.setRadius("100");
         saveAlarmInfo(alarmInfo);
-        Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-        returnIntent.putExtra(Constants.PAGER, 0);
-        startActivity(returnIntent);
     }
 
     /**
