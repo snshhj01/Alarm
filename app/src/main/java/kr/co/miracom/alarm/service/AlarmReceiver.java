@@ -83,7 +83,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent alarmIntent = new Intent(context, NotiActivity.class);
 
-        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        //alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         alarmIntent.putExtra("AlarmInfo",alarm);
         alarmIntent.putExtra("alartUniqId", _id);
