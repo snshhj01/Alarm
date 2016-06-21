@@ -21,8 +21,6 @@ import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.AlarmAddActivity;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.service.AlarmReceiver;
-import kr.co.miracom.alarm.util.AlarmUtils;
-import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.Alarms;
@@ -35,12 +33,20 @@ import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
 public class AlarmListAdapter extends BaseAdapter {
 
     private ArrayList<Alarms> m_list;
+    private Context mContext;
+    private ListView mListView;
     protected DBHelper mDbHelper;
 
     private AlarmManager alarmManager;
 
     public AlarmListAdapter() {
         m_list = new ArrayList<Alarms>();
+    }
+
+    public AlarmListAdapter(Context context, ListView listView) {
+        m_list = new ArrayList<Alarms>();
+        mContext = context;
+        mListView = listView;
     }
 
     @Override
@@ -165,8 +171,8 @@ public class AlarmListAdapter extends BaseAdapter {
 //            Logger.d(this.getClass(), "%S", a.getTitle());
 //        }
 
-        disableExistAlarm(alarmUniqId, context) ;
-
+        cancelExistAlarm(alarmUniqId, context) ;
+        this.mListView.setAdapter(this);
         this.notifyDataSetChanged();
 
     }

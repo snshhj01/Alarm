@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +39,17 @@ public class SiteListAdapter extends BaseAdapter {
 
     private ArrayList<Alarms> m_list;
     protected DBHelper mDbHelper;
-
+    private Context mContext;
+    private ListView mListView;
 
     public SiteListAdapter() {
         m_list = new ArrayList<Alarms>();
+    }
+
+    public SiteListAdapter(Context context, ListView listView) {
+        m_list = new ArrayList<Alarms>();
+        mContext = context;
+        mListView = listView;
     }
 
 
@@ -162,7 +170,7 @@ public class SiteListAdapter extends BaseAdapter {
 //        for(Alarms a : m_list){
 //            Logger.d(this.getClass(), "%S", a.getTitle());
 //        }
-
+        mListView.setAdapter(this);
         this.notifyDataSetChanged();
 
     }
