@@ -287,15 +287,17 @@ public class SiteAddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == REQUEST_CODE_ADD_MAP){
-            Log.d(TAG, data.getStringExtra("address"));
-            Log.d(TAG, String.valueOf(data.getDoubleExtra("latitude", 0.0)));
-            Log.d(TAG, String.valueOf(data.getDoubleExtra("longitude", 0.0)));
+            if(data.getStringExtra(Constants.ADDRESS) != null) {
+                Log.d(TAG, data.getStringExtra(Constants.ADDRESS));
+                Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0)));
+                Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0)));
 
-            address = data.getStringExtra("address");
-            latitude = String.valueOf(data.getDoubleExtra("latitude", 0.0));
-            longitude = String.valueOf(data.getDoubleExtra("longitude", 0.0));
-            //Toast.makeText(getApplicationContext(), address+"||"+latitude+"longitude", Toast.LENGTH_LONG);
-            siteAddress.setText(address);
+                address = data.getStringExtra(Constants.ADDRESS);
+                latitude = String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0));
+                longitude = String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0));
+                //Toast.makeText(getApplicationContext(), address+"||"+latitude+"longitude", Toast.LENGTH_LONG);
+                siteAddress.setText(address);
+            }
         }else if(requestCode == 99){
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);

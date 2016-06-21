@@ -30,6 +30,11 @@ public class Constants {
 
     public static String PAGER = "pager";
 
+    public  static String ADDRESS = "address";
+    public  static String LATITUDE = "latitude";
+    public  static String LONGITUDE = "longitude";
+
     public final static String GPS_INENT_KEY = "gpsProximity";
 
 }
+
