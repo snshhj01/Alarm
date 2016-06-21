@@ -39,6 +39,7 @@ public class Player{
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             mediaPlayer.setLooping(false);
             mediaPlayer.prepare();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
