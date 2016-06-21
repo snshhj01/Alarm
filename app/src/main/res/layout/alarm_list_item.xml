@@ -16,7 +16,7 @@
         android:layout_height="40dp"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_dialog_map"
-        android:background="@android:drawable/list_selector_background"
+        android:background="@drawable/alram_selector"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"/>
 
