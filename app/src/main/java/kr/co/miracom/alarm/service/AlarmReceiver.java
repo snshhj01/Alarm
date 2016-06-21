@@ -43,8 +43,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             if(intent.getIntExtra("alartUniqId",0) != 0) {
                 _id = intent.getIntExtra("alartUniqId", 0);
                 AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ALARM_ID);
-                //수정 시 기존 알람 정보를 세팅해 줌.
-
                 dbDays = new ArrayList<Integer>();
                 active = alarm.getActive();
                 dbDays = alarm.getDays();

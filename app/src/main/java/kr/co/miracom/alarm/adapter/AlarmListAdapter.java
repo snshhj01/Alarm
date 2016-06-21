@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.AndroidCharacter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,7 @@ public class AlarmListAdapter extends BaseAdapter {
             Alarms aVO = m_list.get(position);
 
             ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
+            iv.setImageResource(android.R.drawable.ic_popup_reminder);
             TextView tTitle = (TextView) convertView.findViewById(R.id.title);
             TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
             TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);

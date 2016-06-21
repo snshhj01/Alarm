@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="30dp"
-        android:orientation="vertical"
-        android:id="@+id/notiLinearLayout">
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/notiLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
         <DigitalClock
-            android:id="@+id/alertTime" style="?android:attr/textAppearanceLarge" android:singleLine="true" android:ellipsize="end" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:textSize="77dp"/>
-        <TextView android:id="@+id/alertTitle" style="?android:attr/textAppearanceLarge" android:singleLine="true" android:ellipsize="end" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Arrived Message"/>
+            android:id="@+id/alertTime"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="77dp" />
+
+        <TextView
+            android:id="@+id/alertTitle"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Arrived Message" />
 
         <ImageView
             android:id="@+id/notiAlarmImage"
-            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/clock"
-            android:clickable="true"
-            android:maxWidth="150px"
-            android:maxHeight="150px"
+            android:layout_marginTop="50dp"
             android:adjustViewBounds="true"
+            android:clickable="true"
+            android:maxHeight="150px"
+            android:maxWidth="150px"
+            android:src="@drawable/clock"
 
             />
 
@@ -66,20 +84,38 @@
         android:max="100"
         android:progress="50"
       />-->
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/snooze"
+        android:layout_below="@+id/notiLinearLayout"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentLeft="true"/>
     <SeekBar
         android:id="@+id/notiSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progressDrawable="@drawable/noti_seeker"
-        android:layout_marginTop="42dp"
-        android:progress="50"
-        android:thumbTintMode="multiply"
-        android:max="100"
-        android:thumb="@drawable/circle_icon"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/notiLinearLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:indeterminate="false" />
+        android:layout_marginTop="42dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="50"
+        android:progressDrawable="@drawable/noti_seeker"
+        android:thumb="@drawable/circle_icon"
+        android:thumbTintMode="multiply" />
+
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/dismiss"
+        android:layout_below="@+id/notiLinearLayout"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>
