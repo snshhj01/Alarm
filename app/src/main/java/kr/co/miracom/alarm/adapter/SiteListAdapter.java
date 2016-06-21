@@ -131,7 +131,8 @@ public class SiteListAdapter extends BaseAdapter {
                 @Override
                 public boolean onLongClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
-                    Toast.makeText(context, "사이트리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "사이트리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    remove(pos, context);
                     return true;
                 }
             });

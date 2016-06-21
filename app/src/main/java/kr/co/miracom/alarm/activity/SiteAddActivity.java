@@ -54,7 +54,7 @@ public class SiteAddActivity extends AppCompatActivity {
     private Button okBtn;
     private Button cancelBtn;
     private EditText alarmName;
-    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat, thBtnSun;
+    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
     private TimePicker timePicker;
     //private CheckBox repeatCheckBox;
     private RadioGroup alramTypeGroup;
@@ -151,9 +151,9 @@ public class SiteAddActivity extends AppCompatActivity {
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
         ArrayList<Integer> days = alarm.getDays();
-        ToggleButton [] toogleButtons = new ToggleButton[]{thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        ToggleButton [] toogleButtons = new ToggleButton[]{tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
         for(Integer inx : days) {
-            toogleButtons[inx].setChecked(true);
+            toogleButtons[inx-1].setChecked(true);
         }
         if(alarm.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
             alramTypeGroup.check(R.id.radioBtnSound);

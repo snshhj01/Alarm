@@ -113,6 +113,7 @@ public class AlarmListAdapter extends BaseAdapter {
                 public boolean onLongClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
                     //Toast.makeText(context, "알람리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
+                    remove(pos, context);
                     return true;
                 }
             });
@@ -155,15 +156,15 @@ public class AlarmListAdapter extends BaseAdapter {
     }
 
 
-    public String korDayOfWeek(ArrayList<Integer> arrInt){
-        String korDOW = "";
-        String[] arrStr= {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
-        for(int i=0; i<arrInt.size(); i++){
-            korDOW += arrStr[arrInt.get(i)];
-        }
-
-        return korDOW;
-    }
+//    public String korDayOfWeek(ArrayList<Integer> arrInt){
+//        String korDOW = "";
+//        String[] arrStr= {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+//        for(int i=0; i<arrInt.size(); i++){
+//            korDOW += arrStr[arrInt.get(i)];
+//        }
+//
+//        return korDOW;
+//    }
 
     private void cancelExistAlarm(int alartUniqId, Context context) {
 
