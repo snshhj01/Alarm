@@ -9,17 +9,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.miracom.alarm.R;
-import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
-import kr.co.miracom.alarm.vo.ext.Alarms;
-
-import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
-import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
 
 
 /**
@@ -135,7 +129,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         });
     }
 
-    private void siteListView(View v){
+    private void siteListView(View v) {
         ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
         SiteListAdapter adapter = new SiteListAdapter(context, listView);
 

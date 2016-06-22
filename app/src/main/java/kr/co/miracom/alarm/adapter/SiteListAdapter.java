@@ -1,5 +1,6 @@
 package kr.co.miracom.alarm.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,20 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.co.miracom.alarm.R;
-import kr.co.miracom.alarm.activity.AlarmAddActivity;
 import kr.co.miracom.alarm.activity.SiteAddActivity;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.DBHelper;
-import kr.co.miracom.alarm.view.SiteView;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
-import kr.co.miracom.alarm.vo.ext.Alarms;
-import kr.co.miracom.alarm.vo.ext.SiteItem;
 
 import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
@@ -147,6 +142,7 @@ public class SiteListAdapter extends BaseAdapter {
                     Intent intent = new Intent(context, SiteAddActivity.class);
                     intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_id());
                     context.startActivity(intent);
+                    ((Activity)context).finish();
                 }
             });
 

@@ -5,8 +5,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.text.AndroidCharacter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +25,6 @@ import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
-import kr.co.miracom.alarm.vo.ext.Alarms;
 
 import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
@@ -147,6 +143,8 @@ public class AlarmListAdapter extends BaseAdapter {
                     Intent intent = new Intent(context, AlarmAddActivity.class);
                     intent.putExtra(Constants.ALARM_ID, m_list.get(pos).get_id());
                     context.startActivity(intent);
+                    ((Activity)context).finish();
+
                 }
             });
 

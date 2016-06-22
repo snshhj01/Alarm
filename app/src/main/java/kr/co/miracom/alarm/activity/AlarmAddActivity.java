@@ -190,9 +190,6 @@ public class AlarmAddActivity extends AppCompatActivity {
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
-                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
-                returnIntent.putExtra(Constants.PAGER, 0);
-                startActivity(returnIntent);
                 finish();
             }
         });
