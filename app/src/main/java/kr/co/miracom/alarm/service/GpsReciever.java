@@ -7,13 +7,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import kr.co.miracom.alarm.activity.NotiActivity;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
  * Created by wjw on 2016-05-13.
  */
 public class GpsReciever extends BroadcastReceiver {
+    private final static int ONE_HOUR = 60 * 60 * 1000;
+
     private String mExpectedAction;
     private Intent mLastReceivedIntent;
 
