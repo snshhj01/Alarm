@@ -44,7 +44,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private Button okBtn;
     private Button cancelBtn;
     private EditText alarmName;
-    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
+    private ToggleButton tgBtnSun, thBtnMon, thBtnTue, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
     private TimePicker timePicker;
     //private CheckBox repeatCheckBox;
     private RadioGroup alramTypeGroup;
@@ -121,7 +121,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
         ArrayList<Integer> days = alarm.getDays();
-        ToggleButton [] toogleButtons = new ToggleButton[]{tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        ToggleButton [] toogleButtons = new ToggleButton[]{tgBtnSun, thBtnMon, thBtnTue, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
         for(Integer inx : days) {
             toogleButtons[inx-1].setChecked(true);
         }
@@ -200,6 +200,9 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
+                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+                returnIntent.putExtra(Constants.PAGER, 0);
+                startActivity(returnIntent);
                 finish();
             }
         });
@@ -305,7 +308,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         if(isModify) {
             cancelExistAlarm();
         }
-        weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnThe.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
+        weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnTue.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
         ArrayList<Integer> days = new ArrayList<Integer>();
         for(int i=1; i<weekRepeatInfo.length;i++) {
             if(weekRepeatInfo[i]) {
@@ -316,7 +319,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         long triggerTime = 0;
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
+        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra(Constants.ALARM_ID, alarmId);
