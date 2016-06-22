@@ -17,11 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.AlarmAddActivity;
 import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.service.AlarmReceiver;
+import kr.co.miracom.alarm.util.AlarmUtils;
+import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
@@ -40,6 +43,7 @@ public class AlarmListAdapter extends BaseAdapter {
     private Context mContext;
     private ListView mListView;
     protected DBHelper mDbHelper;
+    private HashMap<String,Integer> timeMap;
 
     private AlarmManager alarmManager;
 
@@ -118,9 +122,9 @@ public class AlarmListAdapter extends BaseAdapter {
                     int alarmUniqId = m_list.get(pos).getAlarmId();
 
                     if (active == 1) {
-                        disableExistAlarm(alarmUniqId, context);
+                        disableExistAlarm(alarmUniqId);
                     } else {
-                        enableExistAlarm(m_list.get(pos), context);
+                        enableExistAlarm(m_list.get(pos));
                     }
                 }
             });
@@ -130,7 +134,7 @@ public class AlarmListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
-                    remove(pos, context);
+                    remove(pos);
                 }
             });
 
@@ -152,7 +156,7 @@ public class AlarmListAdapter extends BaseAdapter {
                 public boolean onLongClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
                     //Toast.makeText(context, "알람리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
-                    remove(pos, context);
+                    remove(pos);
                     return true;
                 }
             });
@@ -168,12 +172,12 @@ public class AlarmListAdapter extends BaseAdapter {
 
 
 
-    public void remove(int _position, Context context){
+    public void remove(int _position){
 
         int alarmUniqId = m_list.get(_position).getAlarmId();
         int _id = m_list.get(_position).get_id();
 
-        mDbHelper = new DBHelper(context);
+        mDbHelper = new DBHelper(mContext);
         mDbHelper.open();
         //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
         mDbHelper.deleteAlarm(_id);
@@ -188,7 +192,7 @@ public class AlarmListAdapter extends BaseAdapter {
 //            Logger.d(this.getClass(), "%S", a.getTitle());
 //        }
 
-        disableExistAlarm(alarmUniqId, context) ;
+        disableExistAlarm(alarmUniqId) ;
         this.mListView.setAdapter(this);
         this.notifyDataSetChanged();
 
@@ -205,28 +209,30 @@ public class AlarmListAdapter extends BaseAdapter {
 //        return korDOW;
 //    }
 
-    private void disableExistAlarm(int alartUniqId, Context context) {
+    private void disableExistAlarm(int alartUniqId) {
 
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pIntent);
         pIntent.cancel();
     }
 
-    private void enableExistAlarm(AlarmInfo aInfo, Context context) {
+    private void enableExistAlarm(AlarmInfo aInfo) {
 
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        long triggerTime = 0;
-        long intervalTime = 24 * 60 * 60 * 1000;// 24시간
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
 
         boolean isRepeat = aInfo.getDays().size() > 0;
         int alartUniqId = aInfo.getAlarmId();
 
-        intent.putExtra("one_time", isRepeat);
-        intent.putExtra("alartUniqId", alartUniqId);
-//        triggerTime = CommonUtils.setTriggerTime();
-//        AlarmUtils.getInstance().startAlarm(context, intent, triggerTime, (isRepeat ? 1 : 0) );
+        long triggerTime = 0;
+        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
+        Logger.d(this.getClass(), "%s", "Is repeat alarm!");
+        intent.putExtra(Constants.ALARM_ID, alartUniqId);
+        //pendingIntent = getPendingIntent(intent);
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+        AlarmUtils.getInstance().startAlarm(mContext, intent, triggerTime, (isRepeat ? 1 : 0));
+
     }
 
 

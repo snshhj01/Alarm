@@ -134,7 +134,7 @@ public class SiteListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
-                    remove(pos, context);
+                    remove(pos);
                 }
             });
 
@@ -156,7 +156,7 @@ public class SiteListAdapter extends BaseAdapter {
                 public boolean onLongClick(View v) {
                     // 터치 시 해당 아이템 이름 출력
 //                    Toast.makeText(context, "사이트리스트 롱 클릭 : " + m_list.get(pos), Toast.LENGTH_SHORT).show();
-                    remove(pos, context);
+                    remove(pos);
                     return true;
                 }
             });
@@ -170,9 +170,9 @@ public class SiteListAdapter extends BaseAdapter {
         m_list.add(aInfo);
     }
 
-    public void remove(int _position, Context context){
+    public void remove(int _position){
 
-        mDbHelper = new DBHelper(context);
+        mDbHelper = new DBHelper(mContext);
         mDbHelper.open();
         //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
         mDbHelper.deleteAlarm(m_list.get(_position).get_id());
