@@ -207,26 +207,23 @@ public class AlarmListAdapter extends BaseAdapter {
 //        return korDOW;
 //    }
 
-    private void disableExistAlarm(int alartUniqId) {
+    private void disableExistAlarm(int alarmId) {
 
         alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pIntent);
         pIntent.cancel();
     }
 
     private void enableExistAlarm(AlarmInfo aInfo) {
-
         Intent intent = new Intent(mContext, AlarmReceiver.class);
-
         boolean isRepeat = aInfo.getDays().size() > 0;
-        int alartUniqId = aInfo.getAlarmId();
-
+        int alarmId = aInfo.getAlarmId();
         long triggerTime = 0;
         triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
         Logger.d(this.getClass(), "%s", "Is repeat alarm!");
-        intent.putExtra(Constants.ALARM_ID, alartUniqId);
+        intent.putExtra(Constants.ALARM_ID, alarmId);
         //pendingIntent = getPendingIntent(intent);
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
         AlarmUtils.getInstance().startAlarm(mContext, intent, triggerTime, (isRepeat ? 1 : 0));
