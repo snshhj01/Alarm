@@ -286,7 +286,7 @@ public class SiteAddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == REQUEST_CODE_ADD_MAP){
-            if(data.getStringExtra(Constants.ADDRESS) != null) {
+            if(data != null) {
                 Log.d(TAG, data.getStringExtra(Constants.ADDRESS));
                 Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0)));
                 Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0)));
