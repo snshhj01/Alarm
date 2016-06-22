@@ -168,8 +168,8 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         tgBtnSun.setOnClickListener(this);
         thBtnMon = (ToggleButton) findViewById(R.id.toggleBtnMonday);
         thBtnMon.setOnClickListener(this);
-        thBtnThe = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
-        thBtnThe.setOnClickListener(this);
+        thBtnTue = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
+        thBtnTue.setOnClickListener(this);
         tgBtnWed = (ToggleButton) findViewById(R.id.toggleBtnWednesday);
         tgBtnWed.setOnClickListener(this);
         tgBthThur = (ToggleButton) findViewById(R.id.toggleBtnThursday);
