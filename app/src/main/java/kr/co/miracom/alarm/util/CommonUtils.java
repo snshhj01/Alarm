@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import kr.co.miracom.alarm.R;
 
@@ -63,5 +64,19 @@ public class CommonUtils {
             tv.setTextColor(Color.parseColor(strColor));
         }
     }
-
+    public static long setTriggerTime(Integer hour, Integer minute) {
+        // current Time
+        long currentTime = System.currentTimeMillis();
+        // timepicker
+        Calendar curTime = Calendar.getInstance();
+        curTime.set(Calendar.HOUR_OF_DAY, hour);
+        curTime.set(Calendar.MINUTE, minute);
+        curTime.set(Calendar.SECOND, 0);
+        curTime.set(Calendar.MILLISECOND, 0);
+        long settingTime = curTime.getTimeInMillis();
+        long triggerTime = settingTime;
+        if (currentTime > settingTime)
+            triggerTime += 1000 * 60 * 60 * 24;
+        return triggerTime;
+    }
 }

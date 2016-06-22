@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import kr.co.miracom.alarm.activity.NotiActivity;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -33,7 +34,7 @@ public class GpsReciever extends BroadcastReceiver {
 
         if (intent != null) {
             mLastReceivedIntent = intent;
-            int id = intent.getIntExtra("alartUniqId", 0);
+            int id = intent.getIntExtra(Constants.ALARM_ID, 0);
             double lat = intent.getDoubleExtra("lat", 0.0D);
             double lng = intent.getDoubleExtra("lng", 0.0D);
             AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
@@ -44,7 +45,7 @@ public class GpsReciever extends BroadcastReceiver {
             alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
          //   alarmIntent.putExtra("alarmName", "근처다." + id + " : " + ala);
 
-            alarmIntent.putExtra("alartUniqId", id);
+            alarmIntent.putExtra(Constants.ALARM_ID, id);
             alarmIntent.putExtra("lat", lat);
             alarmIntent.putExtra("lng", lng);
             alarmIntent.putExtra("AlarmInfo",alarm);

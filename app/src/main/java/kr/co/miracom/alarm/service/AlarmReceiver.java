@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import kr.co.miracom.alarm.activity.NotiActivity;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
@@ -31,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.e("AlarmReceiver connect", "AlarmReceiver connect1 : " +  intent.getIntExtra("alartUniqId", 0));
+        Log.e("AlarmReceiver connect", "AlarmReceiver connect1 : " +  intent.getIntExtra(Constants.ALARM_ID, 0));
 
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
@@ -40,8 +41,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (extra != null) {
 
-            if(intent.getIntExtra("alartUniqId",0) != 0) {
-                _id = intent.getIntExtra("alartUniqId", 0);
+            if(intent.getIntExtra(Constants.ALARM_ID,0) != 0) {
+                _id = intent.getIntExtra(Constants.ALARM_ID, 0);
                 AlarmInfo alarm = mDbHelper.selectAlarm(_id, COLUMN_ALARM_ID);
                 dbDays = new ArrayList<Integer>();
                 active = alarm.getActive();
@@ -51,7 +52,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 if(active == 1){
                     if ("Y".equals(alarm.getFlag())){ //위치 알람이면.
-                        Log.e("AlarmReceiver connect", "AlarmReceiver site : " +  intent.getIntExtra("alartUniqId", 0));
+                        Log.e("AlarmReceiver connect", "AlarmReceiver site : " +  intent.getIntExtra(Constants.ALARM_ID, 0));
 
                         //GPS init 후 3번 정도?? GPS enabl
                         AlarmUtils.getInstance().isGPSEnabled = true;
@@ -85,7 +86,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         alarmIntent.putExtra("AlarmInfo",alarm);
-        alarmIntent.putExtra("alartUniqId", _id);
+        alarmIntent.putExtra(Constants.ALARM_ID, _id);
         PendingIntent p = PendingIntent.getActivity(context, _id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             p.send();
