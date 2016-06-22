@@ -101,27 +101,27 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         List<AlarmInfo> alarmList = mDbHelper.selectAll("N");
         for(AlarmInfo aInfo : alarmList){
 
-            String amPm = getKorAmPm(aInfo.getTime().get("hour"));
-            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+//            String amPm = getKorAmPm(aInfo.getTime().get("hour"));
+//            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
+//
+//            String aType = "";
+//            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+//                aType = "소리";
+//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+//                aType = "진동";
+//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+//                aType = "소리+진동";
+//            }
+//
+//            Alarms aV = new Alarms();
+//            aV.setTitle(aInfo.getAlarmName());
+//            aV.setAmPm(amPm);
+//            aV.setTimeFromTo(timeFromTo);
+//            aV.setBell(aType);
+//            aV.setDayOfWeek(aInfo.getDays());
+//            aV.set_Id(aInfo.get_id());
 
-            String aType = "";
-            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
-                aType = "소리";
-            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
-                aType = "진동";
-            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
-                aType = "소리+진동";
-            }
-
-            Alarms aV = new Alarms();
-            aV.setTitle(aInfo.getAlarmName());
-            aV.setAmPm(amPm);
-            aV.setTimeFromTo(timeFromTo);
-            aV.setBell(aType);
-            aV.setDayOfWeek(aInfo.getDays());
-            aV.set_Id(aInfo.get_id());
-
-            adapter.add(aV);
+            adapter.add(aInfo);
         }
 
         listView.setAdapter(adapter);
@@ -145,31 +145,31 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         List<AlarmInfo> siteList = mDbHelper.selectAll("Y");
         for(AlarmInfo aInfo : siteList){
 
-            String amPm =  getKorAmPm(aInfo.getTime().get("hour"));
-            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
-                    + "~" + getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
+//            String amPm =  getKorAmPm(aInfo.getTime().get("hour"));
+//            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
+//                    + "~" + getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
+//
+//            String aType = "";
+//            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
+//                aType = "소리";
+//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
+//                aType = "진동";
+//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
+//                aType = "소리+진동";
+//            }
+//
+//            Alarms aV = new Alarms();
+//            aV.setTitle(aInfo.getAlarmName());
+//            aV.setAmPm(amPm);
+//            aV.setTimeFromTo(timeFromTo);
+//            aV.setBell(aType);
+//            aV.setDayOfWeek(aInfo.getDays());
+//            aV.setLoc(aInfo.getAddr());
+//            aV.setLocRange(aInfo.getRadius());
+//            aV.set_Id(aInfo.get_id());
+//            aV.setAlarmId(aInfo.getAlarmId());
 
-            String aType = "";
-            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
-                aType = "소리";
-            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
-                aType = "진동";
-            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
-                aType = "소리+진동";
-            }
-
-            Alarms aV = new Alarms();
-            aV.setTitle(aInfo.getAlarmName());
-            aV.setAmPm(amPm);
-            aV.setTimeFromTo(timeFromTo);
-            aV.setBell(aType);
-            aV.setDayOfWeek(aInfo.getDays());
-            aV.setLoc(aInfo.getAddr());
-            aV.setLocRange(aInfo.getRadius());
-            aV.set_Id(aInfo.get_id());
-            aV.setAlarmId(aInfo.getAlarmId());
-
-            adapter.add(aV);
+            adapter.add(aInfo);
         }
 
 
