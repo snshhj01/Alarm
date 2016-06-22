@@ -51,7 +51,7 @@ public class SiteAddActivity extends AppCompatActivity {
     private Button btnMapSetting;
 
     private EditText alarmName;
-    private ToggleButton tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
+    private ToggleButton tgBtnSun, thBtnMon, thBtnTue, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
     private TimePicker timePicker;
     //private CheckBox repeatCheckBox;
     private RadioGroup alramTypeGroup;
@@ -143,7 +143,7 @@ public class SiteAddActivity extends AppCompatActivity {
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
         ArrayList<Integer> days = alarm.getDays();
-        ToggleButton [] toogleButtons = new ToggleButton[]{tgBtnSun, thBtnMon, thBtnThe, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
+        ToggleButton [] toogleButtons = new ToggleButton[]{tgBtnSun, thBtnMon, thBtnTue, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat};
         for(Integer inx : days) {
             toogleButtons[inx-1].setChecked(true);
         }
@@ -189,7 +189,7 @@ public class SiteAddActivity extends AppCompatActivity {
         //반복요일 토글버튼
         tgBtnSun = (ToggleButton) findViewById(R.id.toggleBtnSunday);
         thBtnMon = (ToggleButton) findViewById(R.id.toggleBtnMonday);
-        thBtnThe = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
+        thBtnTue = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
         tgBtnWed = (ToggleButton) findViewById(R.id.toggleBtnWednesday);
         tgBthThur = (ToggleButton) findViewById(R.id.toggleBtnThursday);
         tgBtnFri = (ToggleButton) findViewById(R.id.toggleBtnFriday);
@@ -330,7 +330,7 @@ public class SiteAddActivity extends AppCompatActivity {
         if(isModify) {
             cancelExistAlarm();
         }
-        weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnThe.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
+        weekRepeatInfo = new boolean[]{false, tgBtnSun.isChecked(), thBtnMon.isChecked(), thBtnTue.isChecked(), tgBtnWed.isChecked(), tgBthThur.isChecked(), tgBtnFri.isChecked(), thBtnSat.isChecked()};
         ArrayList<Integer> days = new ArrayList<Integer>();
         for(int i=1; i<weekRepeatInfo.length;i++) {
             if(weekRepeatInfo[i]) {
