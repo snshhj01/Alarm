@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import kr.co.miracom.alarm.activity.NotiActivity;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -16,6 +20,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 public class GpsReciever extends BroadcastReceiver {
     private String mExpectedAction;
     private Intent mLastReceivedIntent;
+    private final static int ONE_HOUR = 60 * 60 * 1000;
 
     public GpsReciever(String expectedAction) {
         mExpectedAction = expectedAction;
@@ -38,23 +43,37 @@ public class GpsReciever extends BroadcastReceiver {
             double lng = intent.getDoubleExtra("lng", 0.0D);
             AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
 
-            intent.putExtra("AlarmInfo",alarm);
+            HashMap<String,Integer> timeMap = alarm.getTime();
+            int hour = timeMap.get(Constants.TIME_HOUR);
+            int min = timeMap.get(Constants.TIME_MINUTE);
 
-            Intent alarmIntent = new Intent(context, NotiActivity.class);
-            alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-         //   alarmIntent.putExtra("alarmName", "근처다." + id + " : " + ala);
+            Date nowDate = new Date();
+            Date selDate = new Date();
 
-            alarmIntent.putExtra("alartUniqId", id);
-            alarmIntent.putExtra("lat", lat);
-            alarmIntent.putExtra("lng", lng);
-            alarmIntent.putExtra("AlarmInfo",alarm);
+            selDate.setHours(hour);
+            selDate.setMinutes(min);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, id, alarmIntent, 0);
+            if ((selDate.getTime() + ONE_HOUR) >= nowDate.getTime()) {
+                intent.putExtra("AlarmInfo",alarm);
 
-            try {
-                pendingIntent.send();
-            } catch (PendingIntent.CanceledException e) {
-                e.printStackTrace();
+                Intent alarmIntent = new Intent(context, NotiActivity.class);
+                alarmIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                //   alarmIntent.putExtra("alarmName", "근처다." + id + " : " + ala);
+
+                alarmIntent.putExtra("alartUniqId", id);
+                alarmIntent.putExtra("lat", lat);
+                alarmIntent.putExtra("lng", lng);
+                alarmIntent.putExtra("AlarmInfo",alarm);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, id, alarmIntent, 0);
+
+                try {
+                    pendingIntent.send();
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                return;
             }
         }
     }
