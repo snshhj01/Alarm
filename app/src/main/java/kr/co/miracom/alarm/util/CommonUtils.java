@@ -2,6 +2,7 @@ package kr.co.miracom.alarm.util;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
  * @author kws
@@ -55,15 +57,52 @@ public class CommonUtils {
 
     public static void setColorDOW(View convertView,  ArrayList<Integer> arrInt){
 
-        String strColor = "#17C300";
+        String enableColor = "#17C300";
+        String disableColor="#9C9D9D";
 
         int[] arrObj= {R.id.sun, R.id.mon, R.id.tue, R.id.wed, R.id.thu, R.id.fri, R.id.sat};
 
-        for(int i=0; i<arrInt.size(); i++){
-            TextView tv = (TextView) convertView.findViewById( arrObj[ arrInt.get(i)-1 ] );
-            tv.setTextColor(Color.parseColor(strColor));
+        if(arrInt == null){ // disable
+            for(int i=0; i<7; i++){
+                TextView tv = (TextView) convertView.findViewById( arrObj[ i ] ); // All Disabled
+                tv.setTextColor(Color.parseColor(disableColor));
+            }
+        }else { // enable
+            for (int i = 0; i < arrInt.size(); i++) {
+                TextView tv = (TextView) convertView.findViewById(arrObj[arrInt.get(i) - 1]);
+                tv.setTextColor(Color.parseColor(enableColor));
+            }
         }
     }
+
+    public static void disabledViewColor(View convertView){
+        ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
+        iv.setBackgroundColor(Color.parseColor("#C0C0C0"));
+
+        TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
+        tAmPm.setTextColor(Color.parseColor("#9C9D9D"));
+        TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
+        tTimeFromTo.setTextColor(Color.parseColor("#9C9D9D"));
+
+        setColorDOW(convertView, null);  // All disable
+    }
+
+    public static void enabledViewColor(View convertView, AlarmInfo alnfo){
+        ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
+        if(alnfo.getFlag() == "Y"){
+            iv.setImageResource(android.R.drawable.ic_dialog_map);
+        }else{
+            iv.setImageResource(android.R.drawable.ic_popup_reminder);
+        }
+
+        TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
+        tAmPm.setTextColor(Color.BLACK);
+        TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
+        tTimeFromTo.setTextColor(Color.BLACK);
+
+        setColorDOW(convertView, alnfo.getDays());  // All disable
+    }
+
     public static long setTriggerTime(Integer hour, Integer minute) {
         // current Time
         long currentTime = System.currentTimeMillis();
