@@ -221,7 +221,7 @@ public class AlarmListAdapter extends BaseAdapter {
         boolean isRepeat = aInfo.getDays().size() > 0;
         int alarmId = aInfo.getAlarmId();
         long triggerTime = 0;
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
+        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
         Logger.d(this.getClass(), "%s", "Is repeat alarm!");
         intent.putExtra(Constants.ALARM_ID, alarmId);
         //pendingIntent = getPendingIntent(intent);

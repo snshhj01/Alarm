@@ -304,7 +304,7 @@ public class AlarmAddActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         long triggerTime = 0;
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
+        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra(Constants.ALARM_ID, alarmId);
