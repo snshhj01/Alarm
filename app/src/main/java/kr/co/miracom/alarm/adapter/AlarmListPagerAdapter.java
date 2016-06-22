@@ -172,10 +172,6 @@ public class AlarmListPagerAdapter extends PagerAdapter {
             adapter.add(aV);
         }
 
-//        Alarms aV = new Alarms("카메라 스티커 확인","오전","08:00~09:00","일월화수목금토","향군타워","50m", "소리", 123);
-//        Alarms aV1 = new Alarms("가방 보안 체크","오후","06:00~07:00","일월화수목금토","잠실 동관","100m", "진동", 123);
-//        adapter.add(aV);
-//        adapter.add(aV1);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
