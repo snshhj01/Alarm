@@ -109,7 +109,7 @@ public class AlarmUtils implements LocationListener {
             Toast.makeText(m_Activity, "latPoint: " + lat + ", lngPoint: " + lng, Toast.LENGTH_SHORT).show();
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.3680115, 127.1033245, 500, -1, intent); //정자
-            locRegister(m_Activity, intent.getIntExtra("alartUniqId", 0), 37.516648, 127.1010280, 1000, -1, intent); //잠실1
+            locRegister(m_Activity, intent.getIntExtra(Constants.ALARM_ID, 0), 37.516648, 127.1010280, 1000, -1, intent); //잠실1
        //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.5166423, 127.1010482, 100, -1, intent); //잠실2
 
         //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), latPoint, lngPoint, 500, -1, intent);
@@ -175,7 +175,7 @@ public class AlarmUtils implements LocationListener {
         //Intent proximityIntent = new Intent(context, GpsIntentReciever.class);
         AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
 
-        proximityIntent.putExtra("alartUniqId", id);
+        proximityIntent.putExtra(Constants.ALARM_ID, id);
         proximityIntent.putExtra("lat", lat);
         proximityIntent.putExtra("lng", lng);
        // proximityIntent.putExtra("alarmName", intent.getStringExtra("alarmName"));
@@ -257,7 +257,7 @@ public class AlarmUtils implements LocationListener {
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        alarmIntent.putExtra("alartUniqId", intent.getIntExtra("alartUniqId", 0));
+        alarmIntent.putExtra(Constants.ALARM_ID, intent.getIntExtra(Constants.ALARM_ID, 0));
         //pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         pendingIntent = PendingIntent.getBroadcast(context, CommonUtils.getAlarmId(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        // startAlram(context, pendingIntent, FIVE_SECOND);
@@ -274,9 +274,9 @@ public class AlarmUtils implements LocationListener {
         /*
         * TODO Intent Setting.
         * */
-        alarmIntent.putExtra("alartUniqId", intent.getIntExtra("alartUniqId", 0));
+        alarmIntent.putExtra(Constants.ALARM_ID, intent.getIntExtra(Constants.ALARM_ID, 0));
 
-        pendingIntent =  PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent =  PendingIntent.getBroadcast(context, intent.getIntExtra(Constants.ALARM_ID, 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // type 0 : 한번, 1 : repeat
         if (type == 0) {

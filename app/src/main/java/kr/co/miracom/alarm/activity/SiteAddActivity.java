@@ -72,7 +72,7 @@ public class SiteAddActivity extends AppCompatActivity {
 
     private PendingIntent pendingIntent;
     private boolean isModify;
-    private int alartUniqId;
+    private int alarmId;
 
     private int _id;
     private int volume;
@@ -109,7 +109,7 @@ public class SiteAddActivity extends AppCompatActivity {
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
-            alartUniqId = CommonUtils.getAlarmId();
+            alarmId = CommonUtils.getAlarmId();
             volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             volSeekBar.setProgress(volume);
 
@@ -136,7 +136,7 @@ public class SiteAddActivity extends AppCompatActivity {
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alartUniqId = alarm.getAlarmId();
+        alarmId = alarm.getAlarmId();
         if(alarm.getAlarmName() != null){
             alarmName.setText(alarm.getAlarmName());
         }
@@ -344,17 +344,13 @@ public class SiteAddActivity extends AppCompatActivity {
         long intervalTime = 24 * 60 * 60 * 1000;// 24시간
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
-            intent.putExtra("one_time", false);
-            intent.putExtra("alartUniqId", alartUniqId);
-            intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
             //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
-            intent.putExtra("one_time", true);
-            intent.putExtra("alartUniqId", alartUniqId);
-            intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
             triggerTime = setTriggerTime();
             // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
@@ -363,7 +359,7 @@ public class SiteAddActivity extends AppCompatActivity {
         if(isModify)
             alarmInfo.set_id(_id);
         alarmInfo.setAlarmName(alarmName.getText().toString());
-        alarmInfo.setAlarmId(alartUniqId);
+        alarmInfo.setAlarmId(alarmId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
@@ -399,7 +395,7 @@ public class SiteAddActivity extends AppCompatActivity {
      */
     private void cancelExistAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pIntent);
         pIntent.cancel();
     }
@@ -410,7 +406,7 @@ public class SiteAddActivity extends AppCompatActivity {
      * @return
      */
     private PendingIntent getPendingIntent(Intent intent) {
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pIntent;
     }
 

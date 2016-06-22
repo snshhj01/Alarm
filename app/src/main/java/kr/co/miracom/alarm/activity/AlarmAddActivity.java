@@ -22,7 +22,6 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
@@ -65,7 +64,7 @@ public class AlarmAddActivity extends AppCompatActivity {
 
     private PendingIntent pendingIntent;
     private boolean isModify;
-    private int alartUniqId;
+    private int alarmId;
     private int _id;
     private int volume;
     private int alarmType = 1;
@@ -97,8 +96,7 @@ public class AlarmAddActivity extends AppCompatActivity {
             //수정 시 기존 알람 정보를 세팅해 줌.
             setExistAlarmInfo(alarm);
         } else {
-
-            alartUniqId = CommonUtils.getAlarmId();
+            alarmId = CommonUtils.getAlarmId();
             volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             volSeekBar.setProgress(volume);
 
@@ -116,12 +114,10 @@ public class AlarmAddActivity extends AppCompatActivity {
      * @param alarm
      */
     private void setExistAlarmInfo(AlarmInfo alarm) {
-        alartUniqId = alarm.getAlarmId();
+        alarmId = alarm.getAlarmId();
         if(alarm.getAlarmName() != null){
             alarmName.setText(alarm.getAlarmName());
         }
-
-
         timePicker.setCurrentHour(alarm.getTime().get(Constants.TIME_HOUR));
         timePicker.setCurrentMinute(alarm.getTime().get(Constants.TIME_MINUTE));
         ArrayList<Integer> days = alarm.getDays();
@@ -188,6 +184,9 @@ public class AlarmAddActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeMap = new HashMap<String,Integer>();
+                timeMap.put(Constants.TIME_HOUR, timePicker.getCurrentHour());
+                timeMap.put(Constants.TIME_MINUTE, timePicker.getCurrentMinute());
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
@@ -305,29 +304,23 @@ public class AlarmAddActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         long triggerTime = 0;
-        long intervalTime = 24 * 60 * 60 * 1000;// 24시간
+        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_HOUR));
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
-            intent.putExtra("one_time", false);
-            intent.putExtra("alartUniqId", alartUniqId);
-            intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
-            triggerTime = setTriggerTime();
             //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
-            intent.putExtra("one_time", true);
-            intent.putExtra("alartUniqId", alartUniqId);
-            intent.putExtra("day_of_week", weekRepeatInfo);
+            intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
-            triggerTime = setTriggerTime();
             // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
         if(isModify)
             alarmInfo.set_id(_id);
         alarmInfo.setAlarmName(alarmName.getText().toString());
-        alarmInfo.setAlarmId(alartUniqId);
+        alarmInfo.setAlarmId(alarmId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
         alarmInfo.setTime(timeMap);
         alarmInfo.setDays(days);
@@ -353,7 +346,7 @@ public class AlarmAddActivity extends AppCompatActivity {
      */
     private void cancelExistAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pIntent);
         pIntent.cancel();
     }
@@ -364,35 +357,11 @@ public class AlarmAddActivity extends AppCompatActivity {
      * @return
      */
     private PendingIntent getPendingIntent(Intent intent) {
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, alartUniqId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pIntent;
     }
 
-    /**
-     * Trigger 시간을 설정 함
-     * @return
-     */
-    private long setTriggerTime() {
-        timeMap = new HashMap<String,Integer>();
-        timeMap.put(Constants.TIME_HOUR,this.timePicker.getCurrentHour());
-        timeMap.put(Constants.TIME_MINUTE,this.timePicker.getCurrentMinute());
-        // current Time
-        long currentTime = System.currentTimeMillis();
-        // timepicker
-        Calendar curTime = Calendar.getInstance();
-        curTime.set(Calendar.HOUR_OF_DAY, this.timePicker.getCurrentHour());
-        curTime.set(Calendar.MINUTE, this.timePicker.getCurrentMinute());
-        curTime.set(Calendar.SECOND, 0);
-        curTime.set(Calendar.MILLISECOND, 0);
-        long settingTime = curTime.getTimeInMillis();
-        long triggerTime = settingTime;
-        if (currentTime > settingTime)
-            triggerTime += 1000 * 60 * 60 * 24;
-        return triggerTime;
-    }
-
     public void ringtonePlay(){
-
         mPlayer.setMediaPlayerMode();
         mPlayer.play();
     }
