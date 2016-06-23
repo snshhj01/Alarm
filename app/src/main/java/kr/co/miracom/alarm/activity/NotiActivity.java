@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -34,13 +35,18 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("info", "onCreate");
         setContentView(R.layout.noti_main);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.d("onresume","onresume");
         setContentView(R.layout.noti_main);
 
         alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
@@ -93,18 +99,18 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
+        Log.d("info", "NotiActivity onStart");
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        PushWakeLock.releaseCpuLock();
+       PushWakeLock.releaseCpuLock();
     }
 
     public void startAlarm(int alarmType, Uri uri, int volume) {
+        Log.d("info","start alarm");
         if(alarmType == 2 || alarmType == 3) {
             startVibrate(this);
         }
