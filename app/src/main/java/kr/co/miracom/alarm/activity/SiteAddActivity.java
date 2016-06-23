@@ -212,10 +212,10 @@ public class SiteAddActivity extends AppCompatActivity {
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
-                finish();
                 Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, 1);
                 startActivity(returnIntent);
+                finish();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {

@@ -1,8 +1,11 @@
 package kr.co.miracom.alarm.adapter;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +15,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.activity.SiteAddActivity;
 import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.service.AlarmReceiver;
+import kr.co.miracom.alarm.util.AlarmUtils;
+import kr.co.miracom.alarm.util.CommonUtils;
 import kr.co.miracom.alarm.util.DBHelper;
+import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
+import static kr.co.miracom.alarm.util.CommonUtils.disabledViewColor;
+import static kr.co.miracom.alarm.util.CommonUtils.enabledViewColor;
 import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
@@ -39,6 +49,8 @@ public class SiteListAdapter extends BaseAdapter {
     protected DBHelper mDbHelper;
     private Context mContext;
     private ListView mListView;
+
+    private AlarmManager alarmManager;
 
     public SiteListAdapter() {
         m_list = new ArrayList<AlarmInfo>();
@@ -123,6 +135,37 @@ public class SiteListAdapter extends BaseAdapter {
             tLoc.setText(aInfo.getAddr());
             tLocRange.setText(aInfo.getRadius());
             tBell.setText(aType);
+            if (aInfo.getActive() == 1) {
+                enabledViewColor(convertView, aInfo);
+            } else {
+                disabledViewColor(convertView);
+            }
+
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
+
+                    AlarmInfo aInfo = m_list.get(pos);
+                    View parent = (View)v.getParent();
+
+                    Logger.d(this.getClass(), "%S", aInfo.getAlarmName() + " " + aInfo.get_id());
+
+                    int active = aInfo.getActive();
+                    if (active == 1) {  //  토글  : enable / disable
+                        aInfo.setActive(0);
+                        Logger.d(this.getClass(), "%S", aInfo.getAlarmName() + " " + aInfo.get_id());
+                        mDbHelper.updateAlarm(aInfo);
+                        disabledViewColor(parent);
+                        disableExistAlarm(aInfo.getAlarmId());
+                    } else {
+                        aInfo.setActive(1);
+                        mDbHelper.updateAlarm(aInfo);
+                        enabledViewColor(parent, aInfo);
+                        enableExistAlarm(aInfo);
+                    }
+                }
+            });
 
             ImageView btnClose = (ImageView) convertView.findViewById(R.id.close);
             btnClose.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +219,7 @@ public class SiteListAdapter extends BaseAdapter {
 //        for(Alarms a : m_list){
 //            Logger.d(this.getClass(), "%S", a.getTitle());
 //        }
-//        Logger.d(this.getClass(), "%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        Logger.d(this.getClass(), "%S", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         m_list.remove(getItem(_position));
 
 //        for(Alarms a : m_list){
@@ -186,4 +229,29 @@ public class SiteListAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
 
     }
+
+    private void disableExistAlarm(int alarmId) {
+
+        alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pIntent);
+        pIntent.cancel();
+    }
+
+    private void enableExistAlarm(AlarmInfo aInfo) {
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        boolean isRepeat = aInfo.getDays().size() > 0;
+
+        long triggerTime = 0;
+        triggerTime = CommonUtils.setTriggerTime(aInfo.getTime().get(Constants.TIME_HOUR), aInfo.getTime().get(Constants.TIME_MINUTE));
+
+        Logger.d(this.getClass(), "%s", "Is repeat alarm!");
+        intent.putExtra(Constants.ALARM_ID, aInfo.getAlarmId());
+        //pendingIntent = getPendingIntent(intent);
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
+        AlarmUtils.getInstance().startAlarm(mContext, intent, triggerTime, (isRepeat ? 1 : 0));
+    }
+
+
 }

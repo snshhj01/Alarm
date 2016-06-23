@@ -37,7 +37,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 /**
  * Created by kimsungmog on 2016-05-26.
  */
-public class AlarmAddActivity extends AppCompatActivity {
+public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String COLUMN_ID = "_id";
 
     //Layout variable
@@ -162,21 +162,31 @@ public class AlarmAddActivity extends AppCompatActivity {
 
         //알람 타입 선택(사운드,진동,사운드&진동)
         alramTypeGroup = (RadioGroup) findViewById(R.id.radioGroupAdd);
+        alramTypeGroup.setOnClickListener(this);
         //반복요일 토글버튼
         tgBtnSun = (ToggleButton) findViewById(R.id.toggleBtnSunday);
+        tgBtnSun.setOnClickListener(this);
         thBtnMon = (ToggleButton) findViewById(R.id.toggleBtnMonday);
+        thBtnMon.setOnClickListener(this);
         thBtnTue = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
+        thBtnTue.setOnClickListener(this);
         tgBtnWed = (ToggleButton) findViewById(R.id.toggleBtnWednesday);
+        tgBtnWed.setOnClickListener(this);
         tgBthThur = (ToggleButton) findViewById(R.id.toggleBtnThursday);
+        tgBthThur.setOnClickListener(this);
         tgBtnFri = (ToggleButton) findViewById(R.id.toggleBtnFriday);
+        tgBtnFri.setOnClickListener(this);
         thBtnSat = (ToggleButton) findViewById(R.id.toggleBtnSaturday);
+        thBtnSat.setOnClickListener(this);
 
         //매주 반복 체크박스(
         //repeatCheckBox = (CheckBox) findViewById(R.id.repeatCheckBox);
 
         //알람 사운드 선택 버튼 및 제목표시
         alramSoundSelector = (LinearLayout) findViewById(R.id.addAlramContentBtn);
+        alramSoundSelector.setOnClickListener(this);
         alramSoundName = (TextView) findViewById(R.id.alarmSoundContent);
+        alramSoundName.setOnClickListener(this);
         //볼륨조절Bar
         volSeekBar = (SeekBar) findViewById(R.id.seekBarVolumeBar);
         speakerImage = (ImageView) findViewById(R.id.speakerImg);
@@ -267,6 +277,11 @@ public class AlarmAddActivity extends AppCompatActivity {
             alramSoundName.setText(mRingtone.getTitle(this));
             mPlayer.setUri(mUri);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        ringtoneStop();
     }
 
     /**
@@ -367,7 +382,9 @@ public class AlarmAddActivity extends AppCompatActivity {
     }
 
     public void ringtoneStop(){
-        mPlayer.stop();
+        if(mPlayer != null){
+            mPlayer.stop();
+        }
     }
 
 
