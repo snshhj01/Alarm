@@ -35,13 +35,18 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("info", "onCreate");
         setContentView(R.layout.noti_main);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.d("onresume","onresume");
         setContentView(R.layout.noti_main);
 
         alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
@@ -51,7 +56,7 @@ public class NotiActivity extends AppCompatActivity {
 
         AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
         //String strUri = "content://settings/system/alarm_alert";
-       // Uri mUri = alarm.getSoundUri();
+        // Uri mUri = alarm.getSoundUri();
         String strUri = alarm.getSoundUri();
         Uri mUri = Uri.parse(strUri);
         startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
@@ -94,11 +99,8 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Log.e("Noti", "NotiActivity onStart.");
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        AlarmUtils.getInstance().isWakeLock = true;
-        PushWakeLock.acquireCpuWakeLock(this, 0);
+        Log.d("info", "NotiActivity onStart");
+
     }
 
     @Override
@@ -108,6 +110,7 @@ public class NotiActivity extends AppCompatActivity {
     }
 
     public void startAlarm(int alarmType, Uri uri, int volume) {
+        Log.d("info","start alarm");
         if(alarmType == 2 || alarmType == 3) {
             startVibrate(this);
         }
@@ -118,7 +121,7 @@ public class NotiActivity extends AppCompatActivity {
 
         //Timer timer = null;
         //1분뒤 알람 중지
-      //  timer.schedule(new MyTimer(), 0, 60000);
+        //  timer.schedule(new MyTimer(), 0, 60000);
     }
 
     public void stopAlarm() {

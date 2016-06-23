@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.util.Log;
 
-import kr.co.miracom.alarm.util.AlarmUtils;
-
 /**
  * Created by jiwoon-won on 2016-05-27.
  */
@@ -22,15 +20,6 @@ public class PushWakeLock {
         if (sCpuWakeLock != null) {
             return;
         }
-
-        if (AlarmUtils.getInstance().isWakeLock == true) {
-            Log.e("PushWakeLock", "Acquiring cpu wake lock start.");
-            AlarmUtils.getInstance().isWakeLock = false;
-        } else {
-            Log.e("PushWakeLock", "Acquiring cpu wake lock return.");
-            return;
-        }
-
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         sCpuWakeLock = pm.newWakeLock(
                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
