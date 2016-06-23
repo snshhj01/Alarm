@@ -53,6 +53,7 @@ public class AlarmUtils implements LocationListener {
     public Context m_Activity;
     public boolean isGPSEnabled = false;
     public boolean isGPSInit = false;
+    public boolean isWakeLock = false;
     private Intent saveIntent;
 
     public static AlarmUtils getInstance() {
@@ -108,6 +109,8 @@ public class AlarmUtils implements LocationListener {
 
             Double lat = Double.parseDouble(alarm.getLatitude());// intent.getDoubleExtra("latitude", 0.0);
             Double lng = Double.parseDouble(alarm.getLongitude());//intent.getDoubleExtra("longitude", 0.0);
+
+            Log.e("Receiver GetLocations()", "latPoint2: " + lat + ", lngPoint2: " + lng);
 
             Toast.makeText(m_Activity, "latPoint: " + lat + ", lngPoint: " + lng, Toast.LENGTH_SHORT).show();
 
@@ -264,7 +267,7 @@ public class AlarmUtils implements LocationListener {
         //pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         pendingIntent = PendingIntent.getBroadcast(context, CommonUtils.getAlarmId(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        // startAlram(context, pendingIntent, FIVE_SECOND);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + FIVE_MINUTE, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + FIVE_SECOND, pendingIntent);
     }
 
     public void startAlarm(Context context, Intent intent, long triggerTime, int type) {

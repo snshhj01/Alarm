@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -93,9 +94,11 @@ public class NotiActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Log.e("Noti", "NotiActivity onStart.");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
+        AlarmUtils.getInstance().isWakeLock = true;
+        PushWakeLock.acquireCpuWakeLock(this, 0);
     }
 
     @Override

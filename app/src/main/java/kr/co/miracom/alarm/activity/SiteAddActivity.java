@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
@@ -118,7 +119,7 @@ public class SiteAddActivity extends AppCompatActivity {
             alramSoundName.setText(mRingtone.getTitle(this));
 
             mPlayer.setUri(mUri);
-    }
+        }
 
         btnMapSetting = (Button) findViewById(R.id.btnMapSetting);
         btnMapSetting.setOnClickListener(new View.OnClickListener() {
@@ -344,16 +345,17 @@ public class SiteAddActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         long triggerTime = 0;
         long intervalTime = 24 * 60 * 60 * 1000;// 24시간
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
+            triggerTime = setTriggerTime();
             //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 1);
         } else {
             intent.putExtra(Constants.ALARM_ID, alarmId);
             //pendingIntent = getPendingIntent(intent);
+            triggerTime = setTriggerTime();
             // alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
             AlarmUtils.getInstance().startAlarm(getApplicationContext(), intent, triggerTime, 0);
         }
@@ -409,6 +411,29 @@ public class SiteAddActivity extends AppCompatActivity {
     private PendingIntent getPendingIntent(Intent intent) {
         PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pIntent;
+    }
+
+    /**
+     * Trigger 시간을 설정 함
+     * @return
+     */
+    private long setTriggerTime() {
+        timeMap = new HashMap<String,Integer>();
+        timeMap.put(Constants.TIME_HOUR,this.timePicker.getCurrentHour());
+        timeMap.put(Constants.TIME_MINUTE,this.timePicker.getCurrentMinute());
+        // current Time
+        long currentTime = System.currentTimeMillis();
+        // timepicker
+        Calendar curTime = Calendar.getInstance();
+        curTime.set(Calendar.HOUR_OF_DAY, this.timePicker.getCurrentHour());
+        curTime.set(Calendar.MINUTE, this.timePicker.getCurrentMinute());
+        curTime.set(Calendar.SECOND, 0);
+        curTime.set(Calendar.MILLISECOND, 0);
+        long settingTime = curTime.getTimeInMillis();
+        long triggerTime = settingTime;
+        if (currentTime > settingTime)
+            triggerTime += 1000 * 60 * 60 * 24;
+        return triggerTime;
     }
 
     public void ringtonePlay(){

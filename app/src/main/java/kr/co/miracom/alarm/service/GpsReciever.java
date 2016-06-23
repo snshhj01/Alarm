@@ -55,6 +55,8 @@ public class GpsReciever extends BroadcastReceiver {
             selDate.setMinutes(min);
 
             if ((selDate.getTime() + ONE_HOUR) >= nowDate.getTime()) {
+                Log.e("GpsReciever connect", "GpsReciever onReceive correct time. ");
+
                 intent.putExtra("AlarmInfo",alarm);
 
                 Intent alarmIntent = new Intent(context, NotiActivity.class);
@@ -74,6 +76,8 @@ public class GpsReciever extends BroadcastReceiver {
                     e.printStackTrace();
                 }
             } else {
+                Log.e("GpsReciever connect", "GpsReciever onReceive uncorrect time. ");
+
                 return;
             }
         }
