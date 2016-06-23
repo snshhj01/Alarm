@@ -77,7 +77,7 @@ public class CommonUtils {
 
     public static void disabledViewColor(View convertView){
         ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
-        iv.setBackgroundColor(Color.parseColor("#C0C0C0"));
+        iv.setSelected(false);
 
         TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
         tAmPm.setTextColor(Color.parseColor("#9C9D9D"));
@@ -89,11 +89,7 @@ public class CommonUtils {
 
     public static void enabledViewColor(View convertView, AlarmInfo alnfo){
         ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
-        if(alnfo.getFlag() == "Y"){
-            iv.setImageResource(android.R.drawable.ic_dialog_map);
-        }else{
-            iv.setImageResource(android.R.drawable.ic_popup_reminder);
-        }
+        iv.setSelected(true);
 
         TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
         tAmPm.setTextColor(Color.BLACK);
@@ -117,5 +113,12 @@ public class CommonUtils {
         if (currentTime > settingTime)
             triggerTime += 1000 * 60 * 60 * 24;
         return triggerTime;
+    }
+
+    public static int addHour(int curHour, int addHour){
+        Calendar curTime = Calendar.getInstance();
+        curTime.set(Calendar.HOUR_OF_DAY, curHour);
+        curTime.add(Calendar.HOUR, addHour);
+        return curTime.get(Calendar.HOUR_OF_DAY);
     }
 }
