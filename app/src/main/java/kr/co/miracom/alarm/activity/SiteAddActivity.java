@@ -209,13 +209,16 @@ public class SiteAddActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeMap = new HashMap<String,Integer>();
+                timeMap.put(Constants.TIME_HOUR, timePicker.getCurrentHour());
+                timeMap.put(Constants.TIME_MINUTE, timePicker.getCurrentMinute());
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
-                finish();
                 Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, 1);
                 startActivity(returnIntent);
+                finish();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -286,7 +289,7 @@ public class SiteAddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == REQUEST_CODE_ADD_MAP){
-            if(data.getStringExtra(Constants.ADDRESS) != null) {
+            if(data != null) {
                 Log.d(TAG, data.getStringExtra(Constants.ADDRESS));
                 Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0)));
                 Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0)));

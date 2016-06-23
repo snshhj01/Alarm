@@ -152,6 +152,11 @@ public class DBHelper {
                     alarm.setSoundUri(cursor.getString(6));
                     alarm.setAlarmType(cursor.getInt(7));
                     alarm.setVolume(cursor.getInt(8));
+                    alarm.setFlag(cursor.getString(9));
+                    alarm.setLatitude(cursor.getString(10));
+                    alarm.setLongitude(cursor.getString(11));
+                    alarm.setRadius(cursor.getString(12));
+                    alarm.setAddr(cursor.getString(13));
                     alarmList.add(alarm);
                     Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());

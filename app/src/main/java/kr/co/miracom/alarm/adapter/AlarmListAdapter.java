@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
@@ -26,6 +28,9 @@ import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
+
+import static kr.co.miracom.alarm.util.CommonUtils.disabledViewColor;
+import static kr.co.miracom.alarm.util.CommonUtils.enabledViewColor;
 import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.getKorAmPm;
 import static kr.co.miracom.alarm.util.CommonUtils.setColorDOW;
@@ -39,7 +44,6 @@ public class AlarmListAdapter extends BaseAdapter {
     private Context mContext;
     private ListView mListView;
     protected DBHelper mDbHelper;
-    private HashMap<String,Integer> timeMap;
 
     private AlarmManager alarmManager;
 
@@ -73,6 +77,9 @@ public class AlarmListAdapter extends BaseAdapter {
         final int pos = position;
         final Context context = parent.getContext();
 
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         if (convertView == null) {
@@ -95,6 +102,7 @@ public class AlarmListAdapter extends BaseAdapter {
 
             ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
             iv.setImageResource(android.R.drawable.ic_popup_reminder);
+
             TextView tTitle = (TextView) convertView.findViewById(R.id.title);
             TextView tAmPm = (TextView) convertView.findViewById(R.id.amPm);
             TextView tTimeFromTo = (TextView) convertView.findViewById(R.id.timeFromTo);
@@ -104,24 +112,38 @@ public class AlarmListAdapter extends BaseAdapter {
             tTitle.setText(aInfo.getAlarmName());
             tAmPm.setText(amPm);
             tTimeFromTo.setText(timeFromTo);
-            setColorDOW(convertView, aInfo.getDays());
             tLoc.setText(aInfo.getAddr());
             tLocRange.setText(aInfo.getRadius());
             tBell.setText(aType);
+            if (aInfo.getActive() == 1) {
+                enabledViewColor(convertView, aInfo);
+            } else {
+                disabledViewColor(convertView);
+            }
 
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(context, "알람클로즈 클릭 : " + m_list.get(pos).get_Id() + "/" + pos, Toast.LENGTH_SHORT).show();
 
-                    int active = m_list.get(pos).getActive();
-                    int alarmUniqId = m_list.get(pos).getAlarmId();
+                    AlarmInfo aInfo = m_list.get(pos);
+                    View parent = (View)v.getParent();
 
-                    if (active == 1) {
-                        disableExistAlarm(alarmUniqId);
+                    int active = aInfo.getActive();
+                    if (active == 1) {   //  토글  : enable / disable
+                        aInfo.setActive(0);
+                        mDbHelper.updateAlarm(aInfo);
+
+                        disabledViewColor(parent);
+                        disableExistAlarm(aInfo.getAlarmId());
                     } else {
-                        enableExistAlarm(m_list.get(pos));
+                        aInfo.setActive(1);
+                        mDbHelper.updateAlarm(aInfo);
+                        enabledViewColor(parent, aInfo);
+                        enableExistAlarm(aInfo);
                     }
+
+                    mDbHelper.selectAll("N"); //  로그 대신 찍음, 추후 삭제 예정
+                    Logger.d(this.getClass(), "%S", aInfo.getAlarmName() + " " + aInfo.getActive());
                 }
             });
 
@@ -175,8 +197,6 @@ public class AlarmListAdapter extends BaseAdapter {
         int alarmUniqId = m_list.get(_position).getAlarmId();
         int _id = m_list.get(_position).get_id();
 
-        mDbHelper = new DBHelper(mContext);
-        mDbHelper.open();
         //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
         mDbHelper.deleteAlarm(_id);
 
@@ -219,16 +239,19 @@ public class AlarmListAdapter extends BaseAdapter {
     private void enableExistAlarm(AlarmInfo aInfo) {
         Intent intent = new Intent(mContext, AlarmReceiver.class);
         boolean isRepeat = aInfo.getDays().size() > 0;
-        int alarmId = aInfo.getAlarmId();
+
         long triggerTime = 0;
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
+        triggerTime = CommonUtils.setTriggerTime(aInfo.getTime().get(Constants.TIME_HOUR), aInfo.getTime().get(Constants.TIME_MINUTE));
+
         Logger.d(this.getClass(), "%s", "Is repeat alarm!");
-        intent.putExtra(Constants.ALARM_ID, alarmId);
+        intent.putExtra(Constants.ALARM_ID, aInfo.getAlarmId());
         //pendingIntent = getPendingIntent(intent);
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
         AlarmUtils.getInstance().startAlarm(mContext, intent, triggerTime, (isRepeat ? 1 : 0));
-
     }
+
+
+
 
 
 }
