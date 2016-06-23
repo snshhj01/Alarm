@@ -209,6 +209,9 @@ public class SiteAddActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timeMap = new HashMap<String,Integer>();
+                timeMap.put(Constants.TIME_HOUR, timePicker.getCurrentHour());
+                timeMap.put(Constants.TIME_MINUTE, timePicker.getCurrentMinute());
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();

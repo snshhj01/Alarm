@@ -27,6 +27,7 @@ import kr.co.miracom.alarm.util.DBHelper;
 import kr.co.miracom.alarm.util.Logger;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
+import static kr.co.miracom.alarm.util.CommonUtils.addHour;
 import static kr.co.miracom.alarm.util.CommonUtils.disabledViewColor;
 import static kr.co.miracom.alarm.util.CommonUtils.enabledViewColor;
 import static kr.co.miracom.alarm.util.CommonUtils.getHourAmPm;
@@ -102,6 +103,9 @@ public class SiteListAdapter extends BaseAdapter {
         final int pos = position;
         final Context context = parent.getContext();
 
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.alarm_list_item, parent, false);
@@ -110,7 +114,7 @@ public class SiteListAdapter extends BaseAdapter {
 
             String amPm =  getKorAmPm(aInfo.getTime().get("hour"));
             String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
-                    + "~" + getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
+                    + "~" + getHourAmPm(addHour(aInfo.getTime().get("hour"), 1)) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
 
             String aType = "";
             if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
