@@ -74,7 +74,7 @@ public class AlarmUtils implements LocationListener {
         mLocationManger.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 5, this);
         // LocationListener의 핸들을 얻음
         //AlarmUtils.getInstance().locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-      //  enableGPSSetting();
+        //  enableGPSSetting();
         mGpsIntentReceiver = new GpsReciever(Constants.GPS_INENT_KEY);
         // mGpsIntentReceiver = new GpsIntentReciever(getApplicationContext(), GpsIntentReciever.class);
         m_Activity.getApplicationContext().registerReceiver(mGpsIntentReceiver, mGpsIntentReceiver.getFilter());
@@ -111,11 +111,11 @@ public class AlarmUtils implements LocationListener {
 
             Toast.makeText(m_Activity, "latPoint: " + lat + ", lngPoint: " + lng, Toast.LENGTH_SHORT).show();
 
-        //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.3680115, 127.1033245, 500, -1, intent); //정자
+            //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.3680115, 127.1033245, 500, -1, intent); //정자
             locRegister(m_Activity, intent.getIntExtra(Constants.ALARM_ID, 0), lat, lng, 3000, -1, intent); //잠실1
-       //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.5166423, 127.1010482, 100, -1, intent); //잠실2
+            //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), 37.5166423, 127.1010482, 100, -1, intent); //잠실2
 
-        //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), latPoint, lngPoint, 500, -1, intent);
+            //    locRegister(m_Activity, intent.getIntExtra("alartUniqId",0), latPoint, lngPoint, 500, -1, intent);
 
 
 
@@ -131,7 +131,7 @@ public class AlarmUtils implements LocationListener {
 
         } else {
             Log.d("location", "myLocation == null");
-        //    Toast.makeText(m_Activity, "myLocation == null GPS Disabled", Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(m_Activity, "myLocation == null GPS Disabled", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -142,9 +142,9 @@ public class AlarmUtils implements LocationListener {
         lngTextView =(TextView) findViewById(R.id.lng);
         latTextView.setText(String.valueOf(location.getLatitude()) + " : " + getProvider());
         lngTextView.setText(String.valueOf(location.getLongitude()));*/
-     //   Toast.makeText(m_Activity, "onLocationChanged!!", Toast.LENGTH_SHORT).show();
+        //   Toast.makeText(m_Activity, "onLocationChanged!!", Toast.LENGTH_SHORT).show();
         Log.d("location", "location changed");
-       // Toast.makeText(m_Activity, "location changed!!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(m_Activity, "location changed!!", Toast.LENGTH_SHORT).show();
         myLocation = location;
 
         if (isGPSEnabled) {
@@ -181,7 +181,7 @@ public class AlarmUtils implements LocationListener {
         proximityIntent.putExtra(Constants.ALARM_ID, id);
         proximityIntent.putExtra("lat", lat);
         proximityIntent.putExtra("lng", lng);
-       // proximityIntent.putExtra("alarmName", intent.getStringExtra("alarmName"));
+        // proximityIntent.putExtra("alarmName", intent.getStringExtra("alarmName"));
         proximityIntent.putExtra("AlarmInfo",alarm);
 
         //Log.d(getClass().getName(), "OnCreate2 starGPStAlram startAlram : " + AlarmUtils.getInstance().alarmCountId);
@@ -199,7 +199,7 @@ public class AlarmUtils implements LocationListener {
      */
     public void locUnRegister(Context context) {
         if (mPendingIntentList != null) {
-           // Toast.makeText(context, "Del Gps List size: " + mPendingIntentList.size(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(context, "Del Gps List size: " + mPendingIntentList.size(), Toast.LENGTH_SHORT).show();
             Log.e("AlarmReceiver DelGpsLi", "onProviderEnabled : " + mPendingIntentList.size());
             for (int i = 0; i < mPendingIntentList.size(); i++) {
                 PendingIntent curIntent = (PendingIntent) mPendingIntentList.get(i);
@@ -218,25 +218,25 @@ public class AlarmUtils implements LocationListener {
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
         // 프로바이더 상태가 변경됨
-       // Toast.makeText(MainActivity.this, "onStatusChanged!!!!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(MainActivity.this, "onStatusChanged!!!!", Toast.LENGTH_SHORT).show();
         Log.d("Test", "test2");
     }
 
     @Override
     public void onProviderEnabled(String provider) {
         // TODO Auto-generated method stub
-      //  Toast.makeText(m_Activity, "onProviderEnabled!!!!", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(m_Activity, "onProviderEnabled!!!!", Toast.LENGTH_SHORT).show();
 
         //myLocation = location;
         Log.e("AlarmReceiver connect", "onProviderEnabled ");
         //GetLocations(getAlarmIntent());
-    //    isGPSEnabled = true;
+        //    isGPSEnabled = true;
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         // TODO Auto-generated method stub
-     //   Toast.makeText(m_Activity, "onProviderDisabled!!!!", Toast.LENGTH_SHORT).show();
+        //   Toast.makeText(m_Activity, "onProviderDisabled!!!!", Toast.LENGTH_SHORT).show();
         Log.e("AlarmReceiver connect", "onProviderDisabled ");
         isGPSEnabled = false;
         isGPSInit = false;
@@ -246,7 +246,7 @@ public class AlarmUtils implements LocationListener {
             m_Activity.unregisterReceiver(mGpsIntentReceiver);
             mGpsIntentReceiver = null;
         }*/
-      //  Log.d("Test", "test4");
+        //  Log.d("Test", "test4");
     }
 
     /*
@@ -263,7 +263,7 @@ public class AlarmUtils implements LocationListener {
         alarmIntent.putExtra(Constants.ALARM_ID, intent.getIntExtra(Constants.ALARM_ID, 0));
         //pendingIntent = PendingIntent.getBroadcast(context, intent.getIntExtra("alartUniqId", 0), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         pendingIntent = PendingIntent.getBroadcast(context, CommonUtils.getAlarmId(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-       // startAlram(context, pendingIntent, FIVE_SECOND);
+        // startAlram(context, pendingIntent, FIVE_SECOND);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + FIVE_MINUTE, pendingIntent);
     }
 

@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.adapter.AlarmListPagerAdapter;
@@ -27,7 +26,7 @@ public class AlarmListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        enableGPSSetting();
     }
 
     @Override
@@ -60,7 +59,6 @@ public class AlarmListActivity extends AppCompatActivity {
                 finish();
             }
         });
-        enableGPSSetting();
        // AlarmUtils.getInstance().gpsInit(getApplicationContext());
     }
 

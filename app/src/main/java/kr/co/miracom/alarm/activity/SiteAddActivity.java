@@ -118,7 +118,7 @@ public class SiteAddActivity extends AppCompatActivity {
             alramSoundName.setText(mRingtone.getTitle(this));
 
             mPlayer.setUri(mUri);
-    }
+        }
 
         btnMapSetting = (Button) findViewById(R.id.btnMapSetting);
         btnMapSetting.setOnClickListener(new View.OnClickListener() {
