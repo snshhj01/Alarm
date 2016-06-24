@@ -31,69 +31,68 @@ public class NotiActivity extends AppCompatActivity {
 
     TextView alertMsgTextView;
     boolean progressSelectFlag = false;
-
+    boolean isRinging = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("info", "onCreate");
         setContentView(R.layout.noti_main);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
+        isRinging = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("onresume","onresume");
-        setContentView(R.layout.noti_main);
 
-        alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
-        seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
+        if(isRinging == false) {
+            setContentView(R.layout.noti_main);
 
-        Intent intent = getIntent();
+            alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
+            seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
 
-        AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
-        //String strUri = "content://settings/system/alarm_alert";
-       // Uri mUri = alarm.getSoundUri();
-        String strUri = alarm.getSoundUri();
-        Uri mUri = Uri.parse(strUri);
-        startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
+            Intent intent = getIntent();
 
-        alertMsgTextView.setText(alarm.getAlarmName());
+            AlarmInfo alarm = (AlarmInfo)intent.getSerializableExtra("AlarmInfo");
+            //String strUri = "content://settings/system/alarm_alert";
+            // Uri mUri = alarm.getSoundUri();
+            String strUri = alarm.getSoundUri();
+            Uri mUri = Uri.parse(strUri);
+            startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int seekBarProgress = 0;
+            alertMsgTextView.setText(alarm.getAlarmName());
 
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                seekBarProgress = progress;
-                if (progress > 80 && progressSelectFlag == false) {
-                    //    Toast.makeText(getApplicationContext(), "SeekBar End", Toast.LENGTH_SHORT).show();
-                    progressSelectFlag = true;
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                int seekBarProgress = 0;
 
-                    stopAlarm();
-                    finish();
-                } else if (progress < 20 && progressSelectFlag == false) {
-                    progressSelectFlag = true;
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    seekBarProgress = progress;
+                    if (progress > 80 && progressSelectFlag == false) {
+                        //    Toast.makeText(getApplicationContext(), "SeekBar End", Toast.LENGTH_SHORT).show();
+                        progressSelectFlag = true;
 
-                    stopAlarm();
-                    AlarmUtils.getInstance().startInstantAlarm(getApplicationContext(), getIntent());
-                    finish();
-                } else {
-                    //  textView.setText("Not QUIT");
+                        stopAlarm();
+                        finish();
+                    } else if (progress < 20 && progressSelectFlag == false) {
+                        progressSelectFlag = true;
+
+                        stopAlarm();
+                        AlarmUtils.getInstance().startInstantAlarm(getApplicationContext(), getIntent());
+                        finish();
+                    } else {
+                        //  textView.setText("Not QUIT");
+                    }
                 }
-            }
 
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                public void onStartTrackingTouch(SeekBar seekBar) {
 
-            }
+                }
 
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                public void onStopTrackingTouch(SeekBar seekBar) {
 
-                seekBar.setProgress(50);
-            }
-        });
+                    seekBar.setProgress(50);
+                }
+            });
+            isRinging = true;
+        }
     }
 
     @Override
@@ -101,6 +100,9 @@ public class NotiActivity extends AppCompatActivity {
         super.onStart();
         Log.d("info", "NotiActivity onStart");
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        PushWakeLock.acquireCpuWakeLock(getApplicationContext(), 0);
     }
 
     @Override
