@@ -4,12 +4,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,13 +21,18 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.common.Constants;
+import kr.co.miracom.alarm.external.DirectionFinder;
+import kr.co.miracom.alarm.external.DirectionFinderListener;
 import kr.co.miracom.alarm.service.AlarmReceiver;
 import kr.co.miracom.alarm.util.AlarmUtils;
 import kr.co.miracom.alarm.util.CommonUtils;
@@ -35,15 +42,20 @@ import kr.co.miracom.alarm.util.Player;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
- * Created by kimsungmog on 2016-05-26.
+ * Created by admin on 2016-05-26.
  */
-public class AlarmAddActivity extends AppCompatActivity implements View.OnClickListener{
+public class SmartAddActivity extends AppCompatActivity implements DirectionFinderListener {
+
+    private final String TAG = "SmartAddActivity";
+    public static final int REQUEST_CODE_ADD_MAP = 2001;
     public static final String COLUMN_ID = "_id";
-    private static final int PARGER_NUM = 0;
+    private static final int PARGER_NUM = 2;
 
     //Layout variable
     private Button okBtn;
     private Button cancelBtn;
+    private Button btnMapSetting;
+
     private EditText alarmName;
     private ToggleButton tgBtnSun, thBtnMon, thBtnTue, tgBtnWed, tgBthThur, tgBtnFri, thBtnSat;
     private TimePicker timePicker;
@@ -53,6 +65,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private SeekBar volSeekBar;
     private ImageView speakerImage;
     private TextView alramSoundName;
+    private TextView siteAddress;
 
 
     //User define variable
@@ -66,6 +79,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private PendingIntent pendingIntent;
     private boolean isModify;
     private int alarmId;
+
     private int _id;
     private int volume;
     private int alarmType = 1;
@@ -76,11 +90,19 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private Uri mUri;
     private Player mPlayer;
 
+    String address;
+    String latitude;
+    String longitude;
+    String myLatitude;
+    String myLongtitue;
+
+    private HashMap<String, Integer> smarttimeMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_simple_alarm);
+        setContentView(R.layout.add_site);
         mDbHelper = new DBHelper(this);
         mDbHelper.open();
 
@@ -108,6 +130,16 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
             mPlayer.setUri(mUri);
         }
+
+        btnMapSetting = (Button) findViewById(R.id.btnMapSetting);
+        btnMapSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), MapAddActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_ADD_MAP);
+            }
+        });
+
     }
 
     /**
@@ -134,18 +166,20 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             alramTypeGroup.check(R.id.radioBtnSoundVibrate);
         }
 
-        //mUri = alarm.getSoundUri();
         mUri = Uri.parse(alarm.getSoundUri());
         mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
         alramSoundName.setText(mRingtone.getTitle(this));
 
         mPlayer.setUri(mUri);
-
         // seekbar progress = volum
         //audiomanager volum = volum
         volume = alarm.getVolume();
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM,volume,0);
         volSeekBar.setProgress(volume);
+        address = alarm.getAddr();
+        latitude = alarm.getLatitude();
+        longitude = alarm.getLongitude();
+        siteAddress.setText(address);
     }
 
     /**
@@ -163,34 +197,26 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
         //알람 타입 선택(사운드,진동,사운드&진동)
         alramTypeGroup = (RadioGroup) findViewById(R.id.radioGroupAdd);
-        alramTypeGroup.setOnClickListener(this);
         //반복요일 토글버튼
         tgBtnSun = (ToggleButton) findViewById(R.id.toggleBtnSunday);
-        tgBtnSun.setOnClickListener(this);
         thBtnMon = (ToggleButton) findViewById(R.id.toggleBtnMonday);
-        thBtnMon.setOnClickListener(this);
         thBtnTue = (ToggleButton) findViewById(R.id.toggleBtnTuesday);
-        thBtnTue.setOnClickListener(this);
         tgBtnWed = (ToggleButton) findViewById(R.id.toggleBtnWednesday);
-        tgBtnWed.setOnClickListener(this);
         tgBthThur = (ToggleButton) findViewById(R.id.toggleBtnThursday);
-        tgBthThur.setOnClickListener(this);
         tgBtnFri = (ToggleButton) findViewById(R.id.toggleBtnFriday);
-        tgBtnFri.setOnClickListener(this);
         thBtnSat = (ToggleButton) findViewById(R.id.toggleBtnSaturday);
-        thBtnSat.setOnClickListener(this);
 
         //매주 반복 체크박스(
         //repeatCheckBox = (CheckBox) findViewById(R.id.repeatCheckBox);
 
         //알람 사운드 선택 버튼 및 제목표시
         alramSoundSelector = (LinearLayout) findViewById(R.id.addAlramContentBtn);
-        alramSoundSelector.setOnClickListener(this);
         alramSoundName = (TextView) findViewById(R.id.alarmSoundContent);
-        alramSoundName.setOnClickListener(this);
         //볼륨조절Bar
         volSeekBar = (SeekBar) findViewById(R.id.seekBarVolumeBar);
         speakerImage = (ImageView) findViewById(R.id.speakerImg);
+        //위치 주소값
+        siteAddress =  (TextView)findViewById(R.id.alramSiteName);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,7 +227,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
                 setAlarmType();
                 registerAlram();
                 ringtoneStop();
-                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+                Intent returnIntent = new Intent(SmartAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
                 startActivity(returnIntent);
                 finish();
@@ -211,10 +237,11 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 ringtoneStop();
-                Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+                Intent returnIntent = new Intent(SmartAddActivity.this, AlarmListActivity.class);
                 returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
                 startActivity(returnIntent);
                 finish();
+
             }
         });
         alramSoundSelector.setOnClickListener(new View.OnClickListener(){
@@ -237,10 +264,12 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 ringtoneStop();
+                //
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ringtonePlay();
+                //
             }
         });
     }
@@ -249,12 +278,11 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     public void onBackPressed() {
         super.onBackPressed();
         ringtoneStop();
-        Intent returnIntent = new Intent(AlarmAddActivity.this, AlarmListActivity.class);
+        finish();
+        Intent returnIntent = new Intent(SmartAddActivity.this, AlarmListActivity.class);
         returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
         startActivity(returnIntent);
-        finish();
     }
-
 
     private void alarmSelectDialog(){
         ringtoneStop();
@@ -271,18 +299,32 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Ringtone manager activtity
-        if(requestCode == 99){
+
+        if(requestCode == REQUEST_CODE_ADD_MAP){
+
+            if(data != null) {
+
+                Log.d(TAG, data.getStringExtra(Constants.ADDRESS));
+                Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0)));
+                Log.d(TAG, String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0)));
+
+                address = data.getStringExtra(Constants.ADDRESS);
+                latitude = String.valueOf(data.getDoubleExtra(Constants.LATITUDE, 0.0));
+                longitude = String.valueOf(data.getDoubleExtra(Constants.LONGITUDE, 0.0));
+                //Toast.makeText(getApplicationContext(), address+"||"+latitude+"longitude", Toast.LENGTH_LONG);
+                siteAddress.setText(address);
+
+                myLatitude = String.valueOf(data.getDoubleExtra(Constants.MYLATITUDE, 0.0));
+                myLongtitue = String.valueOf(data.getDoubleExtra(Constants.MYLONGITUDE, 0.0));
+
+                sendRequestDirection(myLatitude+","+myLongtitue, latitude+","+longitude);
+            }
+        }else if(requestCode == 99){
             mUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
             alramSoundName.setText(mRingtone.getTitle(this));
             mPlayer.setUri(mUri);
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        ringtoneStop();
     }
 
     /**
@@ -320,7 +362,9 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         long triggerTime = 0;
-        triggerTime = CommonUtils.setTriggerTime(timeMap.get(Constants.TIME_HOUR), timeMap.get(Constants.TIME_MINUTE));
+        long intervalTime = 24 * 60 * 60 * 1000;// 24시간
+        triggerTime = CommonUtils.setTriggerTime(smarttimeMap.get(Constants.TIME_HOUR), smarttimeMap.get(Constants.TIME_MINUTE));
+
         if (isRepeat) {
             Logger.d(this.getClass(), "%s", "Is repeat alarm!");
             intent.putExtra(Constants.ALARM_ID, alarmId);
@@ -339,10 +383,22 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         alarmInfo.setAlarmId(alarmId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
         alarmInfo.setTime(timeMap);
+//        alarmInfo.setTime(CommonUtils.getHourMin(triggerTime/1000 - duration));
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
         alarmInfo.setSoundUri(mUri.toString());
         alarmInfo.setVolume(volume);
+        alarmInfo.setFlag("SMART");
+
+        alarmInfo.setLatitude(latitude);
+        alarmInfo.setLongitude(longitude);
+        alarmInfo.setAddr(address);
+//        alarmInfo.setLatitude("37.516929");
+//        alarmInfo.setLongitude("127.100788");
+//        alarmInfo.setAddr("서울특별시 송파구 올림픽로35길 123(신천동, 향군타워)");
+
+        alarmInfo.setRadius("100");
+        alarmInfo.setSmartSetTime(smarttimeMap);
         saveAlarmInfo(alarmInfo);
     }
 
@@ -381,12 +437,39 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         mPlayer.setMediaPlayerMode();
         mPlayer.play();
     }
-
     public void ringtoneStop(){
-        if(mPlayer != null){
-            mPlayer.stop();
-        }
+        mPlayer.stop();
     }
 
+    private void sendRequestDirection(String origin, String destination) {
+//        origin = "37.518889, 127.062387"; //봉은중학교
+//        destination = "37.520657, 127.121423"; //올림픽공원
+        if (origin.isEmpty()) {
+            Toast.makeText(this, "Please enter origin address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (destination.isEmpty()) {
+            Toast.makeText(this, "Please enter destination address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            Logger.e(this.getClass(), "%s", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void onDirectionFinderStart() {
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(String duration) {
+        long triggerTime = CommonUtils.setTriggerTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+        long smartTime = triggerTime/1000 - Long.valueOf(duration);
+        smarttimeMap = CommonUtils.getHourMin(smartTime);
+    }
 }

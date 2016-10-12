@@ -25,6 +25,7 @@ public class AlarmInfo extends AbstractVO {
     String flag;
     String addr;
     String soundUri;
+    HashMap<String,Integer> smartSetTime;
 
     public String getAddr() {
         return addr;
@@ -134,4 +135,13 @@ public class AlarmInfo extends AbstractVO {
     public void setSoundUri(String soundUri) {
         this.soundUri = soundUri;
     }
+
+    public HashMap<String, Integer> getSmartSetTime() {
+        return smartSetTime;
+    }
+
+    public void setSmartSetTime(HashMap<String, Integer> smartSetTime) {
+        this.smartSetTime = smartSetTime;
+    }
+
 }

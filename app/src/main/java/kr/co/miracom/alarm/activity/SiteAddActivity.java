@@ -43,6 +43,7 @@ public class SiteAddActivity extends AppCompatActivity {
     private final String TAG = "SiteAddActivity";
     public static final int REQUEST_CODE_ADD_MAP = 1001;
     public static final String COLUMN_ID = "_id";
+    private static final int PARGER_NUM = 1;
 
     //Layout variable
     private Button okBtn;
@@ -216,7 +217,7 @@ public class SiteAddActivity extends AppCompatActivity {
                 registerAlram();
                 ringtoneStop();
                 Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-                returnIntent.putExtra(Constants.PAGER, 1);
+                returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
                 startActivity(returnIntent);
                 finish();
             }
@@ -226,7 +227,7 @@ public class SiteAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ringtoneStop();
                 Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-                returnIntent.putExtra(Constants.PAGER, 1);
+                returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
                 startActivity(returnIntent);
                 finish();
 
@@ -268,7 +269,7 @@ public class SiteAddActivity extends AppCompatActivity {
         ringtoneStop();
         finish();
         Intent returnIntent = new Intent(SiteAddActivity.this, AlarmListActivity.class);
-        returnIntent.putExtra(Constants.PAGER, 1);
+        returnIntent.putExtra(Constants.PAGER, PARGER_NUM);
         startActivity(returnIntent);
     }
 
@@ -367,7 +368,7 @@ public class SiteAddActivity extends AppCompatActivity {
         alarmInfo.setAlarmType(alarmType);
         alarmInfo.setSoundUri(mUri.toString());
         alarmInfo.setVolume(volume);
-        alarmInfo.setFlag("Y");
+        alarmInfo.setFlag("LOCATION");
 
         alarmInfo.setLatitude(latitude);
         alarmInfo.setLongitude(longitude);

@@ -22,7 +22,7 @@ import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 public class AlarmListPagerAdapter extends PagerAdapter {
     private LayoutInflater inflater;
     private Context context;
-    private final int TAB_CNT = 2;
+    private final int TAB_CNT = 3;
 
     protected DBHelper mDbHelper;
 
@@ -56,6 +56,10 @@ public class AlarmListPagerAdapter extends PagerAdapter {
                 view = inflater.inflate(R.layout.alarm_list, null);
                 siteListView(view);
                 break;
+            case 2:
+                view = inflater.inflate(R.layout.alarm_list, null);
+                smartListView(view);
+                break;
             default:
                 break;
         }
@@ -74,6 +78,10 @@ public class AlarmListPagerAdapter extends PagerAdapter {
                 return context.getString(R.string.tab_alarm);
             case 1:
                 return context.getString(R.string.tab_location);
+            case 2:
+                return context.getString(R.string.tab_smart);
+            default:
+                break;
         }
 
         return super.getPageTitle(position);
@@ -82,7 +90,7 @@ public class AlarmListPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
-        super.destroyItem(container, position, object);
+//        super.destroyItem(container, position, object);
     }
 
     private void alarmListView(View v){
@@ -92,8 +100,8 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
 
-        List<AlarmInfo> alarmList = mDbHelper.selectAll("N");
-        for(AlarmInfo aInfo : alarmList){
+        List<AlarmInfo> alarmList = mDbHelper.selectAll("");
+            for(AlarmInfo aInfo : alarmList){
 
 //            String amPm = getKorAmPm(aInfo.getTime().get("hour"));
 //            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute");
@@ -136,48 +144,30 @@ public class AlarmListPagerAdapter extends PagerAdapter {
         mDbHelper = new DBHelper(context);
         mDbHelper.open();
 
-        List<AlarmInfo> siteList = mDbHelper.selectAll("Y");
+        List<AlarmInfo> siteList = mDbHelper.selectAll("LOCATION");
         for(AlarmInfo aInfo : siteList){
-
-//            String amPm =  getKorAmPm(aInfo.getTime().get("hour"));
-//            String timeFromTo = getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute")<10 ? "0": "") + aInfo.getTime().get("minute")
-//                    + "~" + getHourAmPm(aInfo.getTime().get("hour")) + ":" + (aInfo.getTime().get("minute") < 10 ? "0" : "") + aInfo.getTime().get("minute");
-//
-//            String aType = "";
-//            if(aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND) {
-//                aType = "소리";
-//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_VIBRATE) {
-//                aType = "진동";
-//            } else if (aInfo.getAlarmType() == Constants.ALARM_TYPE_SOUND_VIBRATE) {
-//                aType = "소리+진동";
-//            }
-//
-//            Alarms aV = new Alarms();
-//            aV.setTitle(aInfo.getAlarmName());
-//            aV.setAmPm(amPm);
-//            aV.setTimeFromTo(timeFromTo);
-//            aV.setBell(aType);
-//            aV.setDayOfWeek(aInfo.getDays());
-//            aV.setLoc(aInfo.getAddr());
-//            aV.setLocRange(aInfo.getRadius());
-//            aV.set_Id(aInfo.get_id());
-//            aV.setAlarmId(aInfo.getAlarmId());
 
             adapter.add(aInfo);
         }
 
 
         listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Intent intent = new Intent(context, AlarmAddActivity.class);
-////                Toast.makeText(context, position, Toast.LENGTH_SHORT).show();
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+    }
+
+    private void smartListView(View v) {
+        ListView listView = (ListView) v.findViewById(R.id.alarm_list_view);
+        SmartListAdapter adapter = new SmartListAdapter(context, listView);
+
+        mDbHelper = new DBHelper(context);
+        mDbHelper.open();
+
+        List<AlarmInfo> smartList = mDbHelper.selectAll("SMART");
+        for(AlarmInfo aInfo : smartList){
+
+            adapter.add(aInfo);
+        }
+
+        listView.setAdapter(adapter);
     }
 
 

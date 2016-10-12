@@ -44,6 +44,7 @@ public class DBHelper {
     public static final String COLUMN_SITE_LONGITUDE = "alarm_longitude";
     public static final String COLUMN_SITE_RADIUS = "alarm_radius";
     public static final String COLUMN_SITE_ADDR = "alarm_addr";
+    public static final String COLUMN_SMART_SETTIME = "alarm_smart_settime";
 
     Type hashTypeSI = new TypeToken<HashMap<String, Integer>>(){}.getType();
     Type arrTypeI = new TypeToken<ArrayList<Integer>>(){}.getType();
@@ -68,7 +69,8 @@ public class DBHelper {
                     + COLUMN_SITE_LATITUDE + " TEXT, "
                     + COLUMN_SITE_LONGITUDE + " TEXT, "
                     + COLUMN_SITE_RADIUS + " INTEGER, "
-                    + COLUMN_SITE_ADDR + " TEXT) ";
+                    + COLUMN_SITE_ADDR + " TEXT, "
+                    + COLUMN_SMART_SETTIME + " TEXT) ";
             db.execSQL(createTable);
         }
 
@@ -110,6 +112,7 @@ public class DBHelper {
         cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
         cv.put(COLUMN_SITE_RADIUS, alarmInfo.getRadius());
         cv.put(COLUMN_SITE_ADDR, alarmInfo.getAddr());
+        cv.put(COLUMN_SMART_SETTIME, gson.toJson(alarmInfo.getSmartSetTime()));
         sqlDB.insert(ALARM_TABLE, null, cv);
     }
 
@@ -119,7 +122,7 @@ public class DBHelper {
      */
     public List<AlarmInfo> selectAll(String flag) {
         Logger.d(this.getClass(), "%s", "Get all alarm list");
-        String strWhere = ("Y".equals(flag) ? COLUMN_SITE_FLAG+"='"+flag +"'" : COLUMN_SITE_FLAG+" IS NULL ");
+        String strWhere = ("".equals(flag) ? COLUMN_SITE_FLAG+" IS NULL " : COLUMN_SITE_FLAG+"='"+flag +"'" );
         List<AlarmInfo> alarmList = new ArrayList<AlarmInfo>();
         String[] columns = new String[] {
                 COLUMN_ID,
@@ -135,7 +138,8 @@ public class DBHelper {
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
                 COLUMN_SITE_RADIUS,
-                COLUMN_SITE_ADDR
+                COLUMN_SITE_ADDR,
+                COLUMN_SMART_SETTIME
         };
         Cursor cursor = null;
         try {
@@ -157,6 +161,7 @@ public class DBHelper {
                     alarm.setLongitude(cursor.getString(11));
                     alarm.setRadius(cursor.getString(12));
                     alarm.setAddr(cursor.getString(13));
+                    alarm.setSmartSetTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(14), hashTypeSI));
                     alarmList.add(alarm);
                     Logger.d(this.getClass(), "%s", "Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
@@ -195,7 +200,8 @@ public class DBHelper {
                 COLUMN_SITE_LATITUDE,
                 COLUMN_SITE_LONGITUDE,
                 COLUMN_SITE_RADIUS,
-                COLUMN_SITE_ADDR
+                COLUMN_SITE_ADDR,
+                COLUMN_SMART_SETTIME
         };
         Cursor cursor = null;
         try {
@@ -216,6 +222,7 @@ public class DBHelper {
                     alarm.setLongitude(cursor.getString(11));
                     alarm.setRadius(cursor.getString(12));
                     alarm.setAddr(cursor.getString(13));
+                    alarm.setSmartSetTime((HashMap<String, Integer>) gson.fromJson(cursor.getString(14), hashTypeSI));
                     Logger.d(this.getClass(), "%s", "Site Alarm info : " + alarm.toString());
                 } while (cursor.moveToNext());
             }
@@ -252,6 +259,7 @@ public class DBHelper {
         cv.put(COLUMN_SITE_LONGITUDE, alarmInfo.getLongitude());
         cv.put(COLUMN_SITE_RADIUS, alarmInfo.getRadius());
         cv.put(COLUMN_SITE_ADDR, alarmInfo.getAddr());
+        cv.put(COLUMN_SMART_SETTIME, gson.toJson(alarmInfo.getSmartSetTime()));
         return sqlDB.update(ALARM_TABLE, cv, COLUMN_ID+"="+alarmInfo.get_id(), null);
     }
 

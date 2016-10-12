@@ -1,9 +1,13 @@
 package kr.co.miracom.alarm.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -48,7 +52,8 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
     String address;
     double latitude;
     double longitude;
-
+    double myLatitude;
+    double myLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +112,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         Log.i(TAG, "Place Selected: " + place.getName());
 
         searchLocation("" + place.getAddress());
-        tvDetail.setText(place.getName()+" - " + place.getAddress());
+        tvDetail.setText(place.getName() + " - " + place.getAddress());
 
 /*
         place.getName(), place.getId()
@@ -182,12 +187,12 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
                 */
             }
 
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Log.d(TAG, "예외 : " + ex.toString());
         }
     }
 
-    private void moveMap(){
+    private void moveMap() {
         mMap.clear();
         LatLng curPoint = new LatLng(latitude, longitude);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
@@ -195,12 +200,19 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         mMap.addMarker(new MarkerOptions().position(curPoint).title(""));
     }
 
-    private void save(){
+    private void save() {
         Intent resultIntent = new Intent();
+
+        address = "구글 지도 안되네?? 올림픽공원 하드코딩!!";
+        latitude = Double.valueOf("37.520657");
+        longitude = Double.valueOf("127.121423");
 
         resultIntent.putExtra("address", address);
         resultIntent.putExtra("latitude", latitude);
         resultIntent.putExtra("longitude", longitude);
+
+        resultIntent.putExtra("myLatitude", myLatitude);
+        resultIntent.putExtra("myLongitude", myLongitude);
 
         // 응답을 전달하고 이 액티비티를 종료합니다.
         setResult(RESULT_OK, resultIntent);
@@ -224,5 +236,28 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         LatLng curPoint = new LatLng(37.5200705, 127.0995);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 10));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+        if(mMap.getMyLocation() != null){
+            myLatitude = mMap.getMyLocation().getLatitude();
+            myLongitude = mMap.getMyLocation().getLongitude();
+
+        }else{
+            myLatitude = Double.valueOf("37.518889"); //봉은중학교
+            myLongitude = Double.valueOf("127.062387");
+        }
+
+
     }
 }

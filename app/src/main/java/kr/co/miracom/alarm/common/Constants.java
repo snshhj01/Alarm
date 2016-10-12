@@ -34,6 +34,9 @@ public class Constants {
     public  static String LATITUDE = "latitude";
     public  static String LONGITUDE = "longitude";
 
+    public  static String MYLATITUDE = "myLatitude";
+    public  static String MYLONGITUDE = "myLongitude";
+
     public final static String GPS_INENT_KEY = "gpsProximity";
 
 }

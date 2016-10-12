@@ -39,7 +39,6 @@ public class AlarmListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        Logger.d( this.getClass(), "%s",  "인텐트 뭐 받앗니 : " + intent.getIntExtra(Constants.PAGER, 0));
         posion = intent.getIntExtra(Constants.PAGER, 0);
         pager.setCurrentItem(posion);
 
@@ -51,9 +50,10 @@ public class AlarmListActivity extends AppCompatActivity {
                 Logger.d(this.getClass(), "%s", pager.getCurrentItem());
                 if (pager.getCurrentItem() == 0) {
                     intent = new Intent(v.getContext(), AlarmAddActivity.class);
-
-                } else {
+                } else if(pager.getCurrentItem()==1) {
                     intent = new Intent(v.getContext(), SiteAddActivity.class);
+                } else if(pager.getCurrentItem()==2) {
+                    intent = new Intent(v.getContext(), SmartAddActivity.class);
                 }
                 startActivity(intent);
                 finish();

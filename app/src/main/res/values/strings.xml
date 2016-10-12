@@ -21,5 +21,6 @@
     <!--START AlarmListActivity -->
     <string name="tab_alarm">알람</string>
     <string name="tab_location">위치알람</string>
+    <string name="tab_smart">스마트알람</string>
     <!--END AlarmListActivity -->
 </resources>

@@ -10,8 +10,11 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 import kr.co.miracom.alarm.R;
+import kr.co.miracom.alarm.common.Constants;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -114,6 +117,19 @@ public class CommonUtils {
             triggerTime += 1000 * 60 * 60 * 24;
         return triggerTime;
     }
+
+    public static HashMap<String, Integer> getHourMin(long longtime){
+        final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.setTimeInMillis(longtime*1000);
+        Date d = c.getTime();
+        HashMap<String, Integer> rtnMap = new HashMap<String, Integer>();
+        rtnMap.put(Constants.TIME_HOUR, d.getHours());
+        rtnMap.put(Constants.TIME_MINUTE, d.getMinutes());
+
+        return rtnMap;
+    }
+
 
     public static int addHour(int curHour, int addHour){
         Calendar curTime = Calendar.getInstance();
