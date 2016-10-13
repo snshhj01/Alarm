@@ -199,15 +199,8 @@ public class SmartListAdapter extends BaseAdapter {
         //Toast.makeText(context, "없어질  : " + m_list.get(_position).getTitle()+"/"+ m_list.get(_position).get_Id() + "/" + _position, Toast.LENGTH_SHORT).show();
         mDbHelper.deleteAlarm(m_list.get(_position).get_id());
 
-//        for(Alarms a : m_list){
-//            Logger.d(this.getClass(), "%S", a.getTitle());
-//        }
-//        Logger.d(this.getClass(), "%S", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         m_list.remove(getItem(_position));
 
-//        for(Alarms a : m_list){
-//            Logger.d(this.getClass(), "%S", a.getTitle());
-//        }
         mListView.setAdapter(this);
         this.notifyDataSetChanged();
 
