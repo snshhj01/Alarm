@@ -180,6 +180,8 @@ public class SmartAddActivity extends AppCompatActivity implements DirectionFind
         latitude = alarm.getLatitude();
         longitude = alarm.getLongitude();
         siteAddress.setText(address);
+
+        smarttimeMap = alarm.getSmartSetTime();
     }
 
     /**
