@@ -385,7 +385,6 @@ public class SmartAddActivity extends AppCompatActivity implements DirectionFind
         alarmInfo.setAlarmId(alarmId);
         alarmInfo.setActive(Constants.ALARM_ACTIVE);
         alarmInfo.setTime(timeMap);
-//        alarmInfo.setTime(CommonUtils.getHourMin(triggerTime/1000 - duration));
         alarmInfo.setDays(days);
         alarmInfo.setAlarmType(alarmType);
         alarmInfo.setSoundUri(mUri.toString());
