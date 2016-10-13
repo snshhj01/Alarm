@@ -224,8 +224,6 @@ public class SmartListAdapter extends BaseAdapter {
 
         Logger.d(this.getClass(), "%s", "Is repeat alarm!");
         intent.putExtra(Constants.ALARM_ID, aInfo.getAlarmId());
-        //pendingIntent = getPendingIntent(intent);
-        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, intervalTime, pendingIntent);
         AlarmUtils.getInstance().startAlarm(mContext, intent, triggerTime, (isRepeat ? 1 : 0));
     }
 
