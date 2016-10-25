@@ -137,7 +137,7 @@ public class SiteListAdapter extends BaseAdapter {
             tTimeFromTo.setText(timeFromTo);
             setColorDOW(convertView, aInfo.getDays());
             tLoc.setText(aInfo.getAddr());
-            tLocRange.setText(aInfo.getRadius());
+//            tLocRange.setText(aInfo.getRadius());
             tBell.setText(aType);
             if (aInfo.getActive() == 1) {
                 enabledViewColor(convertView, aInfo);

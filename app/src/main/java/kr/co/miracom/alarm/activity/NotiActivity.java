@@ -18,6 +18,7 @@ import java.util.TimerTask;
 
 import kr.co.miracom.alarm.R;
 import kr.co.miracom.alarm.util.AlarmUtils;
+import kr.co.miracom.alarm.view.DigitalClock;
 import kr.co.miracom.alarm.vo.ext.AlarmInfo;
 
 /**
@@ -29,6 +30,7 @@ public class NotiActivity extends AppCompatActivity {
     Vibrator vib = null;
     MediaPlayer player = null;
 
+//    DigitalClock alertTimeDC;
     TextView alertMsgTextView;
     boolean progressSelectFlag = false;
     boolean isRinging = false;
@@ -46,6 +48,7 @@ public class NotiActivity extends AppCompatActivity {
         if(isRinging == false) {
             setContentView(R.layout.noti_main);
 
+//            alertTimeDC = (DigitalClock) findViewById(R.id.alertTime);
             alertMsgTextView = (TextView) findViewById(R.id.alertTitle);
             seekBar = (SeekBar) findViewById(R.id.notiSeekBar);
 
@@ -58,7 +61,20 @@ public class NotiActivity extends AppCompatActivity {
             Uri mUri = Uri.parse(strUri);
             startAlarm(alarm.getAlarmType(), mUri, alarm.getVolume());
 
-            alertMsgTextView.setText(alarm.getAlarmName());
+            String alertMsg = alarm.getAlarmName();
+            if("SMART".equals(alarm.getFlag())){
+                alertMsg = "'" + alarm.getAddr() + "'로 출발시간입니다.";
+            }else if("LOCATION".equals(alarm.getFlag())){
+
+            }else{
+
+            }
+
+
+
+
+
+            alertMsgTextView.setText(alertMsg);
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 int seekBarProgress = 0;

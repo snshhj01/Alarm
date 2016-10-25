@@ -164,7 +164,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
         Log.i(TAG, "onPlaceSelected");
         Log.i(TAG, "Place Selected: " + place.getName());
 
-        searchLocation("" + place.getAddress());
+        searchLocation("" + place.getAddress(), String.valueOf(place.getName()));
         tvDetail.setText(place.getName() + " - " + place.getAddress());
 
 /*
@@ -189,7 +189,7 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
     /**
      * 주소를 이용해 위치 좌표를 찾는 메소드 정의
      */
-    private void searchLocation(String searchStr) {
+    private void searchLocation(String searchStr, String placeName) {
         Log.i(TAG, "searchLocation");
         // 결과값이 들어갈 리스트 선언
         List<Address> addressList = null;
@@ -209,7 +209,11 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
                         buf.append(addr.getAddressLine(k));
                     }
 
-                    address = buf.toString();
+                    if("".equals(placeName)){
+                        address = buf.toString();
+                    }else{
+                        address = placeName;
+                    }
                     latitude = addr.getLatitude();
                     longitude = addr.getLongitude();
 
@@ -262,16 +266,16 @@ public class MapAddActivity extends FragmentActivity implements OnMapReadyCallba
             longitude = Double.valueOf("127.121423");
         }
 
-        resultIntent.putExtra("address", address);
-        resultIntent.putExtra("latitude", latitude);
-        resultIntent.putExtra("longitude", longitude);
-
         // 에뮬레이터 에러 방지. 테스트용 소스. 삭제요망!!!!!!!!!!!!!!!!!!
         if(myLatitude==0 && myLongitude==0){
             address = "출발지 하드코딩(봉은중학교) " + address;
             myLatitude = Double.valueOf("37.518889"); //봉은중학교
             myLongitude = Double.valueOf("127.062387");
         }
+
+        resultIntent.putExtra("address", address);
+        resultIntent.putExtra("latitude", latitude);
+        resultIntent.putExtra("longitude", longitude);
 
         resultIntent.putExtra("myLatitude", myLatitude);
         resultIntent.putExtra("myLongitude", myLongitude);
